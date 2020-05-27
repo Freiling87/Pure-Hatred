@@ -60,7 +60,7 @@ namespace FuRL
         private void CreateMonsters()
         {
             // number of monsters to create
-            int numMonsters = 10;
+            int numMonsters = 100;
 
             // Create several monsters with random attack and defense values and 
             // pick a random position on the map to place them.

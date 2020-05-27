@@ -1,0 +1,10 @@
+{
+  "Name": "Md_curses_16x16",
+  "FilePath": "Md_curses_16x16.png",
+  "GlyphHeight": 16,
+  "GlyphPadding": 1,
+  "GlyphWidth": 16,
+  "SolidGlyphIndex": 219,
+  "Columns": 16,
+  "IsSadExtended": false
+}

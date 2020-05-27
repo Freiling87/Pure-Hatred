@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FuRL.Tiles;
+
 using Microsoft.Xna.Framework;
+
+using FuRL.Tiles;
 
 namespace FuRL
 {
-    // based on tunnelling room generation algorithm
-    // from RogueSharp tutorial
-    // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     public class MapGenerator
     {
-        // Create a random number generator
         Random randNum = new Random();
 
         Map _map; // Temporarily store the map currently worked on
 
-
-        // empty constructor
         public MapGenerator()
         {
         }
-
 
         public Map GenerateMap(int mapWidth, int mapHeight, int maxRooms, int minRoomSize, int maxRoomSize)
         {
