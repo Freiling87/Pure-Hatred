@@ -14,8 +14,8 @@ namespace FuRL
 {
     class GameLoop
     {
-        public const int GameWidth = 240;
-        public const int GameHeight = 60;
+        public const int GameWidth = 160;
+        public const int GameHeight = 80;
 
         public static UIManager UIManager;
         public static CommandManager CommandManager;
@@ -24,13 +24,13 @@ namespace FuRL
 
         static void Main(string[] args)
         {
-            SadConsole.Game.Create(GameWidth, GameHeight);
+            SadConsole.Game.Create("Cheepicus_12x12.font", GameWidth, GameHeight);
             SadConsole.Game.OnInitialize = Init;
             SadConsole.Game.OnUpdate = Update;
             SadConsole.Game.Instance.Run();
 
             // Code below will not run until the game window closes.
-            
+
             SadConsole.Game.Instance.Dispose();
         }
         

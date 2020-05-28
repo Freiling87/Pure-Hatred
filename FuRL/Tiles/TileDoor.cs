@@ -36,8 +36,10 @@ namespace FuRL.Tiles
             IsOpen = true;
             IsBlockingLOS = false;
             IsBlockingMove = false;
-            Glyph = ' ';
-            this.Background = Color.DarkGray;
+            Glyph = 239;
+            this.Background = Color.LightGray;
+            this.Foreground = Color.SaddleBrown;
+            //Just switch these in the image
         }
     }
 }

@@ -30,8 +30,7 @@ namespace FuRL.UI
 
         public void CreateChildConsoles()
         {
-            //FontMaster fontMaster = SadConsole.Global.LoadFont("Md_curses_16x16.png.font");
-            //SadConsole.Global.FontDefault = fontMaster.GetFont(SadConsole.Font.FontSizes.One);
+
 
             MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
         }

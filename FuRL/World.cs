@@ -1,57 +1,40 @@
 ﻿using System;
-using FuRL.Entities;
-using SadConsole;
+
 using Microsoft.Xna.Framework;
+using SadConsole;
 using SadConsole.Components;
+
+using FuRL.Entities;
 
 namespace FuRL
 {
-    // All game state data is stored in World
-    // also creates and processes generators
-    // for map creation
     public class World
     {
-        // random position generator
-        Random rndNum = new Random();
-
-        // map creation and storage data
-        private int _mapWidth = 100;
-        private int _mapHeight = 100;
-        private TileBase[] _mapTiles;
+        private int _mapWidth = 50;
+        private int _mapHeight = 50;
         private int _maxRooms = 100;
-        private int _minRoomSize = 4;
-        private int _maxRoomSize = 15;
-        public Map CurrentMap { get; set; }
+        private int _minRoomDimension = 4;
+        private int _maxRoomDimension = 15;
 
-        // player data
+        Random rndNum = new Random(); 
+        private TileBase[] _mapTiles;
+        public Map CurrentMap { get; set; }
         public Player Player { get; set; }
 
-        // Creates a new game world and stores it in
-        // publicly accessible
         public World()
         {
-            // Build a map
             CreateMap();
-
-            // create an instance of player
             CreatePlayer();
-
-            // spawn a bunch of monsters
             CreateMonsters();
-
-            // spawn some loot!
             CreateLoot();
         }
 
-        // Create a new map using the Map class
-        // and a map generator. Uses several 
-        // parameters to determine geometry
         private void CreateMap()
         {
             _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomDimension, _maxRoomDimension);
         }
 
         // Create some random monsters
