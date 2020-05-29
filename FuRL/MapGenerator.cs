@@ -1,8 +1,10 @@
-﻿using FuRL.Tiles;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.Xna.Framework;
+
+using FuRL.Tiles;
 
 namespace FuRL
 {
@@ -130,25 +132,19 @@ namespace FuRL
             }
         }
 
-        private bool IsPotentialDoor(Point location)
+        private bool IsPotentialDoor(Point center)
         {
-            int locationIndex = location.ToIndex(_map.Width);
+            int locationIndex = center.ToIndex(_map.Width);
 
             if (_map.Tiles[locationIndex] != null && _map.Tiles[locationIndex] is TileWall)
                 return false;
 
-            Point east = new Point(location.X + 1, location.Y);
-            Point west = new Point(location.X - 1, location.Y);
-            Point north = new Point(location.X, location.Y - 1);
-            Point south = new Point(location.X, location.Y + 1);
+            Point east = new Point(center.X + 1, center.Y);
+            Point west = new Point(center.X - 1, center.Y);
+            Point north = new Point(center.X, center.Y - 1);
+            Point south = new Point(center.X, center.Y + 1);
 
-            // Check for adjacent doors
-            if (_map.GetTileAt<TileDoor>(location) != null ||
-                _map.GetTileAt<TileDoor>(east) != null ||
-                _map.GetTileAt<TileDoor>(west) != null ||
-                _map.GetTileAt<TileDoor>(north) != null ||
-                _map.GetTileAt<TileDoor>(south) != null
-               )
+			if (_map.GetTilesAt<TileDoor>(center, east, west, north, south).Any() == false)
                 return false;
 
             //East-West door

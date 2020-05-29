@@ -6,10 +6,8 @@ using SadConsole;
 
 using FuRL.Tiles;
 using FuRL.Entities;
-
-//TODO: Convert from Point to TileIndex
-// so that instead of _map.Tiles[east.ToIndex(_map.Width)].IsBlockingMove
-// we can use NewFn(Point).IsBlockingMove
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace FuRL
 {
@@ -38,13 +36,13 @@ namespace FuRL
         {
             if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
                 return false;
-            return !_tiles[location.Y * Width + location.X].IsBlockingMove;
+            return !_tiles[location.ToIndex(Width)].IsBlockingMove;
         }
 
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
             int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
-            // make sure the index is within the boundaries of the map!
+
             if (locationIndex <= Width * Height && locationIndex >= 0)
             {
                 if (Tiles[locationIndex] is T)
@@ -53,15 +51,25 @@ namespace FuRL
             }
             else return null;
         }
-
-        public T GetTileAt<T>(Point location) where T : TileBase
+        
+        public T GetTileAt<T>(Point tile) where T : TileBase
         {
-            return GetTileAt<T>(location.X, location.Y);
+            return GetTileAt<T>(tile.X, tile.Y);
         }
 
-        public T GetEntityAt<T>(Point location) where T : Entity
+        public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase
+		{
+            List<T> result = new List<T>();
+
+            for (int i = 0; i < tiles.Length; i++)
+                result.Add(GetTileAt<T>(tiles[i].X, tiles[i].Y));
+
+            return result;
+		}
+
+        public T GetEntityAt<T>(Point tile) where T : Entity
         {
-            return Entities.GetItems(location).OfType<T>().FirstOrDefault();
+            return Entities.GetItems(tile).OfType<T>().FirstOrDefault();
         }
 
         public void Remove(Entity entity)
@@ -76,11 +84,8 @@ namespace FuRL
             entity.Moved += OnEntityMoved; // Link entity Moved event to new handler
         }
 
-        // When Entity .Moved value changes, triggers this event handler
-        // which updates the Entity's current position in the SpatialMap
-        private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
-        {
+        // If Entity .Moved changes, this event handler updates Entity's position in SpatialMap
+        private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args) =>
             Entities.Move(args.Entity as Entity, args.Entity.Position);
-        }
     }
 }
