@@ -16,3 +16,6 @@ namespace FuRL.Entities
         }
     }
 }
+
+
+//Testing Clone/Push
