@@ -3,7 +3,7 @@
 using Microsoft.Xna.Framework;
 using SadConsole.Components;
 
-namespace FuRL.Entities
+namespace PureHatred.Entities
 {
     // Extends SadConsole.Entities.Entity, adds UID
     public abstract class Entity : SadConsole.Entities.Entity, GoRogue.IHasID

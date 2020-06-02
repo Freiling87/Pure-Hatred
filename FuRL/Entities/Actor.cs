@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
-using FuRL.Tiles;
+using PureHatred.Tiles;
 
-namespace FuRL.Entities
+namespace PureHatred.Entities
 {
     public abstract class Actor : Entity
     {

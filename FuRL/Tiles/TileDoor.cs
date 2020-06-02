@@ -2,24 +2,23 @@
 
 using Microsoft.Xna.Framework;
 
-namespace FuRL.Tiles
+namespace PureHatred.Tiles
 {
     public class TileDoor : TileBase
     {
         public bool Locked;
         public bool IsOpen;
 
-        public TileDoor(bool locked, bool open) : base(Color.LightGray, Color.SaddleBrown, '=')
+        public TileDoor(bool locked, bool isOpen) : base(Color.LightGray, Color.SaddleBrown, '=', true, true, "Door")
         {
-            Glyph = '=';
-
             Locked = locked;
-            IsOpen = open;
+            IsOpen = isOpen;
 
             if (!Locked && IsOpen)
                 Open();
             else if (Locked || !IsOpen)
                 Close();
+            //Honestly wtf is this even
         }
 
         public void Close()
@@ -28,7 +27,6 @@ namespace FuRL.Tiles
             Glyph = '=';
             IsBlockingLOS = true;
             IsBlockingMove = true;
-            this.Background = Color.SaddleBrown;
         }
 
         public void Open()
@@ -39,7 +37,7 @@ namespace FuRL.Tiles
             Glyph = 239;
             this.Background = Color.LightGray;
             this.Foreground = Color.SaddleBrown;
-            //Just switch these in the image
+            //TODO: Just switch these in the image
         }
     }
 }

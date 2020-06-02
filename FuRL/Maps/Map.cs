@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Xna.Framework;
 using SadConsole;
 
-using FuRL.Tiles;
-using FuRL.Entities;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using PureHatred.Tiles;
+using PureHatred.Entities;
 
-namespace FuRL
+namespace PureHatred
 {
     public class Map
     {

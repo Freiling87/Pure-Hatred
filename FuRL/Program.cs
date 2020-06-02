@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FuRL
+namespace PureHatred
 {
     /// <summary>
     /// The main class.

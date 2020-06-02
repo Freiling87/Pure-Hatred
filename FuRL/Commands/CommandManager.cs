@@ -4,10 +4,10 @@ using System.Text;
 using GoRogue.DiceNotation;
 using Microsoft.Xna.Framework;
 
-using FuRL.Entities;
-using FuRL.Tiles;
+using PureHatred.Entities;
+using PureHatred.Tiles;
 
-namespace FuRL.Commands
+namespace PureHatred.Commands
 {
     public class CommandManager
     {

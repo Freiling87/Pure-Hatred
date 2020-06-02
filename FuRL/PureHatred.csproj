@@ -9,8 +9,8 @@
     <ProjectGuid>{D6F6D66B-F86D-41D5-8219-B4B98FCFFF5D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FuRL</RootNamespace>
-    <AssemblyName>FuRL</AssemblyName>
+    <RootNamespace>PureHatred</RootNamespace>
+    <AssemblyName>PureHatred</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -43,7 +43,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>FuRL.GameLoop</StartupObject>
+    <StartupObject>PureHatred.GameLoop</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandManager.cs" />
@@ -54,15 +54,18 @@
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameLoop.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="MapGenerator.cs" />
+    <Compile Include="Maps\Map.cs" />
+    <Compile Include="Maps\MapGenerator.cs" />
+    <Compile Include="Maps\MapSurface.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tiles\TileBase.cs" />
     <Compile Include="Tiles\TileDoor.cs" />
     <Compile Include="Tiles\TileFloor.cs" />
+    <Compile Include="Tiles\TileStairs.cs" />
     <Compile Include="Tiles\TileWall.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
+    <Compile Include="UI\MouseComponent.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
@@ -152,6 +155,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Behaviors\" />
     <Folder Include="Meta\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

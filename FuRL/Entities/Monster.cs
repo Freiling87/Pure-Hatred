@@ -2,7 +2,7 @@
 
 using Microsoft.Xna.Framework;
 
-namespace FuRL.Entities
+namespace PureHatred.Entities
 {
     public class Monster : Actor
     {

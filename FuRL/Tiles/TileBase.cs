@@ -3,7 +3,7 @@
 using Microsoft.Xna.Framework;
 using SadConsole;
 
-namespace FuRL
+namespace PureHatred
 {
     public abstract class TileBase : Cell
     {

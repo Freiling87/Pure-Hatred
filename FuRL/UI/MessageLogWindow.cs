@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Input;
 
-namespace FuRL.UI
+namespace PureHatred.UI
 {
     public class MessageLogWindow : Window
     {

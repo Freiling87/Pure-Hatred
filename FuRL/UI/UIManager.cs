@@ -6,13 +6,13 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 
-using FuRL.Entities;
+using PureHatred.Entities;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
  */
 
-namespace FuRL.UI
+namespace PureHatred.UI
 {
     public class UIManager : ContainerConsole
     {

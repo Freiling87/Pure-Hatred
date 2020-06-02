@@ -1,28 +1,49 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using PureHatred.Tiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using GoRogue.MapGeneration;
+using SadConsole.EasingFunctions;
 
-using Microsoft.Xna.Framework;
+//TODO: Explore GoRogue documentation on MapGen. Not fully covered in tutorial yet. https://github.com/Chris3606/GoRogue/blob/master/GoRogue.Docs/articles/gr3-map-gen.md
 
-using FuRL.Tiles;
-
-namespace FuRL
+namespace PureHatred
 {
 	public class MapGenerator
     {
         Random randNum = new Random();
         Map _map; // Temporarily store the map currently worked on
 
-        public MapGenerator()
-        {
-        }
+        public MapGenerator(){}
 
-        public Map GenerateMap(int mapWidth, int mapHeight, int maxRooms, int minRoomDimension, int maxRoomDimension)
+        public Map MapGenSurface()
         {
-            _map = new Map(mapWidth, mapHeight);
+            return null;
+        }
+        public Map MapgenCave()
+		{
+            return null;
+		}
+        public Map MapgenMineTunnels()
+		{
+            return null;
+		}
+        public Map MapgenMineColony()
+		{
+            return null;
+		}
+        public Map MapGenOrbitalStation()
+		{
+            return null;
+		}
+
+        public List<Rectangle> GenerateSquareRooms(int mapWidth, int mapHeight, int numberOfRooms, int minRoomDimension, int maxRoomDimension)
+		{
+            // TODO: Should pass list of existing rooms here if you want to avoid excessive intersects
             List<Rectangle> Rooms = new List<Rectangle>();
 
-            for (int i = 0; i < maxRooms; i++)
+            for (int i = 0; i < numberOfRooms; i++)
             {
                 int newRoomWidth = randNum.Next(minRoomDimension, maxRoomDimension);
                 int newRoomHeight = randNum.Next(minRoomDimension, maxRoomDimension);
@@ -39,25 +60,36 @@ namespace FuRL
                     Rooms.Add(newRoom);
                 }
             }
+            return Rooms;
+		}
+
+        public void ConnectRoomsWithTunnels(List<Rectangle> rooms)
+		{
+            for (int r = 1; r < rooms.Count; r++)
+            {
+                Point roomA = rooms[r - 1].Center;
+                Point roomB = rooms[r].Center;
+
+                List<Point> coinToss = new List<Point>() { roomA, roomB }.OrderBy(i => Guid.NewGuid()).ToList();
+
+                TunnelHorizontally(roomA.X, roomB.X, coinToss[0].Y);
+                TunnelVertically(roomA.Y, roomB.Y, coinToss[1].X);
+            }
+        }
+
+        public Map MapgenDungeonCannibalized(int mapWidth, int mapHeight, int maxRooms, int minRoomDimension, int maxRoomDimension)
+        {
+            _map = new Map(mapWidth, mapHeight);
 
             FillMapWithWalls();
+
+            List<Rectangle> Rooms =
+                new List<Rectangle>(GenerateSquareRooms(mapWidth, mapHeight, maxRooms, minRoomDimension, maxRoomDimension));
 
             foreach (Rectangle room in Rooms)
                 DigSquareRoom(room);
 
-            // carve tunnels between room centers in order of their creation 
-            // Coin toss determines L or 7 shaped hallway
-            for (int r = 1; r < Rooms.Count; r++)
-            {
-                List<int> coinToss = new List<int>() { 0, 1 };
-                coinToss = coinToss.OrderBy(i => Guid.NewGuid()).ToList();
-
-                TunnelHorizontally(Rooms[r - 1].Center.X, Rooms[r].Center.X, Rooms[r - coinToss[0]].Center.Y);
-                TunnelVertically(Rooms[r - 1].Center.Y, Rooms[r].Center.Y, Rooms[r - coinToss[1]].Center.X);
-
-                // I got it to four lines but made it more complicated than it needs to be :D 
-                // TODO: Change it back when you get a chance
-            }
+            ConnectRoomsWithTunnels(Rooms);
 
             foreach (Rectangle room in Rooms)
                 CreateDoor(room);

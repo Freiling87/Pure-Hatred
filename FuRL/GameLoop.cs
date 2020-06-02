@@ -4,13 +4,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SadConsole;
 
-using FuRL.Commands;
-using FuRL.Entities;
-using FuRL.UI;
+using PureHatred.Commands;
+using PureHatred.Entities;
+using PureHatred.UI;
 
 using Console = SadConsole.Console;
 
-namespace FuRL
+namespace PureHatred
 {
     class GameLoop
     {

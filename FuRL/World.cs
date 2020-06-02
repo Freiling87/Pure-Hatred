@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Components;
 
-using FuRL.Entities;
+using PureHatred.Entities;
 
-namespace FuRL
+namespace PureHatred
 {
     public class World
     {
@@ -34,7 +34,7 @@ namespace FuRL
             _mapTiles = new TileBase[_mapWidth * _mapHeight];
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
-            CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomDimension, _maxRoomDimension);
+            CurrentMap = mapGen.MapgenDungeonCannibalized(_mapWidth, _mapHeight, _maxRooms, _minRoomDimension, _maxRoomDimension);
         }
 
         // Create some random monsters
