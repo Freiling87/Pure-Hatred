@@ -65,7 +65,6 @@
     <Compile Include="Tiles\TileStairs.cs" />
     <Compile Include="Tiles\TileWall.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
-    <Compile Include="UI\MouseComponent.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
