@@ -8,6 +8,9 @@ using SadConsole.Controls;
 
 using PureHatred.Entities;
 
+using Console = SadConsole.Console;
+using SadConsole.Debug;
+
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
  */
@@ -28,11 +31,20 @@ namespace PureHatred.UI
             Parent = SadConsole.Global.CurrentScreen;
         }
 
-        public void CreateChildConsoles()
+        public void Init()
         {
-
-
             MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth, GameLoop.GameHeight / 4, "Message Log");
+
+            Children.Add(MessageLog);
+            MessageLog.Show();
+            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3 / 4);
+
+            LoadMap(GameLoop.World.CurrentMap);
+            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight * 3 / 4, "Game Map");
+            UseMouse = true;
+
+            MapConsole.CenterViewPortOnPoint(GameLoop.World.Player.Position);
         }
 
         public override void Update(TimeSpan timeElapsed)
@@ -41,7 +53,26 @@ namespace PureHatred.UI
             base.Update(timeElapsed);
         }
 
-        private void CheckKeyboard()
+		// INPUTS
+
+		private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)//+
+		{
+			var console = (Console)sender;
+			console.Print(1, console.Height - 1, $"Mouse pointing at {e.MouseState.CellPosition}        ");
+
+			if (e.MouseState.Mouse.LeftButtonDown)
+				console.Print(1, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}        ");
+			else
+				console.Print(1, console.Height - 2, $"                                                           ");
+		}
+
+		private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
+		{
+			//var console = (Console)sender;
+			//console.Print(1, console.Height - 3, $"You've clicked on {e.MouseState.CellPosition}               ");
+		}
+
+		private void CheckKeyboard()
         {
             Player player = GameLoop.World.Player;
             bool playerMoved = false;
@@ -77,45 +108,35 @@ namespace PureHatred.UI
                 MapConsole.CenterViewPortOnPoint(player.Position);
         }
 
-        public void Init()
+        // MAP 
+
+        public void CreateMapWindow(int width, int height, string title)
         {
-            CreateChildConsoles();
+            MapWindow = new Window(width, height);
+            MapWindow.CanDrag = false;
 
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth, GameLoop.GameHeight / 4, "Message Log");
-            Children.Add(MessageLog);
-            MessageLog.Show();
-            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3/4 );
+            MapConsole.ViewPort = new Rectangle(0, 0, width - 2, height - 2);
+            MapConsole.Position = new Point(1, 1);
 
-            LoadMap(GameLoop.World.CurrentMap);
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight * 3/4, "Game Map");
-            UseMouse = true;
+            Button inventoryButton = new Button(15, 3);
+            inventoryButton.Position = new Point(0, MapWindow.Height - 3);
+            inventoryButton.Text = "Inventory";
+            MapWindow.Add(inventoryButton);
 
-            MapConsole.CenterViewPortOnPoint(GameLoop.World.Player.Position);
-        }
+            Button anatomyButton = new Button(15, 3);
+            anatomyButton.Position = new Point(15, MapWindow.Height - 3);
+            anatomyButton.Text = "Anatomy";
+            MapWindow.Add(anatomyButton);
 
-        private void SyncMapEntities(Map map)
-        {
-            MapConsole.Children.Clear();
+			MapWindow.Title = title.Align(HorizontalAlignment.Center, width);
 
-            foreach (Entity entity in map.Entities.Items)
-            {
-                MapConsole.Children.Add(entity);
-            }
+            MapWindow.Children.Add(MapConsole);
+            Children.Add(MapWindow);
+            MapWindow.Show();
 
-            // Subscribe to Entities listeners
-            map.Entities.ItemAdded += OnMapEntityAdded;
-            map.Entities.ItemRemoved += OnMapEntityRemoved;
-        }
-
-        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args)
-        {
-            MapConsole.Children.Remove(args.Item);
-        }
-
-        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
-        {
-            MapConsole.Children.Add(args.Item);
-        }
+			MapConsole.MouseMove += Console_MouseMove;//+
+			MapConsole.MouseButtonClicked += Console_MouseClicked;//+
+		}
 
         private void LoadMap(Map map)
         {
@@ -126,25 +147,21 @@ namespace PureHatred.UI
             SyncMapEntities(map);
         }
 
-        public void CreateMapWindow(int width, int height, string title)
+        private void SyncMapEntities(Map map)
         {
-            MapWindow = new Window(width, height);
-            MapWindow.CanDrag = false;
+            MapConsole.Children.Clear();
 
-            // Trim to show the window title and borders, and position away from borders
-            MapConsole.ViewPort = new Rectangle(0, 0, width - 2, height - 2);
-            MapConsole.Position = new Point(1, 1);
+            foreach (Entity entity in map.Entities.Items)
+                MapConsole.Children.Add(entity);
 
-            //Button closeButton = new Button(3, 1);
-            //closeButton.Position = new Point(0, 0);
-            //closeButton.Text = "[X]";
-            //MapWindow.Add(closeButton);
-
-            MapWindow.Title = title.Align(HorizontalAlignment.Center, width);
-
-            MapWindow.Children.Add(MapConsole);
-            Children.Add(MapWindow);
-            MapWindow.Show();
+            map.Entities.ItemAdded += OnMapEntityAdded;
+            map.Entities.ItemRemoved += OnMapEntityRemoved;
         }
+
+        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args) =>
+            MapConsole.Children.Remove(args.Item);
+
+        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args) =>
+            MapConsole.Children.Add(args.Item);
     }
 }

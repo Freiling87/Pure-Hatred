@@ -26,9 +26,9 @@ namespace PureHatred.Commands
             int hits = ResolveAttack(attacker, defender, attackMessage);
             int blocks = ResolveDefense(defender, hits, attackMessage, defenseMessage);
 
-            GameLoop.UIManager.MessageLog.Add(attackMessage.ToString());
+            GameLoop.UIManager.MessageLog.AddTextNewline(attackMessage.ToString());
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                GameLoop.UIManager.MessageLog.Add(defenseMessage.ToString());
+                GameLoop.UIManager.MessageLog.AddTextNewline(defenseMessage.ToString());
 
             int damage = hits - blocks;
             ResolveDamage(defender, damage);
@@ -73,12 +73,12 @@ namespace PureHatred.Commands
             if (damage > 0)
             {
                 defender.Health = defender.Health - damage;
-                GameLoop.UIManager.MessageLog.Add($" {defender.Name} was hit for {damage} damage");
+                GameLoop.UIManager.MessageLog.AddTextNewline($" {defender.Name} was hit for {damage} damage");
                 if (defender.Health <= 0)
                     ResolveDeath(defender);
             }
             else
-                GameLoop.UIManager.MessageLog.Add($"{defender.Name} blocked all damage!");
+                GameLoop.UIManager.MessageLog.AddTextNewline($"{defender.Name} blocked all damage!");
         }
 
         private static void ResolveDeath(Actor defender)
@@ -99,7 +99,7 @@ namespace PureHatred.Commands
             }
             deathMessage.Append(".");
             GameLoop.World.CurrentMap.Remove(defender);
-            GameLoop.UIManager.MessageLog.Add(deathMessage.ToString());
+            GameLoop.UIManager.MessageLog.AddTextNewline(deathMessage.ToString());
         }
 
         public void UseDoor(Actor actor, TileDoor door)
@@ -110,7 +110,7 @@ namespace PureHatred.Commands
             else if (!door.Locked && !door.IsOpen)
             {
                 door.Open();
-                GameLoop.UIManager.MessageLog.Add($"{actor.Name} opened a {door.Name}");
+                GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} opened a {door.Name}");
             }
         }
 
@@ -125,7 +125,7 @@ namespace PureHatred.Commands
         public void Pickup(Actor actor, Item item)
         {
             actor.Inventory.Add(item);
-            GameLoop.UIManager.MessageLog.Add($"{actor.Name} picked up {item.Name}");
+            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} picked up {item.Name}");
             item.Destroy();
         }
     }
