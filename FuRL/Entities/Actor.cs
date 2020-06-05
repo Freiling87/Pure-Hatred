@@ -18,7 +18,7 @@ namespace PureHatred.Entities
         public int HealthMax { get; set; }
         public List<Item> Inventory = new List<Item>();
 
-        protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, width, height, glyph)
+        protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
         }
 
