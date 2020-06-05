@@ -12,11 +12,11 @@ namespace PureHatred.Entities
 
         protected Entity(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(width, height)
         {
-            Animation.CurrentFrame[0].Foreground = foreground;
-            Animation.CurrentFrame[0].Background = background;
-            Animation.CurrentFrame[0].Glyph = glyph;
+			Animation.CurrentFrame[0].Foreground = foreground;
+			Animation.CurrentFrame[0].Background = background;
+			Animation.CurrentFrame[0].Glyph = glyph;
 
-            ID = Map.IDGenerator.UseID();
+			ID = Map.IDGenerator.UseID();
 
             // Ensure that the entity position/offset is tracked by scrollingconsoles
             Components.Add(new EntityViewSyncComponent());

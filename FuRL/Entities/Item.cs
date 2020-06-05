@@ -22,9 +22,11 @@ namespace PureHatred.Entities
 
         public Item(Color foreground, Color background, string name, char glyph, int weight = 1, int condition = 100, int width = 1, int height = 1) : base(foreground, background, glyph)
         {
-            Animation.CurrentFrame[0].Foreground = foreground;
-            Animation.CurrentFrame[0].Background = background;
-            Animation.CurrentFrame[0].Glyph = glyph;
+            //Animation.CurrentFrame[0].Foreground = foreground;
+            //Animation.CurrentFrame[0].Background = background;
+            //Animation.CurrentFrame[0].Glyph = glyph;
+            // Per Thraka, not necessary. But when removed from Entity or Actor, they don't work properly. 
+            // TODO: What's different about these two classes?
 
             Weight = weight;
             Condition = condition;

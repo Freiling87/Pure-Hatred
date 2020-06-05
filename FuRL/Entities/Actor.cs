@@ -30,15 +30,9 @@ namespace PureHatred.Entities
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
 
                 if (monster != null)
-                {
-                    GameLoop.CommandManager.Attack(this, monster);
-                    return true;
-                }
+                    return GameLoop.CommandManager.BumpAttack(this, monster);
                 else if (item != null)
-                {
-                    GameLoop.CommandManager.Pickup(this, item);
-                    return true;
-                }
+                    return GameLoop.CommandManager.Pickup(this, item);
 
                 Position += positionChange;
                 return true;
@@ -47,10 +41,7 @@ namespace PureHatred.Entities
             {
                 TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
                 if (door != null)
-                {
-                    GameLoop.CommandManager.UseDoor(this, door);
-                    return true;
-                }
+                    return GameLoop.CommandManager.UseDoor(this, door);
                 return false;
             }
         }

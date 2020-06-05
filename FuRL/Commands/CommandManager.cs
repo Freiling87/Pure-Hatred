@@ -18,7 +18,7 @@ namespace PureHatred.Commands
         {
         }
 
-        public void Attack(Actor attacker, Actor defender)
+        public bool BumpAttack(Actor attacker, Actor defender)
         {
             StringBuilder attackMessage = new StringBuilder();
             StringBuilder defenseMessage = new StringBuilder();
@@ -32,6 +32,8 @@ namespace PureHatred.Commands
 
             int damage = hits - blocks;
             ResolveDamage(defender, damage);
+
+            return true;
         }
 
         private static int ResolveAttack(Actor attacker, Actor defender, StringBuilder attackMessage)
@@ -102,16 +104,19 @@ namespace PureHatred.Commands
             GameLoop.UIManager.MessageLog.AddTextNewline(deathMessage.ToString());
         }
 
-        public void UseDoor(Actor actor, TileDoor door)
+        public bool UseDoor(Actor actor, TileDoor door)
         {
             if (door.Locked)
             {
+                return false;
             }
             else if (!door.Locked && !door.IsOpen)
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} opened a {door.Name}");
+                return true;
             }
+            return false;
         }
 
         public bool MoveActorBy(Actor actor, Point position)
@@ -122,11 +127,12 @@ namespace PureHatred.Commands
             return actor.MoveBy(position);
         }
 
-        public void Pickup(Actor actor, Item item)
+        public bool Pickup(Actor actor, Item item)
         {
             actor.Inventory.Add(item);
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} picked up {item.Name}");
             item.Destroy();
+            return true;
         }
     }
 }

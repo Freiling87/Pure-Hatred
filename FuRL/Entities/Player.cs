@@ -6,7 +6,7 @@ namespace PureHatred.Entities
 {
 	public class Player : Actor
     {
-        public Player(Color foreground, Color background) : base(foreground, background, '@')
+        public Player(Color foreground, Color background) : base(foreground, background, 1)
         {
             Attack = 5;
             AttackChance = 60;
@@ -16,6 +16,3 @@ namespace PureHatred.Entities
         }
     }
 }
-
-
-//Testing Clone/Push

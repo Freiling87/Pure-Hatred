@@ -8,7 +8,7 @@ namespace PureHatred.Entities
     {
         private Random rndNum = new Random();
 
-        public Monster(Color foreground, Color background) : base(foreground, background, 'M')
+        public Monster(Color foreground, Color background) : base(foreground, background, 2)
         {
             int lootNum = rndNum.Next(1, 4);
 
