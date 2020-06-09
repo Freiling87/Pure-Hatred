@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
+using PureHatred.BodyParts;
 using PureHatred.Tiles;
 
 namespace PureHatred.Entities
@@ -17,6 +17,7 @@ namespace PureHatred.Entities
         public int Health { get; set; }
         public int HealthMax { get; set; }
         public List<Item> Inventory = new List<Item>();
+        public List<BodyPart> Anatomy = new List<BodyPart>();
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
