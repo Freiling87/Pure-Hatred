@@ -26,14 +26,14 @@ namespace PureHatred.Tiles
             IsOpen = false;
             Glyph = '=';
             IsBlockingLOS = true;
-            IsBlockingMove = true;
+            IsImpassible = true;
         }
 
         public void Open()
         {
             IsOpen = true;
             IsBlockingLOS = false;
-            IsBlockingMove = false;
+            IsImpassible = false;
             Glyph = 239;
             this.Background = Color.LightGray;
             this.Foreground = Color.SaddleBrown;

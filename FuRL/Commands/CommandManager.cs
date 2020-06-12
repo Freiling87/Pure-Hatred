@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-
+using GoRogue;
 using GoRogue.DiceNotation;
 using Microsoft.Xna.Framework;
 
@@ -43,10 +43,8 @@ namespace PureHatred.Commands
             int hits = 0;
 
             for (int i = 0; i < attacker.Attack; i++)
-            {
-                if (Dice.Roll("1d100") <= attacker.AttackChance)
+                if (Dice.Roll("10d10") <= attacker.AttackChance) 
                     hits++;
-            }
             return hits;
         }
 
@@ -74,8 +72,11 @@ namespace PureHatred.Commands
         {
             if (damage > 0)
             {
+                BodyPart hitPart = defender.Anatomy.RandomItem();
+                hitPart.HpCurrent = hitPart.HpCurrent - damage;
+
                 defender.Health = defender.Health - damage;
-                GameLoop.UIManager.MessageLog.AddTextNewline($" {defender.Name} was hit for {damage} damage");
+                GameLoop.UIManager.MessageLog.AddTextNewline($" {hitPart.Name} was hit for {damage} damage, now at {hitPart.HpCurrent}. {defender.Name} at {defender.Health}.");
                 if (defender.Health <= 0)
                     ResolveDeath(defender);
             }
@@ -87,31 +88,33 @@ namespace PureHatred.Commands
         {
             StringBuilder deathMessage = new StringBuilder($"{defender.Name} died");
 
-            //Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", '%');
-            //blood.Position = defender.Position;
-            //GameLoop.World.CurrentMap.Add(blood);
+			Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258);
+			blood.Position = defender.Position;
+			GameLoop.World.CurrentMap.Add(blood);
+            //TODO: Examine SadConsole.CellDecorator
 
-            if (defender.Inventory.Count > 0)
+			if (defender.Inventory.Count > 0 || defender.Anatomy.Count > 0)
             {
-                deathMessage.Append(" and dropped");
-
-                foreach (Item item in defender.Inventory)
-                {
-                    item.Position = defender.Position;
-                    GameLoop.World.CurrentMap.Add(item);
-                    deathMessage.Append(", " + item.Name);
-                }
-                defender.Inventory.Clear();
+                deathMessage.Append(" and dropped:");
             }
+            foreach (Item item in defender.Inventory)
+            {
+                item.Position = defender.Position;
+                GameLoop.World.CurrentMap.Add(item);
+                deathMessage.Append(" " + item.Name + ",");
+            }
+            defender.Inventory.Clear();
             foreach (BodyPart bodyPart in defender.Anatomy)
             {
                 bodyPart.Position = defender.Position;
                 GameLoop.World.CurrentMap.Add(bodyPart);
-                deathMessage.Append(", " + bodyPart.Name);
+                deathMessage.Append(" " + bodyPart.Name + ",");
             }
             defender.Anatomy.Clear();
 
+            deathMessage.Remove(deathMessage.Length - 1, 1); //Trim comma
             deathMessage.Append(".");
+
             GameLoop.World.CurrentMap.Remove(defender);
             GameLoop.UIManager.MessageLog.AddTextNewline(deathMessage.ToString());
         }
@@ -146,5 +149,13 @@ namespace PureHatred.Commands
             item.Destroy();
             return true;
         }
+
+        public bool Drop(Actor actor, Item item)
+		{
+            actor.Anatomy.Remove(item);
+            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {item.Name} was severed");
+            //item.Destroy() opposite?
+            return true;
+		}
     }
 }

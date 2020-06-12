@@ -10,6 +10,9 @@ using PureHatred.Entities;
 
 using Console = SadConsole.Console;
 using SadConsole.Debug;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
@@ -57,19 +60,38 @@ namespace PureHatred.UI
 
 		private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)//+
 		{
-			var console = (Console)sender;
-			console.Print(1, console.Height - 1, $"Mouse pointing at {e.MouseState.CellPosition}        ");
+            var console = (Console)sender;
+            StringBuilder seenString = new StringBuilder("You see:");
 
-			if (e.MouseState.Mouse.LeftButtonDown)
-				console.Print(1, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}        ");
-			else
-				console.Print(1, console.Height - 2, $"                                                           ");
-		}
+            TileBase seenTile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(e.MouseState.CellPosition);
 
-		private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
+            if (seenTile != null)
+                seenString.Append(" " + $"{seenTile.Name}" + ",");
+            
+            //List<Monster> seenEntities = GameLoop.World.CurrentMap.GetEntitiesAt<Monster>(e.MouseState.CellPosition);
+			//if (seenEntities != null)
+			//	foreach (Entity entity in seenEntities)
+			//		seenString.Append(" " + "test" + ",");
+
+            Monster seenEntity = GameLoop.World.CurrentMap.GetEntityAt<Monster>(e.MouseState.CellPosition);
+			if (seenEntity != null)
+                seenString.Append(" " + "test" + ",");
+            //Consider e.MouseState.CellPosition.ToIndex() to convert to cell integer index?
+
+            seenString.Remove(seenString.Length - 1, 1); //comma
+            seenString.Append("                                         "); //overwrite
+            console.Print(1, console.Height - 1, seenString.ToString());
+
+            //if (e.MouseState.Mouse.LeftButtonDown)
+            //	console.Print(1, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}        ");
+            //else
+            //	console.Print(1, console.Height - 2, $"                                                           ");
+        }
+
+        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
 		{
-			//var console = (Console)sender;
-			//console.Print(1, console.Height - 3, $"You've clicked on {e.MouseState.CellPosition}               ");
+			var console = (Console)sender;
+			console.Print(1, console.Height - 3, $"You've clicked on {e.MouseState.CellPosition}               ");
 		}
 
 		private void CheckKeyboard()

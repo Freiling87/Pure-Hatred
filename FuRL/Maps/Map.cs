@@ -35,7 +35,16 @@ namespace PureHatred
         {
             if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
                 return false;
-            return !_tiles[location.ToIndex(Width)].IsBlockingMove;
+            return !_tiles[location.ToIndex(Width)].IsImpassible;
+        }
+
+        public T GetEntityAt<T>(Point tile) where T : Entity
+        {
+            return Entities.GetItems(tile).OfType<T>().FirstOrDefault();
+        }
+        public List<T> GetEntitiesAt<T>(Point tile) where T : Entity
+		{
+            return Entities.GetItems(tile).OfType<T>().ToList();
         }
 
         public T GetTileAt<T>(int x, int y) where T : TileBase
@@ -58,6 +67,8 @@ namespace PureHatred
 
         public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase
 		{
+            //Returns list of Tiles at multiple Points
+            //A Point can only hold one tile - do not try to detect stacks of tiles!
             List<T> result = new List<T>();
 
             for (int i = 0; i < tiles.Length; i++)
@@ -66,10 +77,7 @@ namespace PureHatred
             return result;
 		}
 
-        public T GetEntityAt<T>(Point tile) where T : Entity
-        {
-            return Entities.GetItems(tile).OfType<T>().FirstOrDefault();
-        }
+
 
         public void Remove(Entity entity)
         {

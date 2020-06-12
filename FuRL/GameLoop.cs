@@ -1,18 +1,11 @@
-using System;
-
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SadConsole;
 
 using PureHatred.Commands;
-using PureHatred.Entities;
 using PureHatred.UI;
-
-using Console = SadConsole.Console;
 
 namespace PureHatred
 {
-    class GameLoop
+	class GameLoop
     {
         public const int GameWidth = 160;
         public const int GameHeight = 80;

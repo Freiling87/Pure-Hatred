@@ -112,8 +112,8 @@ namespace PureHatred.Entities
 {
 	public class BodyPart : Item
 	{
-		private int HpMax;
-		private int HpCurrent;
+		public int HpMax;
+		public int HpCurrent;
 
 		public BodyPart(Color foreground, Color background, string name, int glyph, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
 		{

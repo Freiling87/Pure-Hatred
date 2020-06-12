@@ -4,8 +4,9 @@ namespace PureHatred.Entities
 {
 	public class Decal : Entity
 	{
-		public Decal(Color foreground, Color background, string name, char glyph) : base(foreground, background, glyph)
+		public Decal(Color foreground, Color background, string name, int glyph) : base(foreground, background, glyph)
 		{
+
 		}
 	}
 }

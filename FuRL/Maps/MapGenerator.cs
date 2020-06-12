@@ -180,18 +180,18 @@ namespace PureHatred
                 return false;
 
             //East-West door
-            if (!_map.Tiles[east.ToIndex(_map.Width)].IsBlockingMove && 
-                !_map.Tiles[west.ToIndex(_map.Width)].IsBlockingMove && 
-                _map.Tiles[north.ToIndex(_map.Width)].IsBlockingMove && 
-                _map.Tiles[south.ToIndex(_map.Width)].IsBlockingMove
+            if (!_map.Tiles[east.ToIndex(_map.Width)].IsImpassible && 
+                !_map.Tiles[west.ToIndex(_map.Width)].IsImpassible && 
+                _map.Tiles[north.ToIndex(_map.Width)].IsImpassible && 
+                _map.Tiles[south.ToIndex(_map.Width)].IsImpassible
                 )
                 return true;
 
             //North-South door
-            if (_map.Tiles[east.ToIndex(_map.Width)].IsBlockingMove && 
-                _map.Tiles[west.ToIndex(_map.Width)].IsBlockingMove && 
-                !_map.Tiles[north.ToIndex(_map.Width)].IsBlockingMove && 
-                !_map.Tiles[south.ToIndex(_map.Width)].IsBlockingMove
+            if (_map.Tiles[east.ToIndex(_map.Width)].IsImpassible && 
+                _map.Tiles[west.ToIndex(_map.Width)].IsImpassible && 
+                !_map.Tiles[north.ToIndex(_map.Width)].IsImpassible && 
+                !_map.Tiles[south.ToIndex(_map.Width)].IsImpassible
                 )
                 return true;
 

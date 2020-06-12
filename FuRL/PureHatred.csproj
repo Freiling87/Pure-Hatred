@@ -156,7 +156,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Anatomy\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Meta\" />
   </ItemGroup>
