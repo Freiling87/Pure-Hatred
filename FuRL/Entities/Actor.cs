@@ -2,7 +2,6 @@
 
 using Microsoft.Xna.Framework;
 
-using PureHatred.BodyParts;
 using PureHatred.Tiles;
 
 namespace PureHatred.Entities
@@ -29,11 +28,14 @@ namespace PureHatred.Entities
             {
                 Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
                 Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
+                BodyPart bodyPart = GameLoop.World.CurrentMap.GetEntityAt<BodyPart>(Position + positionChange);
 
                 if (monster != null)
                     return GameLoop.CommandManager.BumpAttack(this, monster);
                 else if (item != null)
                     return GameLoop.CommandManager.Pickup(this, item);
+                else if (bodyPart != null)
+                    return GameLoop.CommandManager.Pickup(this, bodyPart);
 
                 Position += positionChange;
                 return true;

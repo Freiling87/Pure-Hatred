@@ -87,6 +87,10 @@ namespace PureHatred.Commands
         {
             StringBuilder deathMessage = new StringBuilder($"{defender.Name} died");
 
+            //Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", '%');
+            //blood.Position = defender.Position;
+            //GameLoop.World.CurrentMap.Add(blood);
+
             if (defender.Inventory.Count > 0)
             {
                 deathMessage.Append(" and dropped");
@@ -99,6 +103,14 @@ namespace PureHatred.Commands
                 }
                 defender.Inventory.Clear();
             }
+            foreach (BodyPart bodyPart in defender.Anatomy)
+            {
+                bodyPart.Position = defender.Position;
+                GameLoop.World.CurrentMap.Add(bodyPart);
+                deathMessage.Append(", " + bodyPart.Name);
+            }
+            defender.Anatomy.Clear();
+
             deathMessage.Append(".");
             GameLoop.World.CurrentMap.Remove(defender);
             GameLoop.UIManager.MessageLog.AddTextNewline(deathMessage.ToString());

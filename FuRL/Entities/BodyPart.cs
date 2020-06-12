@@ -106,10 +106,21 @@
  * 
  */
 
-namespace PureHatred.BodyParts
+using Microsoft.Xna.Framework;
+
+namespace PureHatred.Entities
 {
-	public class BodyPart
+	public class BodyPart : Item
 	{
+		private int HpMax;
+		private int HpCurrent;
+
+		public BodyPart(Color foreground, Color background, string name, int glyph, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
+		{
+			HpCurrent = hpCurrent;
+			HpMax = hpMax;
+			Name = name;
+		}
 
 	}
 }

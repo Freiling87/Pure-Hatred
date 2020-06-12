@@ -46,9 +46,10 @@
     <StartupObject>PureHatred.GameLoop</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Anatomy\BodyPart.cs" />
+    <Compile Include="Entities\BodyPart.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Entities\Actor.cs" />
+    <Compile Include="Entities\Decal.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\Monster.cs" />
@@ -77,8 +78,8 @@
       <HintPath>..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="netstandard" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Priority Queue, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OptimizedPriorityQueue.4.2.0\lib\net45\Priority Queue.dll</HintPath>
@@ -155,6 +156,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Anatomy\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Meta\" />
   </ItemGroup>
