@@ -20,6 +20,9 @@ namespace PureHatred.Entities
 
             // Ensure that the entity position/offset is tracked by scrollingconsoles
             Components.Add(new EntityViewSyncComponent());
+
+            animation.UseMouse = false;
+            UseMouse = false;
         }
     }
 }
