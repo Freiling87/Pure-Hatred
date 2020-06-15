@@ -77,17 +77,18 @@ namespace PureHatred
             return result;
 		}
 
-
-
         public void Remove(Entity entity)
         {
-            Entities.Remove(entity);
+            if (!Entities.Remove(entity))
+                throw new Exception("Failed to remove entity from map");
             entity.Moved -= OnEntityMoved; // Link entity Moved event to new handler
         }
 
         public void Add(Entity entity)
         {
-            Entities.Add(entity, entity.Position);
+            if (!Entities.Add(entity, entity.Position))
+                throw new Exception("Failed to add entity to map");
+
             entity.Moved += OnEntityMoved; // Link entity Moved event to new handler
         }
 

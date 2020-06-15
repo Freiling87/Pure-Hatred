@@ -152,9 +152,16 @@ namespace PureHatred.Commands
 
         public bool Drop(Actor actor, Item item)
 		{
-            actor.Anatomy.Remove(item);
+            actor.Inventory.Remove(item);
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {item.Name} was severed");
             //item.Destroy() opposite?
+            return true;
+		}
+        public bool Drop(Actor actor, BodyPart bodyPart)
+		{
+            actor.Anatomy.Remove(bodyPart);
+            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {bodyPart.Name} was severed");
+            //item.Destroy() oposite?
             return true;
 		}
     }
