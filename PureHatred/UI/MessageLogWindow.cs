@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Input;
 
 namespace PureHatred.UI
 {
@@ -78,7 +77,7 @@ namespace PureHatred.UI
                 // Make sure we've never scrolled the entire size of the buffer
                 if (_scrollPosition < _console.Height - _console.ViewPort.Height)
                     // Record how much we've scrolled to enable how far back the bar can see
-                    _scrollPosition += _console.TimesShiftedUp != 0 ? _console.TimesShiftedUp : 1;
+                    _scrollPosition += (_console.TimesShiftedUp != 0 ? _console.TimesShiftedUp : 1);
 
                 _scrollBar.Maximum = (_console.Height + _scrollPosition) - _console.Height - _windowBorder;
 

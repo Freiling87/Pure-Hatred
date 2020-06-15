@@ -66,6 +66,7 @@
     <Compile Include="Tiles\TileFloor.cs" />
     <Compile Include="Tiles\TileStairs.cs" />
     <Compile Include="Tiles\TileWall.cs" />
+    <Compile Include="UI\CollapsibleTreeWindow.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="World.cs" />

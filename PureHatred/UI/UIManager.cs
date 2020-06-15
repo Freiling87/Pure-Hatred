@@ -13,6 +13,7 @@ using SadConsole.Debug;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
@@ -25,6 +26,7 @@ namespace PureHatred.UI
         public SadConsole.ScrollingConsole MapConsole;
         public MessageLogWindow MessageLog;
         public Window MapWindow;
+        public CollapsibleTreeWindow SideWindow;
 
         public UIManager()
         {
@@ -36,18 +38,10 @@ namespace PureHatred.UI
 
         public void Init()
         {
-            MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth, GameLoop.GameHeight / 4, "Message Log");
+            CreateWindows();
 
-            Children.Add(MessageLog);
-            MessageLog.Show();
-            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3 / 4);
-
-            LoadMap(GameLoop.World.CurrentMap);
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight * 3 / 4, "Game Map");
             UseMouse = true;
 
-            MapConsole.CenterViewPortOnPoint(GameLoop.World.Player.Position);
         }
 
         public override void Update(TimeSpan timeElapsed)
@@ -56,15 +50,34 @@ namespace PureHatred.UI
             base.Update(timeElapsed);
         }
 
-		// INPUTS
+        public void CreateWindows()
+		{
+            MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight / 4, "Message Log");
+            SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth / 4, GameLoop.GameHeight, "Side Window");
 
-		private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)//+
+            Children.Add(MessageLog);
+            Children.Add(SideWindow);
+
+            MessageLog.Show();
+            SideWindow.Show();
+
+            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3 / 4);
+            SideWindow.Position = new Point(GameLoop.GameWidth * 3 / 4, 0);
+
+            LoadMap(GameLoop.World.CurrentMap);
+
+            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight * 3 / 4, "Game Map");
+        }
+
+        // INPUTS
+
+        private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)//+
 		{
             var console = (Console)sender;
             StringBuilder seenString = new StringBuilder("You see:");
 
             TileBase seenTile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(e.MouseState.CellPosition);
-
             if (seenTile != null)
                 seenString.Append(" " + $"{seenTile.Name}" + ",");
             
@@ -78,7 +91,7 @@ namespace PureHatred.UI
                 seenString.Append(" " + "test" + ",");
             //Consider e.MouseState.CellPosition.ToIndex() to convert to cell integer index?
 
-            seenString.Remove(seenString.Length - 1, 1); //comma
+            seenString.Remove(seenString.Length - 1, 1);                    //comma
             seenString.Append("                                         "); //overwrite
             console.Print(1, console.Height - 1, seenString.ToString());
 
@@ -158,7 +171,9 @@ namespace PureHatred.UI
 
 			MapConsole.MouseMove += Console_MouseMove;//+
 			MapConsole.MouseButtonClicked += Console_MouseClicked;//+
-		}
+
+            MapConsole.CenterViewPortOnPoint(GameLoop.World.Player.Position);
+        }
 
         private void LoadMap(Map map)
         {

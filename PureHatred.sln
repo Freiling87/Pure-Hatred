@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureHatred", "FuRL\PureHatred.csproj", "{D6F6D66B-F86D-41D5-8219-B4B98FCFFF5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureHatred", "PureHatred\PureHatred.csproj", "{D6F6D66B-F86D-41D5-8219-B4B98FCFFF5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D289892C-BDC5-4061-8364-3CB49510768D}
+		SolutionGuid = {81057FC7-9E21-4C75-B82A-7A17F700E2A4}
 	EndGlobalSection
 EndGlobal
