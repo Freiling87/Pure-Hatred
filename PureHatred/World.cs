@@ -75,6 +75,11 @@ namespace PureHatred
                 }
             }
             CurrentMap.Add(Player);
+
+            for (int i = 1; i < 100; i++)
+			{
+                Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L', 2));
+			}
         }
 
         private void CreateLoot()

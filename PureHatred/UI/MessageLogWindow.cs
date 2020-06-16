@@ -17,8 +17,8 @@ namespace PureHatred.UI
 
         public MessageLogWindow(int width, int height, string title) : base(width, height)
         {
-            Theme.FillStyle.Background = Color.Black;
             _lines = new Queue<string>();
+
             CanDrag = false;
             Title = title.Align(HorizontalAlignment.Center, Width); 
 
