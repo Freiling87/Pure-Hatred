@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 using SadConsole;
+using SadConsole.Controls;
 
 namespace PureHatred.UI
 {
@@ -10,8 +11,8 @@ namespace PureHatred.UI
     {
         private static readonly int _maxLines = 100;
         private readonly Queue<string> _lines;
-        private SadConsole.ScrollingConsole _console;
-        private SadConsole.Controls.ScrollBar _scrollBar;
+        private ScrollingConsole _console;
+        private ScrollBar _scrollBar;
         private int _scrollPosition;
         private int _windowBorder = 2;
 
@@ -20,24 +21,27 @@ namespace PureHatred.UI
             _lines = new Queue<string>();
 
             CanDrag = false;
-            Title = title.Align(HorizontalAlignment.Center, Width); 
-
-            _console = new SadConsole.ScrollingConsole(width - _windowBorder, _maxLines);
-            _console.Position = new Point(1, 1);
-            _console.ViewPort = new Rectangle(0, 0, width - 1, height - _windowBorder);
-
-            _scrollBar = new SadConsole.Controls.ScrollBar(SadConsole.Orientation.Vertical, height - _windowBorder);
-            _scrollBar.Position = new Point(_console.Width + 1, _console.Position.X);
-            _scrollBar.IsEnabled = false;
-            _scrollBar.ValueChanged += MessageScrollBar_ValueChanged; // Subscribe to event handler
-            Add(_scrollBar); //Different Add() than the local void (see definition)
-
             UseMouse = true;
+
+            Title = title.Align(HorizontalAlignment.Center, Width);
+
+			_console = new ScrollingConsole(width - _windowBorder, _maxLines)
+			{
+				Position = new Point(1, 1),
+				ViewPort = new Rectangle(0, 0, width - 1, height - _windowBorder)
+			};
+
+			_scrollBar = new ScrollBar(SadConsole.Orientation.Vertical, height - _windowBorder)
+			{
+				Position = new Point(_console.Width + 1, _console.Position.X),
+				IsEnabled = false
+			};
+			_scrollBar.ValueChanged += MessageScrollBar_ValueChanged;
+            Add(_scrollBar); //Different Add() than the local void (see definition)
 
             Children.Add(_console);
         }
 
-        // Controls position of messagelog viewport based on scrollbar position using event handler
         void MessageScrollBar_ValueChanged(object sender, EventArgs e) =>
             _console.ViewPort = new Rectangle(0, _scrollBar.Value + _windowBorder, _console.Width, _console.ViewPort.Height);
 
