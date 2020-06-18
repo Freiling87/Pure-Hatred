@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
+
 using GoRogue;
 using GoRogue.DiceNotation;
 using Microsoft.Xna.Framework;
@@ -88,27 +90,28 @@ namespace PureHatred.Commands
         {
             StringBuilder deathMessage = new StringBuilder($"{defender.Name} died");
 
-			Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258);
-			blood.Position = defender.Position;
+			Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258)
+			    { Position = defender.Position };
+
 			GameLoop.World.CurrentMap.Add(blood);
             //TODO: Examine SadConsole.CellDecorator
 
 			if (defender.Inventory.Count > 0 || defender.Anatomy.Count > 0)
-            {
                 deathMessage.Append(" and dropped:");
-            }
+
             foreach (Item item in defender.Inventory)
             {
                 item.Position = defender.Position;
                 GameLoop.World.CurrentMap.Add(item);
-                deathMessage.Append(" " + item.Name + ",");
+                deathMessage.Append($" {item.Name},");
             }
             defender.Inventory.Clear();
+
             foreach (BodyPart bodyPart in defender.Anatomy)
             {
                 bodyPart.Position = defender.Position;
                 GameLoop.World.CurrentMap.Add(bodyPart);
-                deathMessage.Append(" " + bodyPart.Name + ",");
+                deathMessage.Append($" {bodyPart.Name},");
             }
             defender.Anatomy.Clear();
 

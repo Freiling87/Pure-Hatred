@@ -17,8 +17,8 @@ using PureHatred.Entities;
  * 
  * 1. Process Node
  *  a. Indent #spaces equal to Node depth
- *  b. Leading Node symbol
- *  c. Name & any relevant data
+ *  b. Leading symbol for row
+ *  c. Name & any relevant data (Wt, condition, etc.)
  * 2. Check if Node collapsed/expanded
  * 3. If yes, process Node's child, return to 2
  * 4. If no, check for sibling
@@ -45,38 +45,43 @@ namespace PureHatred.UI
 			_console = new ScrollingConsole(width, 256)
 			{
 				Position = new Point(1, 1),
-                ViewPort = new Rectangle(0, 0, width - 1, height - _windowBorder)
+                ViewPort = new Rectangle(0, 0, width - _windowBorder, height - _windowBorder)
             };
 
-            _scrollBar = new ScrollBar(SadConsole.Orientation.Vertical, height - _windowBorder)
+            _scrollBar = new ScrollBar(Orientation.Vertical, height - _windowBorder)
             {
                 Position = new Point(_console.Width - _windowBorder, _console.Position.Y),
-                IsEnabled = true
+                IsEnabled = false
 			};
 			_scrollBar.ValueChanged += ScrollBar_ValueChanged;
-            Add(_scrollBar); //Different Add() than the local void (see definition)
 
+            Add(_scrollBar); //Different Add() than the local void (see definition)
             Children.Add(_console);
         }
 
         void ScrollBar_ValueChanged(object sender, EventArgs e) =>
-            _console.ViewPort = new Rectangle(0, _scrollBar.Value + _windowBorder, _console.Width, _console.ViewPort.Height);
+            _console.ViewPort = new Rectangle(
+                0, _scrollBar.Value + _windowBorder, _console.Width, _console.ViewPort.Height);
+
+        public override void Draw(TimeSpan drawTime) =>
+            base.Draw(drawTime);
 
         public override void Update(TimeSpan time)
         {
             base.Update(time);
 
             // Scrollbar tracks current position of console
-            if (_console.TimesShiftedUp != 0 | _console.Cursor.Position.Y >= _console.ViewPort.Height + _scrollPosition)
+            if (_console.TimesShiftedUp != 0 |
+                _console.Cursor.Position.Y >= _console.ViewPort.Height + _scrollPosition)
             {
                 _scrollBar.IsEnabled = true;
 
                 // Prevent scroll past buffer
                 // Record amount scrolled to enable how far back bar can see
                 if (_scrollPosition < _console.Height - _console.ViewPort.Height)
-                    _scrollPosition += _console.TimesShiftedUp != 0 ? _console.TimesShiftedUp : 1;
+                    _scrollPosition += (_console.TimesShiftedUp != 0 ? _console.TimesShiftedUp : 1);
 
-                _scrollBar.Maximum = (_console.Height + _scrollPosition) - _console.Height - _windowBorder;
+                _scrollBar.Maximum = _scrollPosition - _windowBorder;
 
                 // Follows cursor since the event moves the render area.
                 _scrollBar.Value = _scrollPosition;
@@ -88,20 +93,21 @@ namespace PureHatred.UI
         private void  InventoryList()
 		{
             int i = 1;
+
             foreach (Item item in GameLoop.World.Player.Inventory)
 			{
                 StringBuilder rowString = new StringBuilder($"- {item.Name}");
 
-                _console.Cursor.Position = new Point(1, i);
-                _console.Cursor.Print(rowString.ToString() + '\n');
-                
-                i++;
-            }
+				_console.Cursor.Position = new Point(1, i);
+				_console.Cursor.Print(rowString.ToString() + '\n');
 
-            //Button button = new Button(15, 3);
-            //button.Position = new Point(1,2);
-            //button.Text = "Test button";
-            //this.Add(button);
+				//Button button = new Button(30);
+				//button.Position = new Point(1, i);
+				//button.Text = rowString.ToString();
+				//this.Add(button);
+
+				i++;
+            }
         }
     }
 }

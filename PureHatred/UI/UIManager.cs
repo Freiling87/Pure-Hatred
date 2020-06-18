@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 //using System.Runtime.CompilerServices;
 //using System.Security.Cryptography.X509Certificates;
 
@@ -9,11 +11,6 @@ using SadConsole.Controls;
 using PureHatred.Entities;
 
 using Console = SadConsole.Console;
-using SadConsole.Debug;
-using System.Linq;
-using System.Text;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
@@ -41,33 +38,31 @@ namespace PureHatred.UI
             CreateWindows();
 
             UseMouse = true;
-
         }
 
         public override void Update(TimeSpan timeElapsed)
         {
-            CheckKeyboard(); // May turn this into a string that returns gamestates or generic commands
+            CheckKeyboard(); 
             base.Update(timeElapsed);
         }
 
         public void CreateWindows()
 		{
             MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
+
             MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight / 4, "Message Log");
-            SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth / 4, GameLoop.GameHeight, "Side Window");
-
-            Children.Add(MessageLog);
-            Children.Add(SideWindow);
-
-            MessageLog.Show();
-            SideWindow.Show();
-
             MessageLog.Position = new Point(0, GameLoop.GameHeight * 3 / 4);
+            Children.Add(MessageLog);
+            MessageLog.Show();
+
+            SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth / 4, GameLoop.GameHeight, "Side Window");
             SideWindow.Position = new Point(GameLoop.GameWidth * 3 / 4, 0);
+            Children.Add(SideWindow);
+            SideWindow.Show();
 
             LoadMap(GameLoop.World.CurrentMap);
 
-            CreateMapWindow(GameLoop.GameWidth / 2, GameLoop.GameHeight * 3 / 4, "Game Map");
+            CreateMapWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight * 3 / 4, "Game Map");
         }
 
         // INPUTS
@@ -79,17 +74,12 @@ namespace PureHatred.UI
 
             TileBase seenTile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(e.MouseState.CellPosition);
             if (seenTile != null)
-                seenString.Append(" " + $"{seenTile.Name}" + ",");
-            
-            //List<Monster> seenEntities = GameLoop.World.CurrentMap.GetEntitiesAt<Monster>(e.MouseState.CellPosition);
-			//if (seenEntities != null)
-			//	foreach (Entity entity in seenEntities)
-			//		seenString.Append(" " + "test" + ",");
+                seenString.Append($" {seenTile.Name},");
 
-            Monster seenEntity = GameLoop.World.CurrentMap.GetEntityAt<Monster>(e.MouseState.CellPosition);
-			if (seenEntity != null)
-                seenString.Append(" " + "test" + ",");
-            //Consider e.MouseState.CellPosition.ToIndex() to convert to cell integer index?
+			List<Entity> seenEntities = GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(e.MouseState.CellPosition);
+			if (seenEntities != null)
+				foreach (Entity entity in seenEntities)
+					seenString.Append($" {entity.Name},");
 
             seenString.Remove(seenString.Length - 1, 1);                    //comma
             seenString.Append("                                         "); //overwrite
@@ -147,30 +137,35 @@ namespace PureHatred.UI
 
         public void CreateMapWindow(int width, int height, string title)
         {
-            MapWindow = new Window(width, height);
-            MapWindow.CanDrag = false;
+			MapWindow = new Window(width, height)
+            {
+                CanDrag = false,
+                Title = title.Align(HorizontalAlignment.Center, width)
+            };
 
-            MapConsole.ViewPort = new Rectangle(0, 0, width - 2, height - 2);
+			MapConsole.ViewPort = new Rectangle(0, 0, width - 2, height - 2);
             MapConsole.Position = new Point(1, 1);
 
-            Button inventoryButton = new Button(15, 3);
-            inventoryButton.Position = new Point(0, MapWindow.Height - 3);
-            inventoryButton.Text = "Inventory";
-            MapWindow.Add(inventoryButton);
+			Button inventoryButton = new Button(15, 3)
+			{
+				Position = new Point(0, MapWindow.Height - 3),
+				Text = "Inventory"
+			};
+			MapWindow.Add(inventoryButton);
 
-            Button anatomyButton = new Button(15, 3);
-            anatomyButton.Position = new Point(15, MapWindow.Height - 3);
-            anatomyButton.Text = "Anatomy";
-            MapWindow.Add(anatomyButton);
-
-			MapWindow.Title = title.Align(HorizontalAlignment.Center, width);
+			Button anatomyButton = new Button(15, 3)
+			{
+				Position = new Point(15, MapWindow.Height - 3),
+				Text = "Anatomy"
+			};
+			MapWindow.Add(anatomyButton);
 
             MapWindow.Children.Add(MapConsole);
             Children.Add(MapWindow);
             MapWindow.Show();
 
-			MapConsole.MouseMove += Console_MouseMove;//+
-			MapConsole.MouseButtonClicked += Console_MouseClicked;//+
+			MapConsole.MouseMove += Console_MouseMove;
+			MapConsole.MouseButtonClicked += Console_MouseClicked;
 
             MapConsole.CenterViewPortOnPoint(GameLoop.World.Player.Position);
         }

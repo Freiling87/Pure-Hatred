@@ -12,7 +12,6 @@ namespace PureHatred
 
         public static UIManager UIManager;
         public static CommandManager CommandManager;
-
         public static World World;
 
         static void Main(string[] args)
@@ -29,7 +28,6 @@ namespace PureHatred
         
         private static void Update(GameTime time)
         {
-
         }
 
         private static void Init()

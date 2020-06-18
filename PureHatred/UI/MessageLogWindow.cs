@@ -43,7 +43,8 @@ namespace PureHatred.UI
         }
 
         void MessageScrollBar_ValueChanged(object sender, EventArgs e) =>
-            _console.ViewPort = new Rectangle(0, _scrollBar.Value + _windowBorder, _console.Width, _console.ViewPort.Height);
+            _console.ViewPort = new Rectangle(
+                0, _scrollBar.Value + _windowBorder, _console.Width, _console.ViewPort.Height);
 
         public void AddTextNewline(string message)
         {
@@ -70,7 +71,6 @@ namespace PureHatred.UI
         {
             base.Update(time);
 
-
             // Ensure that the scrollbar tracks the current position of the _messageConsole.
             if (_console.TimesShiftedUp != 0 | 
                 _console.Cursor.Position.Y >= _console.ViewPort.Height + _scrollPosition)
@@ -83,7 +83,7 @@ namespace PureHatred.UI
                     // Record how much we've scrolled to enable how far back the bar can see
                     _scrollPosition += (_console.TimesShiftedUp != 0 ? _console.TimesShiftedUp : 1);
 
-                _scrollBar.Maximum = (_console.Height + _scrollPosition) - _console.Height - _windowBorder;
+                _scrollBar.Maximum = _scrollPosition - _windowBorder;
 
                 // This will follow the cursor since we move the render area in the event.
                 _scrollBar.Value = _scrollPosition;
