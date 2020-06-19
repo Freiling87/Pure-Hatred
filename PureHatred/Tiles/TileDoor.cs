@@ -35,7 +35,7 @@ namespace PureHatred.Tiles
             IsBlockingLOS = false;
             IsImpassible = false;
             Glyph = 239;
-            this.Background = Color.LightGray;
+            this.Background = Color.DarkGray;
             this.Foreground = Color.SaddleBrown;
             //TODO: Just switch these in the image
         }

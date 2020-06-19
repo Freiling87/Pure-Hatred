@@ -10,8 +10,8 @@ namespace PureHatred
 {
     public class World
     {
-        private int _mapWidth = 50;
-        private int _mapHeight = 50;
+        private int _mapWidth = 150;
+        private int _mapHeight = 150;
         private int _maxRooms = 100;
         private int _minRoomDimension = 4;
         private int _maxRoomDimension = 15;

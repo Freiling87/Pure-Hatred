@@ -42,7 +42,7 @@ namespace PureHatred.UI
 
             Title = title.Align(HorizontalAlignment.Center, Width);
 
-			_console = new ScrollingConsole(width, 256)
+			_console = new ScrollingConsole(width - 3, 256)
 			{
 				Position = new Point(1, 1),
                 ViewPort = new Rectangle(0, 0, width - _windowBorder, height - _windowBorder)
@@ -50,7 +50,7 @@ namespace PureHatred.UI
 
             _scrollBar = new ScrollBar(Orientation.Vertical, height - _windowBorder)
             {
-                Position = new Point(_console.Width - _windowBorder, _console.Position.Y),
+                Position = new Point(width - _windowBorder, _console.Position.Y),
                 IsEnabled = false
 			};
 			_scrollBar.ValueChanged += ScrollBar_ValueChanged;
@@ -98,8 +98,8 @@ namespace PureHatred.UI
 			{
                 StringBuilder rowString = new StringBuilder($"- {item.Name}");
 
-				_console.Cursor.Position = new Point(1, i);
-				_console.Cursor.Print(rowString.ToString() + '\n');
+                _console.Cursor.Position = new Point(1, i);
+                _console.Cursor.Print(rowString.ToString() + "\n");
 
 				//Button button = new Button(30);
 				//button.Position = new Point(1, i);

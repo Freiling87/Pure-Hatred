@@ -50,26 +50,28 @@ namespace PureHatred.UI
 		{
             MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
 
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight / 4, "Message Log");
-            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3 / 4);
+            MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3/4, GameLoop.GameHeight * 1/4, "Log");
+            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3/4);
             Children.Add(MessageLog);
             MessageLog.Show();
 
-            SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth / 4, GameLoop.GameHeight, "Side Window");
-            SideWindow.Position = new Point(GameLoop.GameWidth * 3 / 4, 0);
+            SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth * 1/4, GameLoop.GameHeight * 3/4, "Side Window");
+            SideWindow.Position = new Point(GameLoop.GameWidth * 3/4, 0);
             Children.Add(SideWindow);
             SideWindow.Show();
 
             LoadMap(GameLoop.World.CurrentMap);
 
-            CreateMapWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight * 3 / 4, "Game Map");
+            CreateMapWindow(GameLoop.GameWidth * 3/4, GameLoop.GameHeight * 3/4, "Map");
         }
 
         // INPUTS
 
-        private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)//+
+        private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)
 		{
             var console = (Console)sender;
+
+            // Map Look by Mouseover
             StringBuilder seenString = new StringBuilder("You see:");
 
             TileBase seenTile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(e.MouseState.CellPosition);
@@ -83,8 +85,9 @@ namespace PureHatred.UI
 
             seenString.Remove(seenString.Length - 1, 1);                    //comma
             seenString.Append("                                         "); //overwrite
-            console.Print(1, console.Height - 1, seenString.ToString());
+            console.Print(0, console.Height - 1, seenString.ToString());
 
+            // Map _____ by Click
             //if (e.MouseState.Mouse.LeftButtonDown)
             //	console.Print(1, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}        ");
             //else
@@ -94,7 +97,7 @@ namespace PureHatred.UI
         private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
 		{
 			var console = (Console)sender;
-			console.Print(1, console.Height - 3, $"You've clicked on {e.MouseState.CellPosition}               ");
+			console.Print(0, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}               ");
 		}
 
 		private void CheckKeyboard()

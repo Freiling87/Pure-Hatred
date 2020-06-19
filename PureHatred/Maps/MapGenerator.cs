@@ -3,8 +3,6 @@ using PureHatred.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GoRogue.MapGeneration;
-using SadConsole.EasingFunctions;
 
 //TODO: Explore GoRogue documentation on MapGen. Not fully covered in tutorial yet. https://github.com/Chris3606/GoRogue/blob/master/GoRogue.Docs/articles/gr3-map-gen.md
 
@@ -17,11 +15,15 @@ namespace PureHatred
 
         public MapGenerator(){}
 
-        public Map MapGenSurface()
+        public Map MapgenSurface()
         {
             return null;
         }
-        public Map MapgenCave()
+        public Map MapgenCaveUpper()
+		{
+            return null;
+		}
+        public Map MapgenCaveLower()
 		{
             return null;
 		}
@@ -33,7 +35,15 @@ namespace PureHatred
 		{
             return null;
 		}
-        public Map MapGenOrbitalStation()
+        public Map MapgenOrbitalStation()
+		{
+            return null;
+		}
+        public Map MapgenSpaceship()
+		{
+            return null;
+		}
+        public Map MapgenArcology()
 		{
             return null;
 		}
