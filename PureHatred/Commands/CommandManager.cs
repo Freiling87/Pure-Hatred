@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using PureHatred.Entities;
 using PureHatred.Tiles;
 
+
 namespace PureHatred.Commands
 {
     public class CommandManager
@@ -20,6 +21,8 @@ namespace PureHatred.Commands
         {
         }
 
+        // COMBAT
+
         public bool BumpAttack(Actor attacker, Actor defender)
         {
             StringBuilder attackMessage = new StringBuilder();
@@ -29,6 +32,7 @@ namespace PureHatred.Commands
             int blocks = ResolveDefense(defender, hits, attackMessage, defenseMessage);
 
             GameLoop.UIManager.MessageLog.AddTextNewline(attackMessage.ToString());
+
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
                 GameLoop.UIManager.MessageLog.AddTextNewline(defenseMessage.ToString());
 
@@ -47,6 +51,7 @@ namespace PureHatred.Commands
             for (int i = 0; i < attacker.Attack; i++)
                 if (Dice.Roll("10d10") <= attacker.AttackChance) 
                     hits++;
+
             return hits;
         }
 
@@ -75,9 +80,9 @@ namespace PureHatred.Commands
             if (damage > 0)
             {
                 BodyPart hitPart = defender.Anatomy.RandomItem();
-                hitPart.HpCurrent = hitPart.HpCurrent - damage;
+                hitPart.HpCurrent -= damage;
 
-                defender.Health = defender.Health - damage;
+                defender.Health -= damage;
                 GameLoop.UIManager.MessageLog.AddTextNewline($" {hitPart.Name} was hit for {damage} damage, now at {hitPart.HpCurrent}. {defender.Name} at {defender.Health}.");
                 if (defender.Health <= 0)
                     ResolveDeath(defender);

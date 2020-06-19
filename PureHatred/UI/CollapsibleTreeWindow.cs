@@ -30,8 +30,8 @@ namespace PureHatred.UI
 {
 	public class CollapsibleTreeWindow : Window
 	{
-        private ScrollingConsole _console;
-        private ScrollBar _scrollBar;
+        private readonly ScrollingConsole _console;
+        private readonly ScrollBar _scrollBar;
         private int _scrollPosition;
         private int _windowBorder = 2;
 
@@ -40,17 +40,20 @@ namespace PureHatred.UI
             CanDrag = false; 
             UseMouse = true;
 
+            height -= _windowBorder;
+            width -= _windowBorder;
+
             Title = title.Align(HorizontalAlignment.Center, Width);
 
 			_console = new ScrollingConsole(width - 3, 256)
 			{
 				Position = new Point(1, 1),
-                ViewPort = new Rectangle(0, 0, width - _windowBorder, height - _windowBorder)
+                ViewPort = new Rectangle(0, 0, width, height)
             };
 
-            _scrollBar = new ScrollBar(Orientation.Vertical, height - _windowBorder)
+            _scrollBar = new ScrollBar(Orientation.Vertical, height)
             {
-                Position = new Point(width - _windowBorder, _console.Position.Y),
+                Position = new Point(width, _console.Position.Y),
                 IsEnabled = false
 			};
 			_scrollBar.ValueChanged += ScrollBar_ValueChanged;

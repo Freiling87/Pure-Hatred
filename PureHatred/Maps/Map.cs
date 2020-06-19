@@ -52,11 +52,7 @@ namespace PureHatred
             int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
 
             if (locationIndex <= Width * Height && locationIndex >= 0)
-            {
-                if (Tiles[locationIndex] is T)
-                    return (T)Tiles[locationIndex];
-                else return null;
-            }
+				return Tiles[locationIndex] is T t ? t : null; //https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#the-is-type-pattern-expression
             else return null;
         }
         

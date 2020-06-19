@@ -10,7 +10,7 @@ namespace PureHatred
 {
 	public class MapGenerator
     {
-        private Random randNum = new Random();
+        private readonly Random randNum = new Random();
         Map _map; // Temporarily store the map currently worked on
 
         public MapGenerator(){}

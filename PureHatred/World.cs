@@ -10,13 +10,13 @@ namespace PureHatred
 {
     public class World
     {
-        private int _mapWidth = 150;
-        private int _mapHeight = 150;
-        private int _maxRooms = 100;
-        private int _minRoomDimension = 4;
-        private int _maxRoomDimension = 15;
+        private readonly int _mapWidth = 150;
+        private readonly int _mapHeight = 150;
+        private readonly int _maxRooms = 100;
+        private readonly int _minRoomDimension = 4;
+        private readonly int _maxRoomDimension = 15;
 
-        Random rndNum = new Random(); 
+        private Random rndNum = new Random(); 
         private TileBase[] _mapTiles;
         public Map CurrentMap { get; set; }
         public Player Player { get; set; }

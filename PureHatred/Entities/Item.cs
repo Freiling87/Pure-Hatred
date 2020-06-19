@@ -18,7 +18,7 @@ namespace PureHatred.Entities
             }
         }
 
-        public Item(Color foreground, Color background, string name, int glyph, int weight = 1, int condition = 100, int width = 1, int height = 1) : base(foreground, background, glyph)
+        public Item(Color foreground, Color background, string name, int glyph, int weight = 1, int condition = 100) : base(foreground, background, glyph)
         {
             //Animation.CurrentFrame[0].Foreground = foreground;
             //Animation.CurrentFrame[0].Background = background;

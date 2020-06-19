@@ -18,7 +18,6 @@ namespace PureHatred.Tiles
                 Open();
             else if (Locked || !IsOpen)
                 Close();
-            //Honestly wtf is this even
         }
 
         public void Close()

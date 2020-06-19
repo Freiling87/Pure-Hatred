@@ -20,7 +20,7 @@ namespace PureHatred.UI
 {
     public class UIManager : ContainerConsole
     {
-        public SadConsole.ScrollingConsole MapConsole;
+        public ScrollingConsole MapConsole;
         public MessageLogWindow MessageLog;
         public Window MapWindow;
         public CollapsibleTreeWindow SideWindow;
@@ -30,7 +30,7 @@ namespace PureHatred.UI
             IsVisible = true;
             IsFocused = true;
 
-            Parent = SadConsole.Global.CurrentScreen;
+            Parent = Global.CurrentScreen;
         }
 
         public void Init()
