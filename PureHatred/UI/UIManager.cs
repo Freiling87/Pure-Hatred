@@ -50,14 +50,18 @@ namespace PureHatred.UI
 		{
             MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
 
-            MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3/4, GameLoop.GameHeight * 1/4, "Log");
-            MessageLog.Position = new Point(0, GameLoop.GameHeight * 3/4);
-            Children.Add(MessageLog);
+			MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight * 1 / 4, "Log")
+			{
+				Position = new Point(0, GameLoop.GameHeight * 3 / 4)
+			};
+			Children.Add(MessageLog);
             MessageLog.Show();
 
-            SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth * 1/4, GameLoop.GameHeight * 3/4, "Side Window");
-            SideWindow.Position = new Point(GameLoop.GameWidth * 3/4, 0);
-            Children.Add(SideWindow);
+			SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth * 1 / 4, GameLoop.GameHeight * 3 / 4, "Side Window")
+			{
+				Position = new Point(GameLoop.GameWidth * 3 / 4, 0)
+			};
+			Children.Add(SideWindow);
             SideWindow.Show();
 
             LoadMap(GameLoop.World.CurrentMap);

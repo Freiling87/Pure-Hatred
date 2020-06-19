@@ -10,7 +10,7 @@ namespace PureHatred
 {
 	public class MapGenerator
     {
-        Random randNum = new Random();
+        private Random randNum = new Random();
         Map _map; // Temporarily store the map currently worked on
 
         public MapGenerator(){}
@@ -224,24 +224,23 @@ namespace PureHatred
 
             while (true)
             {
+                int e2 = 2 * err;
+
                 yield return new Point(xA, yA);
+
                 if (xA == xZ && yA == yZ)
                     break;
 
-                int e2 = 2 * err;
-
                 if (e2 > -dy)
                 {
-                    err = err - dy;
-                    xA = xA + sx;
+                    err -= dy;
+                    xA += sx;
                 }
                 if (e2 < dx)
                 {
-                    err = err + dx;
-                    yA = yA + sy;
+                    err += dx;
+                    yA += sy;
                 }
-
-
             }
         }
 
