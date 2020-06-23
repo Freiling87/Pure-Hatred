@@ -68,6 +68,7 @@
     <Compile Include="Tiles\TileWall.cs" />
     <Compile Include="UI\CollapsibleTreeWindow.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
+    <Compile Include="UI\TreeWindowTier.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>

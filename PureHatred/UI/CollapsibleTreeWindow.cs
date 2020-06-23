@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
+using SadConsole.Themes;
 
 using PureHatred.Entities;
 
@@ -40,6 +41,9 @@ namespace PureHatred.UI
             CanDrag = false; 
             UseMouse = true;
 
+            //Library.Default.SetControlTheme(typeof(Button), new ButtonLinesTheme());
+            //TODO: Create custom theme class
+
             height -= _windowBorder;
             width -= _windowBorder;
 
@@ -59,6 +63,9 @@ namespace PureHatred.UI
 			_scrollBar.ValueChanged += ScrollBar_ValueChanged;
 
             Add(_scrollBar); //Different Add() than the local void (see definition)
+            InventoryList();
+
+
             Children.Add(_console);
         }
 
@@ -89,27 +96,38 @@ namespace PureHatred.UI
                 // Follows cursor since the event moves the render area.
                 _scrollBar.Value = _scrollPosition;
                 _console.TimesShiftedUp = 0;
+
+                InventoryList();
             }
-            InventoryList();
         }
 
         private void  InventoryList()
 		{
             int i = 1;
 
+            ButtonTheme buttonTheme = new ButtonTheme()
+            {
+                ShowEnds = false
+            };
+
             foreach (Item item in GameLoop.World.Player.Inventory)
 			{
-                StringBuilder rowString = new StringBuilder($"- {item.Name}");
+                //StringBuilder rowString = new StringBuilder($"{item.Name}");
+                //_console.Cursor.Position = new Point(1, i);
+                //_console.Cursor.Print(rowString.ToString() + "\n");
 
-                _console.Cursor.Position = new Point(1, i);
-                _console.Cursor.Print(rowString.ToString() + "\n");
+                Button button = new Button(10)
+                {
+                    Text = item.Name,
+                    TextAlignment = HorizontalAlignment.Left,
+                    Position = new Point(1, i),
+                    Theme = buttonTheme
+                };
 
-				//Button button = new Button(30);
-				//button.Position = new Point(1, i);
-				//button.Text = rowString.ToString();
-				//this.Add(button);
+				Add(button);
+                buttonTheme.SetBackground(Color.Red);
 
-				i++;
+                i++;
             }
         }
     }
