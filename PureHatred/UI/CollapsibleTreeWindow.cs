@@ -31,7 +31,7 @@ namespace PureHatred.UI
 {
 	public class CollapsibleTreeWindow : Window
 	{
-        private readonly ScrollingConsole _console;
+        private readonly ControlsConsole _ScrollingConsole;
         private readonly ScrollBar _scrollBar;
         private int _scrollPosition;
         private int _windowBorder = 2;
@@ -49,7 +49,7 @@ namespace PureHatred.UI
 
             Title = title.Align(HorizontalAlignment.Center, Width);
 
-			_console = new ScrollingConsole(width - 3, 256)
+			_ScrollingConsole = new ControlsConsole(width - 3, 256)
 			{
 				Position = new Point(1, 1),
                 ViewPort = new Rectangle(0, 0, width, height)
@@ -57,7 +57,7 @@ namespace PureHatred.UI
 
             _scrollBar = new ScrollBar(Orientation.Vertical, height)
             {
-                Position = new Point(width, _console.Position.Y),
+                Position = new Point(width, _ScrollingConsole.Position.Y),
                 IsEnabled = false
 			};
 			_scrollBar.ValueChanged += ScrollBar_ValueChanged;
@@ -66,12 +66,12 @@ namespace PureHatred.UI
             InventoryList();
 
 
-            Children.Add(_console);
+            Children.Add(_ScrollingConsole);
         }
 
         void ScrollBar_ValueChanged(object sender, EventArgs e) =>
-            _console.ViewPort = new Rectangle(
-                0, _scrollBar.Value + _windowBorder, _console.Width, _console.ViewPort.Height);
+            _ScrollingConsole.ViewPort = new Rectangle(
+                0, _scrollBar.Value + _windowBorder, _ScrollingConsole.Width, _ScrollingConsole.ViewPort.Height);
 
         public override void Draw(TimeSpan drawTime) =>
             base.Draw(drawTime);
@@ -81,21 +81,21 @@ namespace PureHatred.UI
             base.Update(time);
 
             // Scrollbar tracks current position of console
-            if (_console.TimesShiftedUp != 0 |
-                _console.Cursor.Position.Y >= _console.ViewPort.Height + _scrollPosition)
+            if (_ScrollingConsole.TimesShiftedUp != 0 |
+                _ScrollingConsole.Cursor.Position.Y >= _ScrollingConsole.ViewPort.Height + _scrollPosition)
             {
                 _scrollBar.IsEnabled = true;
 
                 // Prevent scroll past buffer
                 // Record amount scrolled to enable how far back bar can see
-                if (_scrollPosition < _console.Height - _console.ViewPort.Height)
-                    _scrollPosition += (_console.TimesShiftedUp != 0 ? _console.TimesShiftedUp : 1);
+                if (_scrollPosition < _ScrollingConsole.Height - _ScrollingConsole.ViewPort.Height)
+                    _scrollPosition += (_ScrollingConsole.TimesShiftedUp != 0 ? _ScrollingConsole.TimesShiftedUp : 1);
 
                 _scrollBar.Maximum = _scrollPosition - _windowBorder;
 
                 // Follows cursor since the event moves the render area.
                 _scrollBar.Value = _scrollPosition;
-                _console.TimesShiftedUp = 0;
+                _ScrollingConsole.TimesShiftedUp = 0;
 
                 InventoryList();
             }
@@ -110,24 +110,29 @@ namespace PureHatred.UI
                 ShowEnds = false
             };
 
+            Button testButton = new Button(15, 1)
+            {
+                Text = "test button",
+                Position = new Point(15, 5)
+            };
+            _ScrollingConsole.Add(testButton);            
+
             foreach (Item item in GameLoop.World.Player.Inventory)
 			{
-                //StringBuilder rowString = new StringBuilder($"{item.Name}");
-                //_console.Cursor.Position = new Point(1, i);
-                //_console.Cursor.Print(rowString.ToString() + "\n");
+				StringBuilder rowString = new StringBuilder($"{item.Name}");
+				_ScrollingConsole.Cursor.Position = new Point(1, i);
+				_ScrollingConsole.Cursor.Print(rowString.ToString() + "\n");
 
-                Button button = new Button(10)
-                {
-                    Text = item.Name,
-                    TextAlignment = HorizontalAlignment.Left,
-                    Position = new Point(1, i),
-                    Theme = buttonTheme
-                };
+				//            Button button = new Button(10)
+				//            {
+				//                Text = item.Name,
+				//                TextAlignment = HorizontalAlignment.Left,
+				//                Position = new Point(1, i),
+				//                Theme = buttonTheme
+				//            };
+				//Add(button);
 
-				Add(button);
-                buttonTheme.SetBackground(Color.Red);
-
-                i++;
+				i++;
             }
         }
     }
