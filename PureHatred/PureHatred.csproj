@@ -46,6 +46,8 @@
     <StartupObject>PureHatred.GameLoop</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\AnatomyBehaviors.cs" />
+    <Compile Include="Commands\InventoryBehaviors.cs" />
     <Compile Include="Entities\BodyPart.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Entities\Actor.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Tiles\TileStairs.cs" />
     <Compile Include="Tiles\TileWall.cs" />
     <Compile Include="UI\CollapsibleTreeWindow.cs" />
+    <Compile Include="UI\InventoryButton.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="World.cs" />

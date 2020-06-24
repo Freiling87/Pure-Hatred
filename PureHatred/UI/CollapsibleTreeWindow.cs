@@ -25,6 +25,10 @@ using PureHatred.Entities;
  * 4. If no, check for sibling
  * 5. If yes, process sibling
  * 6. If no, process 4 on parent
+ * 
+ * 
+ * TODO: Take a look at ListBoxes as an alternative to the buttons. Possibly the high number of controls is not supportable, so the Listbox would be a more lightweight way to do it.
+ * ListBox Themes, suggested by Thraka: https://github.com/SadConsole/SadConsole/blob/master/src/SadConsole/Themes/ListBoxTheme.cs#L280
  */
 
 namespace PureHatred.UI
@@ -41,9 +45,6 @@ namespace PureHatred.UI
             CanDrag = false; 
             UseMouse = true;
 
-            //Library.Default.SetControlTheme(typeof(Button), new ButtonLinesTheme());
-            //TODO: Create custom theme class
-
             height -= _windowBorder;
             width -= _windowBorder;
 
@@ -58,13 +59,12 @@ namespace PureHatred.UI
             _scrollBar = new ScrollBar(Orientation.Vertical, height)
             {
                 Position = new Point(width, _ScrollingConsole.Position.Y),
-                IsEnabled = false
+                IsEnabled = true
 			};
 			_scrollBar.ValueChanged += ScrollBar_ValueChanged;
 
-            Add(_scrollBar); //Different Add() than the local void (see definition)
+            Add(_scrollBar); 
             InventoryList();
-
 
             Children.Add(_ScrollingConsole);
         }
@@ -80,20 +80,14 @@ namespace PureHatred.UI
         {
             base.Update(time);
 
-            // Scrollbar tracks current position of console
             if (_ScrollingConsole.TimesShiftedUp != 0 |
                 _ScrollingConsole.Cursor.Position.Y >= _ScrollingConsole.ViewPort.Height + _scrollPosition)
             {
-                _scrollBar.IsEnabled = true;
-
-                // Prevent scroll past buffer
-                // Record amount scrolled to enable how far back bar can see
                 if (_scrollPosition < _ScrollingConsole.Height - _ScrollingConsole.ViewPort.Height)
                     _scrollPosition += (_ScrollingConsole.TimesShiftedUp != 0 ? _ScrollingConsole.TimesShiftedUp : 1);
 
                 _scrollBar.Maximum = _scrollPosition - _windowBorder;
 
-                // Follows cursor since the event moves the render area.
                 _scrollBar.Value = _scrollPosition;
                 _ScrollingConsole.TimesShiftedUp = 0;
 
@@ -101,7 +95,7 @@ namespace PureHatred.UI
             }
         }
 
-        private void  InventoryList()
+        public void InventoryList()
 		{
             int i = 1;
 
@@ -110,27 +104,21 @@ namespace PureHatred.UI
                 ShowEnds = false
             };
 
-            Button testButton = new Button(15, 1)
-            {
-                Text = "test button",
-                Position = new Point(15, 5)
-            };
-            _ScrollingConsole.Add(testButton);            
-
             foreach (Item item in GameLoop.World.Player.Inventory)
 			{
-				StringBuilder rowString = new StringBuilder($"{item.Name}");
-				_ScrollingConsole.Cursor.Position = new Point(1, i);
-				_ScrollingConsole.Cursor.Print(rowString.ToString() + "\n");
+				Button button = new Button(10)
+				{
+					Text = item.Name,
+					TextAlignment = HorizontalAlignment.Left,
+					Position = new Point(1, i),
+					Theme = buttonTheme
+				};
+				_ScrollingConsole.Add(button);
 
-				//            Button button = new Button(10)
-				//            {
-				//                Text = item.Name,
-				//                TextAlignment = HorizontalAlignment.Left,
-				//                Position = new Point(1, i),
-				//                Theme = buttonTheme
-				//            };
-				//Add(button);
+				//StringBuilder rowString = new StringBuilder($"- {item.Name}");
+
+				//_ScrollingConsole.Cursor.Position = new Point(1, i);
+				//_ScrollingConsole.Cursor.Print(rowString.ToString() + "\n");
 
 				i++;
             }

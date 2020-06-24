@@ -6,6 +6,13 @@ using SadConsole.Components;
 
 using PureHatred.Entities;
 
+/* TODO:
+ * - Replace Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
+ *   with Point(TileIndexToPoint(TileIndex));
+ *   or Overload Point to accept a single int and use that:
+ *   Point(TileIndex);
+ */
+
 namespace PureHatred
 {
     public class World
@@ -67,19 +74,16 @@ namespace PureHatred
             Player = new Player(Color.Yellow, Color.Transparent);
 
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
-            {
                 if (!CurrentMap.Tiles[i].IsImpassible)
                 {
                     Player.Position = SadConsole.Helpers.GetPointFromIndex(i, CurrentMap.Width);
                     break;
                 }
-            }
+
             CurrentMap.Add(Player);
 
             for (int i = 1; i < 100; i++)
-			{
                 Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L', 2));
-			}
         }
 
         private void CreateLoot()
@@ -88,13 +92,13 @@ namespace PureHatred
 
             for (int i = 0; i < numLoot; i++)
             {
-                int lootPosition = 0;
                 Item newLoot = new Item(Color.Green, Color.Transparent, "fancy shirt", 'L', 2);
 
-                while (CurrentMap.Tiles[lootPosition].IsImpassible)
-                    lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                int tileIndex = 0;
+                while (CurrentMap.Tiles[tileIndex].IsImpassible)
+                    tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
 
-                newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Width);
+                newLoot.Position = new Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
 
                 CurrentMap.Add(newLoot);
             }

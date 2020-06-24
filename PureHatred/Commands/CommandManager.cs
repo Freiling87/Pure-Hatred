@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 using PureHatred.Entities;
 using PureHatred.Tiles;
+using PureHatred.UI;
 
 
 namespace PureHatred.Commands
@@ -153,6 +154,7 @@ namespace PureHatred.Commands
         public bool Pickup(Actor actor, Item item)
         {
             actor.Inventory.Add(item);
+            GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} picked up {item.Name}");
             item.Destroy();
             return true;
@@ -161,6 +163,7 @@ namespace PureHatred.Commands
         public bool Drop(Actor actor, Item item)
 		{
             actor.Inventory.Remove(item);
+            GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {item.Name} was severed");
             //item.Destroy() opposite?
             return true;
@@ -168,6 +171,7 @@ namespace PureHatred.Commands
         public bool Drop(Actor actor, BodyPart bodyPart)
 		{
             actor.Anatomy.Remove(bodyPart);
+            GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {bodyPart.Name} was severed");
             //item.Destroy() oposite?
             return true;
