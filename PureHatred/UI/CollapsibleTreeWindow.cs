@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
@@ -7,6 +8,7 @@ using SadConsole.Controls;
 using SadConsole.Themes;
 
 using PureHatred.Entities;
+using System.Collections.Generic;
 
 /*Symbols CAN be layered so we'll only need the following for the interface:
  * Hollow nodes, can hold + or - for expand/collapse
@@ -35,9 +37,7 @@ namespace PureHatred.UI
 {
 	public class CollapsibleTreeWindow : Window
 	{
-        private readonly ControlsConsole _ScrollingConsole;
-        private readonly ScrollBar _scrollBar;
-        private int _scrollPosition;
+        private ListBox _listBox;
         private int _windowBorder = 2;
 
         public CollapsibleTreeWindow(int width, int height, string title) : base(width, height)
@@ -48,80 +48,60 @@ namespace PureHatred.UI
             height -= _windowBorder;
             width -= _windowBorder;
 
-            Title = title.Align(HorizontalAlignment.Center, Width);
+            Title = title.Align(HorizontalAlignment.Center, width);
 
-			_ScrollingConsole = new ControlsConsole(width - 3, 256)
-			{
-				Position = new Point(1, 1),
-                ViewPort = new Rectangle(0, 0, width, height)
+			_listBox = new ListBox(width - _windowBorder, height - _windowBorder)
+            {
+                Position = new Point(1, 1),
+                IsEnabled = true,
+                IsVisible = true
             };
+            Add(_listBox);
 
-            _scrollBar = new ScrollBar(Orientation.Vertical, height)
-            {
-                Position = new Point(width, _ScrollingConsole.Position.Y),
-                IsEnabled = true
-			};
-			_scrollBar.ValueChanged += ScrollBar_ValueChanged;
-
-            Add(_scrollBar); 
             InventoryList();
-
-            Children.Add(_ScrollingConsole);
-        }
-
-        void ScrollBar_ValueChanged(object sender, EventArgs e) =>
-            _ScrollingConsole.ViewPort = new Rectangle(
-                0, _scrollBar.Value + _windowBorder, _ScrollingConsole.Width, _ScrollingConsole.ViewPort.Height);
-
-        public override void Draw(TimeSpan drawTime) =>
-            base.Draw(drawTime);
-
-        public override void Update(TimeSpan time)
-        {
-            base.Update(time);
-
-            if (_ScrollingConsole.TimesShiftedUp != 0 |
-                _ScrollingConsole.Cursor.Position.Y >= _ScrollingConsole.ViewPort.Height + _scrollPosition)
-            {
-                if (_scrollPosition < _ScrollingConsole.Height - _ScrollingConsole.ViewPort.Height)
-                    _scrollPosition += (_ScrollingConsole.TimesShiftedUp != 0 ? _ScrollingConsole.TimesShiftedUp : 1);
-
-                _scrollBar.Maximum = _scrollPosition - _windowBorder;
-
-                _scrollBar.Value = _scrollPosition;
-                _ScrollingConsole.TimesShiftedUp = 0;
-
-                InventoryList();
-            }
         }
 
         public void InventoryList()
 		{
-            int i = 1;
+            _listBox.Items.Clear();
 
-            ButtonTheme buttonTheme = new ButtonTheme()
-            {
-                ShowEnds = false
-            };
+            int i = 0;
 
             foreach (Item item in GameLoop.World.Player.Inventory)
 			{
-				Button button = new Button(10)
-				{
-					Text = item.Name,
-					TextAlignment = HorizontalAlignment.Left,
-					Position = new Point(1, i),
-					Theme = buttonTheme
-				};
-				_ScrollingConsole.Add(button);
+                Item currentItem = GameLoop.World.Player.Inventory[i];
 
-				//StringBuilder rowString = new StringBuilder($"- {item.Name}");
+                /*
+                if (IsParentNodeExpanded(Item))
+                {
+                    StringBuilder tierString = new StringBuilder();
+                    for (int i = 0; i < currentItem.tierLevel; i++)
+                    {
+                        tierString += "|"
+                    }
+				}
+                */
 
-				//_ScrollingConsole.Cursor.Position = new Point(1, i);
-				//_ScrollingConsole.Cursor.Print(rowString.ToString() + "\n");
-
-				i++;
+                _listBox.Items.Add(GameLoop.World.Player.Inventory[i++].Name);
             }
         }
+
+        public bool IsParentNodeExpanded(Item item)
+		{
+            return true; //-
+		}
+
+        enum TierSymbol
+		{
+            Expanded = '-',
+            Collapsed = '+',
+            Terminal = 'o'
+		}
+        
+        public override void Draw(TimeSpan drawTime) =>
+            base.Draw(drawTime);
+
+        public override void Update(TimeSpan time) =>
+            base.Update(time);
     }
 }
