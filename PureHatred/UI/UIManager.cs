@@ -21,9 +21,10 @@ namespace PureHatred.UI
     public class UIManager : ContainerConsole
     {
         public ScrollingConsole MapConsole;
-        public MessageLogWindow MessageLog;
         public Window MapWindow;
         public CollapsibleTreeWindow SideWindow;
+        public MessageLogWindow MessageLog;
+        public StatusWindow StatusWindow;
 
         public UIManager()
         {
@@ -33,14 +34,14 @@ namespace PureHatred.UI
             Parent = Global.CurrentScreen;
         }
 
-        public void Init()
-        {
-            CreateWindows();
+		public void Init()
+		{
+			CreateWindows();
 
-            UseMouse = true;
-        }
+			UseMouse = true;
+		}
 
-        public override void Update(TimeSpan timeElapsed)
+		public override void Update(TimeSpan timeElapsed)
         {
             CheckKeyboard(); 
             base.Update(timeElapsed);
@@ -48,25 +49,39 @@ namespace PureHatred.UI
 
         public void CreateWindows()
 		{
-            MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
+            int width = GameLoop.GameWidth;
+            int height = GameLoop.GameHeight;
 
-			MessageLog = new MessageLogWindow(GameLoop.GameWidth * 3 / 4, GameLoop.GameHeight * 1 / 4, "Log")
-			{
-				Position = new Point(0, GameLoop.GameHeight * 3 / 4)
-			};
-			Children.Add(MessageLog);
-            MessageLog.Show();
+            MapConsole = new ScrollingConsole(width, height);
+            LoadMap(GameLoop.World.CurrentMap);
+            CreateMapWindow(width * 3 / 4, height * 3 / 4, "Map");
 
-			SideWindow = new CollapsibleTreeWindow(GameLoop.GameWidth * 1 / 4, GameLoop.GameHeight * 3 / 4, "Side Window")
+			SideWindow = new CollapsibleTreeWindow(width * 1 / 4, height * 3 / 4, "Inventory / Anatomy")
 			{
-				Position = new Point(GameLoop.GameWidth * 3 / 4, 0)
+				Position = new Point(width * 3 / 4, 0),
+                CanDrag = false,
+                UseMouse = true,
 			};
 			Children.Add(SideWindow);
             SideWindow.Show();
 
-            LoadMap(GameLoop.World.CurrentMap);
+            MessageLog = new MessageLogWindow(width * 3 / 4, height * 1 / 4, "Log")
+            {
+                Position = new Point(0, height * 3 / 4),
+                CanDrag = false,
+                UseMouse = true,
+            };
+            Children.Add(MessageLog);
+            MessageLog.Show();
 
-            CreateMapWindow(GameLoop.GameWidth * 3/4, GameLoop.GameHeight * 3/4, "Map");
+            StatusWindow = new StatusWindow(width * 1 / 4, height * 1 / 4)
+            {
+                Position = new Point(width * 3 / 4, height * 3 / 4),
+                CanDrag = false,
+                UseMouse = true,
+            };
+            Children.Add(StatusWindow);
+            StatusWindow.Show();
         }
 
         // INPUTS

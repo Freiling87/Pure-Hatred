@@ -5,7 +5,9 @@ namespace PureHatred.Entities
     public class Item : Entity
     {
         private int _condition;
-        public int Weight { get; set; } 
+        public int weight { get; set; }
+        public bool isExpanded;
+        public Item parent;
 
         public int Condition
         {
@@ -18,7 +20,7 @@ namespace PureHatred.Entities
             }
         }
 
-        public Item(Color foreground, Color background, string name, int glyph, int weight = 1, int condition = 100) : base(foreground, background, glyph)
+        public Item(Color foreground, Color background, string name, int glyph, Item parent=null, int weight = 1, int condition = 100) : base(foreground, background, glyph)
         {
             //Animation.CurrentFrame[0].Foreground = foreground;
             //Animation.CurrentFrame[0].Background = background;
@@ -27,7 +29,7 @@ namespace PureHatred.Entities
             // TODO: What's different about these two classes?
             // Might be because of the :base() in the instantiator above
 
-            Weight = weight;
+            this.weight = weight;
             Condition = condition;
             Name = name;
         }

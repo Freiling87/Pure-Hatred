@@ -45,7 +45,7 @@ namespace PureHatred.Commands
 
         private static int ResolveAttack(Actor attacker, Actor defender, StringBuilder attackMessage)
         {
-            attackMessage.AppendFormat($"{attacker.Name} attacks {defender.Name}, " );
+            attackMessage.AppendFormat($"{attacker.Name} attacks {defender.Name}: " );
 
             int hits = 0;
 
@@ -61,15 +61,15 @@ namespace PureHatred.Commands
             int blocks = 0;
             if (hits > 0)
             {
-                attackMessage.AppendFormat("scoring {0} hits.", hits);
-                defenseMessage.AppendFormat(" {0} defends and rolls: ", defender.Name);
+                attackMessage.AppendFormat($"{hits} hits.");
+                defenseMessage.AppendFormat($" {defender.Name} defends: ");
 
                 for (int i = 0; i < defender.Defense; i++)
                 {
                     if (Dice.Roll("1d100") <= defender.DefenseChance)
                         blocks++;
                 }
-                defenseMessage.AppendFormat("resulting in {0} blocks.", blocks);
+                defenseMessage.AppendFormat($"resulting in {blocks} blocks.");
             }
             else
                 attackMessage.Append("and misses completely!");

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
 
 using PureHatred.Tiles;
+using PureHatred.UI;
 
 namespace PureHatred.Entities
 {
@@ -15,12 +16,46 @@ namespace PureHatred.Entities
         public int Gold { get; set; }
         public int Health { get; set; }
         public int HealthMax { get; set; }
+        public int NutSimpleMax { get; set; }
+        public int NutSimple { get; set; }
+        public int NutComplexMax { get; set; }
+        public int NutComplex { get; set; }
         public List<Item> Inventory = new List<Item>();
         public List<BodyPart> Anatomy = new List<BodyPart>();
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
+            GiveHumanoidParts();
+
+            RecalculateBiology();
         }
+
+        public void GiveHumanoidParts()
+		{
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", 3, 5, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", 3, 5, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", 3, 5, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", 3, 5, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", 3, 10, 20));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", 3, 25, 15));
+        }
+
+        private void AddLoot(Item item)
+        {
+            Inventory.Add(item);
+        }
+
+        private void AddBodyPart(BodyPart bodypart)
+        {
+            Anatomy.Add(bodypart);
+
+            RecalculateBiology();
+        }
+
+        private void EatAThing(Entity entity)
+		{
+            
+		}
 
         public bool MoveBy(Point positionChange)
         {
@@ -54,5 +89,30 @@ namespace PureHatred.Entities
             Position = newPosition;
             return true;
         }
+
+        public void RecalculateBiology()
+		{
+            int simpleNeed = 0;
+            int complexNeed = 0;
+            int currentHp = 0;
+            int maxHp = 0;
+
+            foreach (BodyPart bodyPart in Anatomy)
+			{
+                complexNeed += bodyPart.NutrientNeedComplex;
+                simpleNeed += bodyPart.NutrientNeedSimple;
+                currentHp += bodyPart.HpCurrent;
+                maxHp += bodyPart.HpMax;
+			}
+
+            NutComplexMax = complexNeed;
+            NutSimpleMax = simpleNeed;
+            Health = currentHp;
+            HealthMax = maxHp;
+
+            // Doesn't exist yet
+            if (GameLoop.UIManager.StatusWindow != null)
+                GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
+		}
     }
 }

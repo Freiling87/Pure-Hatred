@@ -83,7 +83,7 @@ namespace PureHatred
             CurrentMap.Add(Player);
 
             for (int i = 1; i < 100; i++)
-                Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L', 2));
+                Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L'));
         }
 
         private void CreateLoot()
@@ -92,7 +92,7 @@ namespace PureHatred
 
             for (int i = 0; i < numLoot; i++)
             {
-                Item newLoot = new Item(Color.Green, Color.Transparent, "fancy shirt", 'L', 2);
+                Item newLoot = new Item(Color.Green, Color.Transparent, "fancy shirt", 'L');
 
                 int tileIndex = 0;
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Principal;
+
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
@@ -70,7 +70,7 @@ namespace PureHatred.UI
 
                 _scrollBar.Maximum = _scrollPosition - _windowBorder;
 
-                // This will follow the cursor since we move the render area in the event.
+                // Follow cursor since render area moves in event.
                 _scrollBar.Value = _scrollPosition;
                 _console.TimesShiftedUp = 0;
             }

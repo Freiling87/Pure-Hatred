@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
-using SadConsole.Themes;
 
 using PureHatred.Entities;
-using System.Collections.Generic;
+
 
 /*Symbols CAN be layered so we'll only need the following for the interface:
  * Hollow nodes, can hold + or - for expand/collapse
@@ -28,9 +26,15 @@ using System.Collections.Generic;
  * 5. If yes, process sibling
  * 6. If no, process 4 on parent
  * 
- * 
  * TODO: Take a look at ListBoxes as an alternative to the buttons. Possibly the high number of controls is not supportable, so the Listbox would be a more lightweight way to do it.
  * ListBox Themes, suggested by Thraka: https://github.com/SadConsole/SadConsole/blob/master/src/SadConsole/Themes/ListBoxTheme.cs#L280
+ * 
+ * TODO: Figure out inventory/anatomy sorting according to parent. Currently they'll be sorted in order of acquisition.
+ * 
+ * The NuGet pkg I added: https://github.com/davidwest/TreeCollections
+ * 
+ * https://github.com/aalhour/C-Sharp-Algorithms/tree/master/DataStructures/Trees
+ * 
  */
 
 namespace PureHatred.UI
@@ -42,19 +46,14 @@ namespace PureHatred.UI
 
         public CollapsibleTreeWindow(int width, int height, string title) : base(width, height)
         {
-            CanDrag = false; 
-            UseMouse = true;
-
             height -= _windowBorder;
             width -= _windowBorder;
 
             Title = title.Align(HorizontalAlignment.Center, width);
 
-			_listBox = new ListBox(width - _windowBorder, height - _windowBorder)
+			_listBox = new ListBox(width - _windowBorder / 2, height - _windowBorder / 2)
             {
                 Position = new Point(1, 1),
-                IsEnabled = true,
-                IsVisible = true
             };
             Add(_listBox);
 
@@ -72,7 +71,7 @@ namespace PureHatred.UI
                 Item currentItem = GameLoop.World.Player.Inventory[i];
 
                 /*
-                if (IsParentNodeExpanded(Item))
+                if (Item.parent.isExpanded) // check for null parent, in case of core
                 {
                     StringBuilder tierString = new StringBuilder();
                     for (int i = 0; i < currentItem.tierLevel; i++)
