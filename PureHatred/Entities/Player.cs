@@ -8,7 +8,7 @@ namespace PureHatred.Entities
     {
         public Player(Color foreground, Color background) : base(foreground, background, 1)
         {
-            Name = "A friendly Cherub";
+            Name = "Cherub Bully";
 
             Attack = 5;
             AttackChance = 60;
@@ -21,8 +21,6 @@ namespace PureHatred.Entities
             NutComplex = 5;
 
             NutSimple = 5;
-
-            GiveHumanoidParts();
         }
     }
 }

@@ -26,18 +26,16 @@ namespace PureHatred.Entities
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
             GiveHumanoidParts();
-
-            RecalculateBiology();
         }
 
         public void GiveHumanoidParts()
 		{
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", 3, 5, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", 3, 5, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", 3, 5, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", 3, 5, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", 3, 10, 20));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", 3, 25, 15));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 5, 10, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 5, 10, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 5, 10, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 5, 10, 10));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", '@', 10, 10, 20, 20));
+            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 25, 15, 15));
         }
 
         private void AddLoot(Item item)

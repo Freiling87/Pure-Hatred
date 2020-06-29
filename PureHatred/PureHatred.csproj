@@ -46,8 +46,9 @@
     <StartupObject>PureHatred.GameLoop</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Commands\AnatomyBehaviors.cs" />
-    <Compile Include="Commands\InventoryBehaviors.cs" />
+    <Compile Include="Commands\Anatomy.cs" />
+    <Compile Include="Commands\Combat.cs" />
+    <Compile Include="Commands\Inventory.cs" />
     <Compile Include="Entities\BodyPart.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Entities\Actor.cs" />

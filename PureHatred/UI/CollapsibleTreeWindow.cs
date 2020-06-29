@@ -63,26 +63,34 @@ namespace PureHatred.UI
         public void InventoryList()
 		{
             _listBox.Items.Clear();
+            Player player = GameLoop.World.Player;
 
             int i = 0;
 
-            foreach (Item item in GameLoop.World.Player.Inventory)
-			{
-                Item currentItem = GameLoop.World.Player.Inventory[i];
+            if (player.Inventory.Count > 0)
+                foreach (Item item in player.Inventory)
+			    {
+                    Item currentItem = player.Inventory[i];
 
-                /*
-                if (Item.parent.isExpanded) // check for null parent, in case of core
-                {
-                    StringBuilder tierString = new StringBuilder();
-                    for (int i = 0; i < currentItem.tierLevel; i++)
+                    /*
+                    if (Item.parent.isExpanded) // check for null parent, in case of core
                     {
-                        tierString += "|"
-                    }
-				}
-                */
+                        StringBuilder tierString = new StringBuilder();
+                        for (int i = 0; i < currentItem.tierLevel; i++)
+                        {
+                            tierString += "|"
+                        }
+				    }
+                    */
 
-                _listBox.Items.Add(GameLoop.World.Player.Inventory[i++].Name);
-            }
+                    _listBox.Items.Add(player.Inventory[i++].Name);
+                }
+
+            i = 0;
+
+            if (player.Anatomy.Count > 0)
+                foreach (BodyPart bodyPart in player.Anatomy)
+                    _listBox.Items.Add(player.Anatomy[i++].Name);
         }
 
         public bool IsParentNodeExpanded(Item item)

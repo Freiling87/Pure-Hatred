@@ -62,7 +62,7 @@ namespace PureHatred
                 newMonster.AttackChance = rndNum.Next(0, 50);
                 newMonster.HealthMax = rndNum.Next(25, 50);
                 newMonster.Health = newMonster.HealthMax;
-                newMonster.Name = "a common troll";
+                newMonster.Name = "a helpless cherub";
 
                 newMonster.Position = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Width);
                 CurrentMap.Add(newMonster);

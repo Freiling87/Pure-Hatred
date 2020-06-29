@@ -117,7 +117,7 @@ namespace PureHatred.Entities
 		public int NutrientNeedComplex;
 		public int NutrientNeedSimple;
 
-		public BodyPart(Color foreground, Color background, string name, int glyph, int nutComplexNeed, int nutSimpleNeed, BodyPart parent=null, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
+		public BodyPart(Color foreground, Color background, string name, int glyph, int nutComplexCurrent, int nutComplexNeed, int nutSimpleCurrent, int nutSimpleNeed, BodyPart parent=null, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
 		{
 			Name = name;
 

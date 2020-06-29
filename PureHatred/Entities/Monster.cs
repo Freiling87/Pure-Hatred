@@ -12,6 +12,7 @@ namespace PureHatred.Entities
 
         public Monster(Color foreground, Color background) : base(foreground, background, 2)
         {
+
         }
     }
 }

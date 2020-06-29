@@ -1,6 +1,6 @@
 ﻿namespace PureHatred.Commands
 {
-	class InventoryBehaviors
+	class Inventory
 	{
 	}
 }
