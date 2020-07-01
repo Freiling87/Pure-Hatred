@@ -71,27 +71,41 @@ namespace PureHatred.UI
                 foreach (Item item in player.Inventory)
 			    {
                     Item currentItem = player.Inventory[i];
+                    StringBuilder tierString = new StringBuilder();
 
-                    /*
-                    if (Item.parent.isExpanded) // check for null parent, in case of core
-                    {
-                        StringBuilder tierString = new StringBuilder();
-                        for (int i = 0; i < currentItem.tierLevel; i++)
-                        {
-                            tierString += "|"
-                        }
-				    }
-                    */
+                    for (int j = 0; j < GetNodeIndent(item); j++)
+                        tierString.Append("|");
 
-                    _listBox.Items.Add(player.Inventory[i++].Name);
+                    tierString.Append(player.Inventory[i++].Name);
+
+                    _listBox.Items.Add(tierString);
                 }
 
             i = 0;
 
             if (player.Anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.Anatomy)
-                    _listBox.Items.Add(player.Anatomy[i++].Name);
+				{
+                    BodyPart currentPart = player.Anatomy[i];
+                    StringBuilder tierString = new StringBuilder();
+
+                    for (int j = 0; j < GetNodeIndent(bodyPart); j++)
+                        tierString.Append("|");
+
+                    tierString.Append(player.Anatomy[i++].Name);
+
+                    _listBox.Items.Add(tierString);
+				}
+
         }
+
+        public int GetNodeIndent(Item item)
+		{
+            if (item.parent == null)
+                return 0;
+            else 
+                return 1 + GetNodeIndent(item.parent);
+		}
 
         public bool IsParentNodeExpanded(Item item)
 		{

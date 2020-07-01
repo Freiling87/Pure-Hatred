@@ -12,6 +12,7 @@ using PureHatred.Commands;
 using PureHatred.Entities;
 
 using Console = SadConsole.Console;
+using Microsoft.Xna.Framework.Input;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
@@ -35,14 +36,14 @@ namespace PureHatred.UI
             Parent = Global.CurrentScreen;
         }
 
-		public void Init()
-		{
-			CreateWindows();
+        public void Init()
+        {
+            CreateWindows();
 
-			UseMouse = true;
-		}
+            UseMouse = true;
+        }
 
-		public override void Update(TimeSpan timeElapsed)
+        public override void Update(TimeSpan timeElapsed)
         {
             if (GameLoop.CommandManager._gameState == CommandManager.GameState.PlayerTurn)
                 CheckKeyboard();
@@ -51,7 +52,7 @@ namespace PureHatred.UI
         }
 
         public void CreateWindows()
-		{
+        {
             int width = GameLoop.GameWidth;
             int height = GameLoop.GameHeight;
 
@@ -59,13 +60,13 @@ namespace PureHatred.UI
             LoadMap(GameLoop.World.CurrentMap);
             CreateMapWindow(width * 3 / 4, height * 3 / 4, "Map");
 
-			SideWindow = new CollapsibleTreeWindow(width * 1 / 4, height * 3 / 4, "Inventory / Anatomy")
-			{
-				Position = new Point(width * 3 / 4, 0),
+            SideWindow = new CollapsibleTreeWindow(width * 1 / 4, height * 3 / 4, "Inventory / Anatomy")
+            {
+                Position = new Point(width * 3 / 4, 0),
                 CanDrag = false,
                 UseMouse = true,
-			};
-			Children.Add(SideWindow);
+            };
+            Children.Add(SideWindow);
             SideWindow.Show();
 
             MessageLog = new MessageLogWindow(width * 3 / 4, height * 1 / 4, "Log")
@@ -90,7 +91,7 @@ namespace PureHatred.UI
         // INPUTS
 
         private static void Console_MouseMove(object sender, SadConsole.Input.MouseEventArgs e)
-		{
+        {
             var console = (Console)sender;
 
             // Map Look by Mouseover
@@ -100,10 +101,10 @@ namespace PureHatred.UI
             if (seenTile != null)
                 seenString.Append($" {seenTile.Name},");
 
-			List<Entity> seenEntities = GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(e.MouseState.CellPosition);
-			if (seenEntities != null)
-				foreach (Entity entity in seenEntities)
-					seenString.Append($" {entity.Name},");
+            List<Entity> seenEntities = GameLoop.World.CurrentMap.GetEntitiesAt<Entity>(e.MouseState.CellPosition);
+            if (seenEntities != null)
+                foreach (Entity entity in seenEntities)
+                    seenString.Append($" {entity.Name},");
 
             seenString.Remove(seenString.Length - 1, 1);                    //comma
             seenString.Append("                                         "); //overwrite
@@ -117,38 +118,49 @@ namespace PureHatred.UI
         }
 
         private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)
-		{
-			var console = (Console)sender;
+        {
+            var console = (Console)sender;
             GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
-		}
+        }
+
+        private bool IsKeyReleased(Keys input)
+		{
+            return Global.KeyboardState.IsKeyReleased(input);
+        }
+
+        private bool IsKeyPressed(Keys input)
+		{
+            return Global.KeyboardState.IsKeyPressed(input);
+        }
 
         private void CheckKeyboard()
         {
             Player player = GameLoop.World.Player;
+
             bool turnTaken = false;
 
-            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
+            if (IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 SadConsole.Settings.ToggleFullScreen();
 
-            if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(0, -1));
                 turnTaken = true;
             }
 
-            if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(0, 1));
                 turnTaken = true;
             }
 
-            if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(-1, 0));
                 turnTaken = true;
             }
 
-            if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(1, 0));
                 turnTaken = true;
@@ -157,7 +169,7 @@ namespace PureHatred.UI
             if (turnTaken == true)
 			{
                 MapConsole.CenterViewPortOnPoint(player.Position);
-                GameLoop.CommandManager._gameState = CommandManager.GameState.EnemyTurn;
+                //GameLoop.CommandManager._gameState = CommandManager.GameState.EnemyTurn;
             }
         }
 
