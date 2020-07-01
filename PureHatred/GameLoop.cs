@@ -12,7 +12,7 @@ namespace PureHatred
 
         public static UIManager UIManager;
         public static CommandManager CommandManager;
-        public static World World;
+        public static SpatialWorld World;
 
         static void Main(string[] args)
         {
@@ -34,9 +34,14 @@ namespace PureHatred
         {
             UIManager = new UIManager();
             CommandManager = new CommandManager();
-            World = new World();
+            World = new SpatialWorld();
 
             UIManager.Init();
+        }
+
+        private static void PassTurn()
+        {
+
         }
     }
 }
