@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
+using System.Linq;
+
 using Microsoft.Xna.Framework;
 
 using PureHatred.Tiles;
@@ -20,10 +21,13 @@ namespace PureHatred.Entities
         public int NutSimple { get; set; }
         public int NutComplexMax { get; set; }
         public int NutComplex { get; set; }
+        public int HealRate { get; set; } = 1;
+        public int NutrientSurplus { get; set; } = 0;
         public List<Item> Inventory = new List<Item>();
         public List<BodyPart> Anatomy = new List<BodyPart>();
-        private List<BodyPart> Stomachs = new List<BodyPart>();
-        private List<BodyPart> Intestines = new List<BodyPart>();
+        public List<BodyPart> Stomachs = new List<BodyPart>(); //Checks for contents to process into nutrients
+        public List<BodyPart> Intestines = new List<BodyPart>(); //Checks for nutrients to process into system
+        public List<Mutation> Mutations = new List<Mutation>();
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
@@ -32,14 +36,14 @@ namespace PureHatred.Entities
 
         public void HardCodeHumanParts()
 		{
-            BodyPart torso = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15, null));
-            BodyPart leg1 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
-            BodyPart leg2 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
-            BodyPart arm1 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
-            BodyPart arm2 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
-            BodyPart head = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", '@', 10, 20), torso);
-            BodyPart stomach = AddBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", '§', 10, 10, torso));
-            BodyPart intestines = AddBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", 'G', 5, 0), stomach);
+            BodyPart torso = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15, null));
+            BodyPart leg1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
+            BodyPart leg2 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
+            BodyPart arm1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
+            BodyPart arm2 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
+            BodyPart head = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", '@', 10, 20), torso);
+            BodyPart stomach = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", '§', 10, 10, torso));
+            BodyPart intestines = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", 'G', 5, 0), stomach);
 
             Stomachs.Add(stomach);
             Intestines.Add(intestines);
@@ -52,22 +56,38 @@ namespace PureHatred.Entities
             return item;
         }
 
-        private BodyPart AddBodyPart(BodyPart child, BodyPart parent = null)
+        private BodyPart GraftBodyPart(BodyPart target, BodyPart parent = null)
         {
             //if (RecalculateBodyPart((BodyPart)bodyPart.parent)); //Cast to BodyPart or it takes it as Item
 
-            Anatomy.Add(child);
+            Anatomy.Add(target);
 
-            RecalculateBiology();
+            if (parent != null)
+			{
+                target.parent = parent;
+                parent.children.Add(target);
+			}
 
-            RecalculateBodyParts(child, parent);
+            NetBiologyValues();
 
-            return child;
+            RecalculateBodyParts(target, parent);
+
+            return target;
         }
 
-        private void EatAThing(Entity entity)
+        private BodyPart SeverBodyPart(BodyPart target, BodyPart parent = null)
 		{
-            
+            Anatomy.Remove(target);
+
+            if (target.children.Count != 0)
+                foreach (BodyPart bodyPart in target.children)
+                    Anatomy.Remove(bodyPart);
+
+            NetBiologyValues();
+
+            RecalculateBodyParts(parent);
+
+            return target;
 		}
 
         public bool MoveBy(Point positionChange)
@@ -80,10 +100,10 @@ namespace PureHatred.Entities
 
                 if (monster != null)
                     return GameLoop.CommandManager.BumpAttack(this, monster);
-                else if (item != null)
-                    return GameLoop.CommandManager.Pickup(this, item);
+                //else if (item != null)
+                //    return GameLoop.CommandManager.Pickup(this, item);
                 else if (bodyPart != null)
-                    return GameLoop.CommandManager.Pickup(this, bodyPart);
+                    return GameLoop.CommandManager.Devour(this, bodyPart);
 
                 Position += positionChange;
                 return true;
@@ -103,7 +123,12 @@ namespace PureHatred.Entities
             return true;
         }
 
-        public void RecalculateBiology()
+        public void BioRhythm()
+		{
+            Alimentation();
+		}
+
+        public void NetBiologyValues()
 		{
             int simpleNeed = 0;
             int complexNeed = 0;
@@ -139,5 +164,51 @@ namespace PureHatred.Entities
 			}
 
 		}
+
+        public int Alimentation()
+        {
+            foreach (BodyPart bodyPart in Anatomy)
+            {
+                NutSimple -= bodyPart.HungerSimple;
+                NutComplex -= bodyPart.HungerComplex;
+            }
+
+            NutrientSurplus += NutSimple;
+            NutrientSurplus += NutComplex;
+
+            return NutrientSurplus;
+        }
+
+        public void ProcessStomachContents(Actor actor)
+        {
+            //Break contents down slowly into Nutrients, pass to child Intestine
+        }
+
+        public void ProcessIntestineContents(Actor actor)
+        {
+            // Send contained Nutrients into system metabolism
+        }
+
+        public void HealWounds(Actor actor)
+        {
+            bool multiBreak = false;
+
+            IEnumerable<BodyPart> ouchies = Anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax);
+
+            for (int i = 0; i < actor.HealRate; i++) //Always heal same HP per nutrients, just at faster rate if possible
+                if (!multiBreak)
+                    foreach (BodyPart bodyPart in ouchies)
+                    {
+                        if (!multiBreak)
+                            bodyPart.HpCurrent++;
+                        else
+                            break;
+
+                        if (NutrientSurplus-- == 0)
+                            multiBreak = true;
+                    }
+                else
+                    break;
+        }
     }
 }
