@@ -15,7 +15,7 @@ using PureHatred.Entities;
 
 namespace PureHatred
 {
-    public class SpatialWorld
+    public class World
     {
         private readonly int _mapWidth = 150;
         private readonly int _mapHeight = 150;
@@ -28,7 +28,7 @@ namespace PureHatred
         public Map CurrentMap { get; set; }
         public Player Player { get; set; }
 
-        public SpatialWorld()
+        public World()
         {
             CreateMap();
             CreatePlayer();
@@ -82,8 +82,8 @@ namespace PureHatred
 
             CurrentMap.Add(Player);
 
-            //for (int i = 1; i < 100; i++)
-                //Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L'));
+            for (int i = 1; i < 100; i++)
+                Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L'));
         }
 
         private void CreateLoot()

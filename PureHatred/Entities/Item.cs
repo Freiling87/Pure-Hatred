@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace PureHatred.Entities
 {
@@ -9,7 +8,6 @@ namespace PureHatred.Entities
         public int weight { get; set; }
         public bool isExpanded;
         public Item parent;
-        public List<Item> children = new List<Item>();
 
         public int Condition
         {

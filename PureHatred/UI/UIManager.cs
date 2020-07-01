@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using SadConsole;
 using SadConsole.Controls;
 
-using PureHatred.Commands;
 using PureHatred.Entities;
 
 using Console = SadConsole.Console;
@@ -44,9 +43,7 @@ namespace PureHatred.UI
 
 		public override void Update(TimeSpan timeElapsed)
         {
-            if (GameLoop.CommandManager._gameState == CommandManager.GameState.PlayerTurn)
-                CheckKeyboard();
-
+            CheckKeyboard(); 
             base.Update(timeElapsed);
         }
 
@@ -116,16 +113,16 @@ namespace PureHatred.UI
             //	console.Print(1, console.Height - 2, $"                                                           ");
         }
 
-        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)
+        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
 		{
 			var console = (Console)sender;
-            GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
+			console.Print(0, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}               ");
 		}
 
-        private void CheckKeyboard()
+		private void CheckKeyboard()
         {
             Player player = GameLoop.World.Player;
-            bool turnTaken = false;
+            bool playerMoved = false;
 
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
                 SadConsole.Settings.ToggleFullScreen();
@@ -133,32 +130,29 @@ namespace PureHatred.UI
             if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(0, -1));
-                turnTaken = true;
+                playerMoved = true;
             }
 
             if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(0, 1));
-                turnTaken = true;
+                playerMoved = true;
             }
 
             if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(-1, 0));
-                turnTaken = true;
+                playerMoved = true;
             }
 
             if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(1, 0));
-                turnTaken = true;
+                playerMoved = true;
             }
 
-            if (turnTaken == true)
-			{
+            if (playerMoved == true)
                 MapConsole.CenterViewPortOnPoint(player.Position);
-                GameLoop.CommandManager._gameState = CommandManager.GameState.EnemyTurn;
-            }
         }
 
         // MAP 

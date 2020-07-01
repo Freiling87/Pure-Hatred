@@ -20,6 +20,9 @@ namespace PureHatred.UI
         {
             _lines = new Queue<string>();
 
+            CanDrag = false;
+            UseMouse = true;
+
             height -= _windowBorder;
             width -= _windowBorder;
 

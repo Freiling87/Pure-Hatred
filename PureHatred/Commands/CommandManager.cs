@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 using GoRogue;
@@ -11,6 +10,7 @@ using PureHatred.Entities;
 using PureHatred.Tiles;
 using PureHatred.UI;
 
+
 namespace PureHatred.Commands
 {
     public class CommandManager
@@ -18,46 +18,26 @@ namespace PureHatred.Commands
         private Point _lastMoveActorPoint;
         private Actor _lastMoveActor;
 
-        public GameState _gameState = 0;
-
         public CommandManager()
         {
         }
-
-        public enum GameState : int
-		{
-            Setup = 0,
-            PlayerTurn = 1,
-            EnemyTurn = 2, 
-            PassiveTurn = 3,
-            MenuGeneric = 10, // Base Esc/Enter, Arrow Keys
-		}
-
-        private void EnemyTurn()
-		{
-            //placeholder
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)");
-            _gameState = GameState.PlayerTurn;
-		}
 
         // COMBAT
 
         public bool BumpAttack(Actor attacker, Actor defender)
         {
-            MessageLogWindow MessageLog = GameLoop.UIManager.MessageLog;
-
             StringBuilder attackMessage = new StringBuilder();
             StringBuilder defenseMessage = new StringBuilder();
 
             int hits = ResolveAttack(attacker, defender, attackMessage);
             int blocks = ResolveDefense(defender, hits, attackMessage, defenseMessage);
-            int damage = hits - blocks;
 
-            MessageLog.AddTextNewline(attackMessage.ToString());
+            GameLoop.UIManager.MessageLog.AddTextNewline(attackMessage.ToString());
 
             if (!string.IsNullOrWhiteSpace(defenseMessage.ToString()))
-                MessageLog.AddTextNewline(defenseMessage.ToString());
+                GameLoop.UIManager.MessageLog.AddTextNewline(defenseMessage.ToString());
 
+            int damage = hits - blocks;
             ResolveDamage(defender, damage);
 
             return true;
@@ -179,16 +159,6 @@ namespace PureHatred.Commands
             item.Destroy();
             return true;
         }
-
-        public bool Devour(Actor actor, Item item)
-		{
-            item.parent = actor.Stomachs[0];
-            actor.Inventory.Add(item);
-            GameLoop.UIManager.SideWindow.InventoryList();
-            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {item.Name}");
-            item.Destroy();
-            return true;
-		}
 
         public bool Drop(Actor actor, Item item)
 		{
