@@ -22,32 +22,47 @@ namespace PureHatred.Entities
         public int NutComplex { get; set; }
         public List<Item> Inventory = new List<Item>();
         public List<BodyPart> Anatomy = new List<BodyPart>();
+        private List<BodyPart> Stomachs = new List<BodyPart>();
+        private List<BodyPart> Intestines = new List<BodyPart>();
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
-            GiveHumanoidParts();
+            HardCodeHumanParts();
         }
 
-        public void GiveHumanoidParts()
+        public void HardCodeHumanParts()
 		{
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 5, 10, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 5, 10, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 5, 10, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 5, 10, 10));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", '@', 10, 10, 20, 20));
-            AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 25, 15, 15));
+            BodyPart torso = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15, null));
+            BodyPart leg1 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
+            BodyPart leg2 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
+            BodyPart arm1 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
+            BodyPart arm2 = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
+            BodyPart head = AddBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", '@', 10, 20), torso);
+            BodyPart stomach = AddBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", '§', 10, 10, torso));
+            BodyPart intestines = AddBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", 'G', 5, 0), stomach);
+
+            Stomachs.Add(stomach);
+            Intestines.Add(intestines);
         }
 
-        private void AddLoot(Item item)
+        private Item AddLoot(Item item)
         {
             Inventory.Add(item);
+
+            return item;
         }
 
-        private void AddBodyPart(BodyPart bodypart)
+        private BodyPart AddBodyPart(BodyPart child, BodyPart parent = null)
         {
-            Anatomy.Add(bodypart);
+            //if (RecalculateBodyPart((BodyPart)bodyPart.parent)); //Cast to BodyPart or it takes it as Item
+
+            Anatomy.Add(child);
 
             RecalculateBiology();
+
+            RecalculateBodyParts(child, parent);
+
+            return child;
         }
 
         private void EatAThing(Entity entity)
@@ -97,8 +112,8 @@ namespace PureHatred.Entities
 
             foreach (BodyPart bodyPart in Anatomy)
 			{
-                complexNeed += bodyPart.NutrientNeedComplex;
-                simpleNeed += bodyPart.NutrientNeedSimple;
+                complexNeed += bodyPart.HungerComplex;
+                simpleNeed += bodyPart.HungerSimple;
                 currentHp += bodyPart.HpCurrent;
                 maxHp += bodyPart.HpMax;
 			}
@@ -111,6 +126,18 @@ namespace PureHatred.Entities
             // Doesn't exist yet
             if (GameLoop.UIManager.StatusWindow != null)
                 GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
+		}
+
+        public void RecalculateBodyParts(params BodyPart[] list)
+		{
+            /* Recalculate Trunk/Branch space with existing grafts
+             */
+
+            foreach (BodyPart bodyPart in list)
+			{
+
+			}
+
 		}
     }
 }

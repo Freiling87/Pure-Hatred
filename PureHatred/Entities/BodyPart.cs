@@ -114,17 +114,23 @@ namespace PureHatred.Entities
 	{
 		public int HpMax;
 		public int HpCurrent;
-		public int NutrientNeedComplex;
-		public int NutrientNeedSimple;
+		public int HungerComplex;
+		public int HungerSimple;
 
-		public BodyPart(Color foreground, Color background, string name, int glyph, int nutComplexCurrent, int nutComplexNeed, int nutSimpleCurrent, int nutSimpleNeed, BodyPart parent=null, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
+		public int Size;
+		public int Capacity;
+		public int Trunks;
+		public int Branches;
+		public int Dexterity;
+		public int Striking;
+		public int Stability;
+
+		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, BodyPart parent = null, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
 		{
 			Name = name;
 
 			HpCurrent = hpCurrent;
 			HpMax = hpMax;
-
-
 		}
 	}
 }
