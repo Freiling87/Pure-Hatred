@@ -13,6 +13,7 @@ using PureHatred.Entities;
 
 using Console = SadConsole.Console;
 using Microsoft.Xna.Framework.Input;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
  * 
@@ -139,37 +140,35 @@ namespace PureHatred.UI
 
             bool turnTaken = false;
 
-            if (IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
+            if (IsKeyReleased(Keys.F5))
                 SadConsole.Settings.ToggleFullScreen();
 
-            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up))
+            if (IsKeyPressed(Keys.Up))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(0, -1));
                 turnTaken = true;
             }
 
-            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down))
+            if (IsKeyPressed(Keys.Down))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(0, 1));
                 turnTaken = true;
             }
 
-            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left))
+            if (IsKeyPressed(Keys.Left))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(-1, 0));
                 turnTaken = true;
             }
 
-            if (IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right))
+            if (IsKeyPressed(Keys.Right))
             {
                 GameLoop.CommandManager.MoveActorBy(player, new Point(1, 0));
                 turnTaken = true;
             }
 
             if (turnTaken == true)
-            {
                 MapConsole.CenterViewPortOnPoint(player.Position);
-            }
         }
 
         // MAP 

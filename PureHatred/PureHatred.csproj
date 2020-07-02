@@ -71,7 +71,7 @@
     <Compile Include="Tiles\TileStairs.cs" />
     <Compile Include="Tiles\TileWall.cs" />
     <Compile Include="UI\CollapsibleTreeWindow.cs" />
-    <Compile Include="UI\InventoryButton.cs" />
+    <Compile Include="UI\InventoryTier.cs" />
     <Compile Include="UI\MessageLogWindow.cs" />
     <Compile Include="UI\StatusWindow.cs" />
     <Compile Include="UI\TreeViewMenu.cs" />

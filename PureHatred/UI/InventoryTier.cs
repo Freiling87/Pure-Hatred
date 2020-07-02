@@ -2,9 +2,9 @@
 
 namespace PureHatred.UI
 {
-	public class InventoryButton : Button 
+	public class InventoryTier : Button 
 	{
-		public InventoryButton (int width, int height = 1) : base (width, height)
+		public InventoryTier (int width, int height = 1) : base (width, height)
 		{
 
 		}
