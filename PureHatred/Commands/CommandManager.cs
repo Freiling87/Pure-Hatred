@@ -18,23 +18,29 @@ namespace PureHatred.Commands
         private Point _lastMoveActorPoint;
         private Actor _lastMoveActor;
         public GameState _gameState = GameState.PlayerTurn;
+
         public CommandManager()
         {
         }
 
         public enum GameState : int
 		{
-            Setup = 0,
-            PlayerTurn = 1,
-            EnemyTurn = 2, 
-            PassiveTurn = 3,
-            MenuGeneric = 10, // Base Esc/Enter, Arrow Keys
+            Setup,
+            PlayerTurn,
+            EnemyTurn, 
+            PassiveTurn,
+            MenuGeneric, // Base Esc/Enter, Arrow Keys
 		}
 
         private void EnemyTurn()
 		{
-            //placeholder
             GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)");
+            _gameState = GameState.PlayerTurn;
+		}
+
+        private void PlayerTurn()
+		{
+            GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here");
             _gameState = GameState.PlayerTurn;
 		}
 

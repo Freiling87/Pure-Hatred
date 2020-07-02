@@ -107,6 +107,7 @@
  */
 
 using Microsoft.Xna.Framework;
+using System.Text;
 
 namespace PureHatred.Entities
 {
@@ -124,6 +125,9 @@ namespace PureHatred.Entities
 		public int Dexterity;
 		public int Striking;
 		public int Stability;
+
+		public StringBuilder TierPrefix = new StringBuilder("");
+		public int AnatomyTier = 0;
 
 		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, BodyPart parent = null, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
 		{

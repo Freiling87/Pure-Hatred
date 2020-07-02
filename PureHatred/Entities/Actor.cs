@@ -2,7 +2,7 @@
 using System.Linq;
 
 using Microsoft.Xna.Framework;
-
+using PureHatred.Commands;
 using PureHatred.Tiles;
 using PureHatred.UI;
 
@@ -70,6 +70,9 @@ namespace PureHatred.Entities
 
             NetBiologyValues();
 
+            if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
+                GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
+
             RecalculateBodyParts(target, parent);
 
             return target;
@@ -85,6 +88,9 @@ namespace PureHatred.Entities
 
             NetBiologyValues();
 
+            if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
+                GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
+
             RecalculateBodyParts(parent);
 
             return target;
@@ -92,29 +98,28 @@ namespace PureHatred.Entities
 
         public bool MoveBy(Point positionChange)
         {
-            if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
-            {
-                Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
-                Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
-                BodyPart bodyPart = GameLoop.World.CurrentMap.GetEntityAt<BodyPart>(Position + positionChange);
+            Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
+            Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
+            BodyPart bodyPart = GameLoop.World.CurrentMap.GetEntityAt<BodyPart>(Position + positionChange);
+            TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+            TileWall wall = GameLoop.World.CurrentMap.GetTileAt<TileWall>(Position + positionChange);
 
-                if (monster != null)
-                    return GameLoop.CommandManager.BumpAttack(this, monster);
-                //else if (item != null)
-                //    return GameLoop.CommandManager.Pickup(this, item);
-                else if (bodyPart != null)
-                    return GameLoop.CommandManager.Devour(this, bodyPart);
+            if (monster != null)
+                return GameLoop.CommandManager.BumpAttack(this, monster);
+            else if (bodyPart != null)
+                return GameLoop.CommandManager.Devour(this, bodyPart);
+            //else if (item != null)
+            //    return GameLoop.CommandManager.Pickup(this, item);
+            else if (door != null && !door.IsOpen)
+                return GameLoop.CommandManager.UseDoor(this, door);
 
+            else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
+			{
                 Position += positionChange;
                 return true;
             }
-            else
-            {
-                TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
-                if (door != null)
-                    return GameLoop.CommandManager.UseDoor(this, door);
-                return false;
-            }
+
+            return false;
         }
 
         public bool MoveTo(Point newPosition)
@@ -130,27 +135,11 @@ namespace PureHatred.Entities
 
         public void NetBiologyValues()
 		{
-            int simpleNeed = 0;
-            int complexNeed = 0;
-            int currentHp = 0;
-            int maxHp = 0;
+            NutComplexMax = Anatomy.Sum(x => x.HungerComplex);
+            NutSimpleMax = Anatomy.Sum(x => x.HungerSimple);
+            Health = Anatomy.Sum(x => x.HpCurrent);
+            HealthMax = Anatomy.Sum(x => x.HpMax);
 
-            foreach (BodyPart bodyPart in Anatomy)
-			{
-                complexNeed += bodyPart.HungerComplex;
-                simpleNeed += bodyPart.HungerSimple;
-                currentHp += bodyPart.HpCurrent;
-                maxHp += bodyPart.HpMax;
-			}
-
-            NutComplexMax = complexNeed;
-            NutSimpleMax = simpleNeed;
-            Health = currentHp;
-            HealthMax = maxHp;
-
-            // Doesn't exist yet
-            if (GameLoop.UIManager.StatusWindow != null)
-                GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 		}
 
         public void RecalculateBodyParts(params BodyPart[] list)

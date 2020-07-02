@@ -70,7 +70,6 @@ namespace PureHatred.UI
             if (player.Inventory.Count > 0)
                 foreach (Item item in player.Inventory)
 			    {
-                    Item currentItem = player.Inventory[i];
                     StringBuilder tierString = new StringBuilder();
 
                     for (int j = 0; j < GetNodeIndent(item); j++)
@@ -86,17 +85,15 @@ namespace PureHatred.UI
             if (player.Anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.Anatomy)
 				{
-                    BodyPart currentPart = player.Anatomy[i];
                     StringBuilder tierString = new StringBuilder();
 
                     for (int j = 0; j < GetNodeIndent(bodyPart); j++)
-                        tierString.Append("|");
+                        tierString.Append("||");
 
                     tierString.Append(player.Anatomy[i++].Name);
 
                     _listBox.Items.Add(tierString);
 				}
-
         }
 
         public int GetNodeIndent(Item item)
