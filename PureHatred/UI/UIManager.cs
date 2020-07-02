@@ -117,20 +117,10 @@ namespace PureHatred.UI
             //	console.Print(1, console.Height - 2, $"                                                           ");
         }
 
-        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)
-        {
-            var console = (Console)sender;
+        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
+		{
+			var console = (Console)sender;
             GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
-        }
-
-        private bool IsKeyReleased(Keys input)
-		{
-            return Global.KeyboardState.IsKeyReleased(input);
-        }
-
-        private bool IsKeyPressed(Keys input)
-		{
-            return Global.KeyboardState.IsKeyPressed(input);
         }
 
         private void CheckKeyboard()
@@ -169,9 +159,7 @@ namespace PureHatred.UI
             if (turnTaken == true)
 			{
                 MapConsole.CenterViewPortOnPoint(player.Position);
-                //GameLoop.CommandManager._gameState = CommandManager.GameState.EnemyTurn;
             }
-        }
 
         // MAP 
 

@@ -17,9 +17,7 @@ namespace PureHatred.Commands
     {
         private Point _lastMoveActorPoint;
         private Actor _lastMoveActor;
-
         public GameState _gameState = GameState.PlayerTurn;
-
         public CommandManager()
         {
         }
