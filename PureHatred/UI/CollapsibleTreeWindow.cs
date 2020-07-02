@@ -73,7 +73,7 @@ namespace PureHatred.UI
                     StringBuilder tierString = new StringBuilder();
 
                     for (int j = 0; j < GetNodeIndent(item); j++)
-                        tierString.Append("|");
+                        tierString.Append("-");
 
                     tierString.Append(player.Inventory[i++].Name);
 
@@ -88,7 +88,7 @@ namespace PureHatred.UI
                     StringBuilder tierString = new StringBuilder();
 
                     for (int j = 0; j < GetNodeIndent(bodyPart); j++)
-                        tierString.Append("||");
+                        tierString.AppendFormat("-");
 
                     tierString.Append(player.Anatomy[i++].Name);
 

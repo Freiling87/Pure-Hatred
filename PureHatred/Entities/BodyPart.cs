@@ -129,7 +129,7 @@ namespace PureHatred.Entities
 		public StringBuilder TierPrefix = new StringBuilder("");
 		public int AnatomyTier = 0;
 
-		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, BodyPart parent = null, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
+		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
 		{
 			Name = name;
 

@@ -32,15 +32,21 @@ namespace PureHatred.Commands
             MenuGeneric, // Base Esc/Enter, Arrow Keys
 		}
 
-        private void EnemyTurn()
-		{
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)");
-            _gameState = GameState.PlayerTurn;
-		}
-
         private void PlayerTurn()
 		{
             GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here");
+            _gameState = GameState.EnemyTurn;
+		}
+
+        private void EnemyTurn()
+        {
+            GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)");
+            _gameState = GameState.PassiveTurn;
+        }
+
+        private void PassiveTurn()
+		{
+
             _gameState = GameState.PlayerTurn;
 		}
 
@@ -184,13 +190,13 @@ namespace PureHatred.Commands
             return true;
         }
 
-        public bool Devour(Actor actor, Item item)
+        public bool Devour(Actor actor, BodyPart bodyPart)
 		{
-            item.parent = actor.Stomachs[0];
-            actor.Inventory.Add(item);
+            bodyPart.parent = actor.Stomachs[0];
+            actor.Anatomy.Add(bodyPart);
             GameLoop.UIManager.SideWindow.InventoryList();
-            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {item.Name}");
-            item.Destroy();
+            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {bodyPart.Name}");
+            bodyPart.Destroy();
             return true;
 		}
 
