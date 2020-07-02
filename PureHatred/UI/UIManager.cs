@@ -123,6 +123,16 @@ namespace PureHatred.UI
             GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
         }
 
+        private bool IsKeyReleased(Keys input)
+        {
+            return Global.KeyboardState.IsKeyReleased(input);
+        }
+
+        private bool IsKeyPressed(Keys input)
+        {
+            return Global.KeyboardState.IsKeyPressed(input);
+        }
+
         private void CheckKeyboard()
         {
             Player player = GameLoop.World.Player;
@@ -157,9 +167,10 @@ namespace PureHatred.UI
             }
 
             if (turnTaken == true)
-			{
+            {
                 MapConsole.CenterViewPortOnPoint(player.Position);
             }
+        }
 
         // MAP 
 
