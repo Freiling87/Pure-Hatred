@@ -38,10 +38,5 @@ namespace PureHatred
 
 			UIManager.Init();
 		}
-
-		private static void PassTurn()
-		{
-
-		}
 	}
 }

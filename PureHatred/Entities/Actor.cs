@@ -3,6 +3,7 @@ using System.Linq;
 
 using Microsoft.Xna.Framework;
 using PureHatred.Commands;
+using PureHatred.Resolutions;
 using PureHatred.Tiles;
 using PureHatred.UI;
 
@@ -119,7 +120,8 @@ namespace PureHatred.Entities
             TileWall wall = GameLoop.World.CurrentMap.GetTileAt<TileWall>(Position + positionChange);
 
             if (monster != null)
-                return GameLoop.CommandManager.BumpAttack(this, monster);
+                //return GameLoop.CommandManager.BumpAttack(this, monster);
+                Combat.BumpAttack(this, monster);
             else if (bodyPart != null)
                 return GameLoop.CommandManager.Devour(this, bodyPart);
             //else if (item != null)
@@ -128,7 +130,7 @@ namespace PureHatred.Entities
                 return GameLoop.CommandManager.UseDoor(this, door);
 
             else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
-			{
+            {
                 Position += positionChange;
                 return true;
             }

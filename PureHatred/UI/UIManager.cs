@@ -97,6 +97,8 @@ namespace PureHatred.UI
 
             // Map Look by Mouseover
             StringBuilder seenString = new StringBuilder("You see:");
+            // May need to move this to MessageLog by Click, as it can get very extensive
+            // Or just list Adam objects only, and allow further inspection explicitly
 
             TileBase seenTile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(e.MouseState.CellPosition);
             if (seenTile != null)
@@ -109,7 +111,7 @@ namespace PureHatred.UI
 
             seenString.Remove(seenString.Length - 1, 1);                    //comma
             seenString.Append("                                         "); //overwrite
-            console.Print(0, console.Height - 1, seenString.ToString());
+            console.Print(0, 0, seenString.ToString());
 
             // Map _____ by Click
             //if (e.MouseState.Mouse.LeftButtonDown)
@@ -129,7 +131,7 @@ namespace PureHatred.UI
             return Global.KeyboardState.IsKeyReleased(input);
         }
 
-        private bool IsKeyPressed(Keys input)
+        private bool IsKeyPressed(Keys input) 
         {
             return Global.KeyboardState.IsKeyPressed(input);
         }
