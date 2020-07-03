@@ -141,7 +141,6 @@ namespace PureHatred.Entities
 
 		public StringBuilder TierPrefix = new StringBuilder("");
 		public int AnatomyTier = 0;
-		public Actor owner; // TODO: Owner should just be a hidden Core node
 
 		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, glyph)
 		{

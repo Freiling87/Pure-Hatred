@@ -6,13 +6,10 @@ using SadConsole;
 using SadConsole.Controls;
 
 using PureHatred.Entities;
+using System.Collections.Generic;
 
 
-/*Symbols CAN be layered so we'll only need the following for the interface:
- * Hollow nodes, can hold + or - for expand/collapse
- * + and - themselves, possibly different from main font symbols
- * Node line connectors to parents, children and siblings
- *
+/*
  *Depth-First pre-order traversal appears to be the way to go, if we're going through the tree but generating the menu linearly.
  * https://en.wikipedia.org/wiki/Tree_traversal
  * 
@@ -26,15 +23,12 @@ using PureHatred.Entities;
  * 5. If yes, process sibling
  * 6. If no, process 4 on parent
  * 
- * TODO: Take a look at ListBoxes as an alternative to the buttons. Possibly the high number of controls is not supportable, so the Listbox would be a more lightweight way to do it.
  * ListBox Themes, suggested by Thraka: https://github.com/SadConsole/SadConsole/blob/master/src/SadConsole/Themes/ListBoxTheme.cs#L280
  * 
  * TODO: Figure out inventory/anatomy sorting according to parent. Currently they'll be sorted in order of acquisition.
  * 
  * The NuGet pkg I added: https://github.com/davidwest/TreeCollections
- * 
  * https://github.com/aalhour/C-Sharp-Algorithms/tree/master/DataStructures/Trees
- * 
  */
 
 namespace PureHatred.UI
@@ -64,20 +58,18 @@ namespace PureHatred.UI
 		{
             _listBox.Items.Clear();
             Player player = GameLoop.World.Player;
+            List<bool> finishedTiers = new List<bool>();
+            // This should track whether the last member of this generation has been registered into the list, 
+            // In order to cease the generation of this tier's Uncle-branches in child tiers
 
             int i = 0;
 
             if (player.Inventory.Count > 0)
                 foreach (Item item in player.Inventory)
 			    {
-                    StringBuilder tierString = new StringBuilder();
-
-                    for (int j = 0; j < GetNodeIndent(item); j++)
-                        tierString.Append("-");
-
-                    tierString.Append(player.Inventory[i++].Name);
-
-                    _listBox.Items.Add(tierString);
+                    _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{player.Inventory[i++].Name}");
+                    if (item == item.parent.children[item.parent.children.Count - 1])
+                        finishedTiers.Add(true);
                 }
 
             i = 0;
@@ -85,28 +77,62 @@ namespace PureHatred.UI
             if (player.Anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.Anatomy)
 				{
-                    StringBuilder tierString = new StringBuilder();
-
-                    for (int j = 0; j < GetNodeIndent(bodyPart); j++)
-                        tierString.AppendFormat("-");
-
-                    tierString.Append(player.Anatomy[i++].Name);
-
-                    _listBox.Items.Add(tierString);
+                    _listBox.Items.Add($"{GetNodeTreeSymbols(bodyPart)}{player.Anatomy[i++].Name}");
 				}
         }
 
-        public int GetNodeIndent(Item item)
+        public StringBuilder GetNodeTreeSymbols(Item item)
+		{
+            StringBuilder output = new StringBuilder(" ");
+
+            if (item.parent == null)
+                return output.Append($"{(char)194}{(char)196}");
+			else
+			{
+                /* Uncle branch     │ 179
+                 * Self branch 
+                 *   Not Lastborn   ├ 195
+                 *   Lastborn       └ 192
+                 * Offspring Branch
+                 *   Childless      ─ 196
+                 *   With child     ┬ 194
+                 * ○┬Adam
+                    ├┬Parent
+                    │├─Child
+                    │├─Child
+                    │└┬Child
+                    │ ├─Grandchild
+                    │ └─Grandchild
+                    ├─Parent
+                    └┬Parent
+                     ├─Child
+                     └─Child
+                 */
+
+                for (int i = 0; i < GetTier(item); i++)
+                    output.Append((char)179);
+                //These are "Uncle-branches", which allow parent to connect to its siblings. 
+                //Need to suppress if parent-or-higher tier has already expressed lastborn
+                // See FinishedTiers in InventoryList() for the first steps I've implemented. 
+                // If it's unreachable here we should just merge these two functions, but it won't be pretty.
+
+                List<Item> siblings = item.parent.children;
+
+                if (item == siblings[siblings.Count - 1])
+                    output.Append((char)192); //Lastborn
+                else
+                    output.Append((char)196);
+            }
+
+            return output;
+		}
+
+        private int GetTier(Item item)
 		{
             if (item.parent == null)
                 return 0;
-            else 
-                return 1 + GetNodeIndent(item.parent);
-		}
-
-        public bool IsParentNodeExpanded(Item item)
-		{
-            return true; //-
+            else
+                return 1 + GetTier(item.parent);
 		}
 
         enum TierSymbol

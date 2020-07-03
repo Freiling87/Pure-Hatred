@@ -7,9 +7,11 @@ namespace PureHatred.Entities
     {
         private int _condition;
         public int weight { get; set; }
-        public bool isExpanded;
+        public bool isNodeExpanded;
         public Item parent;
         public List<Item> children = new List<Item>();
+        public Actor owner; // TODO: Owner should just be a hidden Core node
+
 
         public int Condition
         {
