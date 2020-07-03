@@ -119,6 +119,7 @@ namespace PureHatred.Resolutions
             deathMessage.Append(".");
 
             Map.Remove(defender);
+            GameLoop.World.CurrentMap.Actors.Remove(defender);
             GameLoop.UIManager.MessageLog.AddTextNewline(deathMessage.ToString());
         }
     }

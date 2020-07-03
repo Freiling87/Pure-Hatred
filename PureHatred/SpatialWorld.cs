@@ -66,6 +66,8 @@ namespace PureHatred
 
                 newMonster.Position = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Width);
                 CurrentMap.Add(newMonster);
+
+                CurrentMap.Actors.Add(newMonster);
             }
         }
 

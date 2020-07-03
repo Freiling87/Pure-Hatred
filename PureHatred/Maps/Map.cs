@@ -23,6 +23,8 @@ namespace PureHatred
         public GoRogue.MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
         public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator(); // A static IDGenerator that all Entities can access
 
+        public List<Actor> Actors = new List<Actor>();
+
         public Map(int width, int height)
         {
             _width = width;

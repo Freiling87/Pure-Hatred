@@ -136,5 +136,31 @@ namespace PureHatred.Entities
 			HpCurrent = hpCurrent;
 			HpMax = hpMax;
 		}
+
+		public void Remove()
+		{
+			Map Map = GameLoop.World.CurrentMap;
+
+			Map.Remove(this);
+			GameLoop.World.CurrentMap.Entities.Remove(this);
+			parent.children.Remove(this);
+			
+			foreach (BodyPart child in children)
+			{
+				child.parent = null;
+			}
+
+			GameLoop.UIManager.MessageLog.AddTextNewline($"{Name} was destroyed.");
+		}
+
+		public void Decompose()
+		{
+			HpCurrent--;
+
+			if (HpCurrent == 0)
+			{
+				Remove();
+			}
+		}
 	}
 }

@@ -18,18 +18,18 @@ namespace PureHatred.Entities
         public int Gold { get; set; }
         public int Health { get; set; }
         public int HealthMax { get; set; }
-        public int NutSimpleMax { get; set; }
+        public int HungerSimple { get; set; }
         public int NutSimple { get; set; }
-        public int NutComplexMax { get; set; }
+        public int HungerComplex { get; set; }
         public int NutComplex { get; set; }
         public int HealRate { get; set; } = 1;
         public int NutrientSurplus { get; set; } = 0;
 
-        public List<BodyPart> Anatomy = new List<BodyPart>();
-        public List<BodyPart> Intestines = new List<BodyPart>(); //Checks for nutrients to process into system
+        public List<BodyPart> Anatomy = new List<BodyPart>(); // TODO: Remove this list and simply make the Actor the parent of the Core. Then all Children can be determined as with a bodyPart.
+        public BodyPart Intestines; //Checks for nutrients to process into system
         public List<Item> Inventory = new List<Item>();
         public List<Mutation> Mutations = new List<Mutation>();
-        public List<BodyPart> Stomachs = new List<BodyPart>(); //Checks for contents to process into nutrients
+        public BodyPart Stomach;
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
@@ -60,8 +60,8 @@ namespace PureHatred.Entities
 			BodyPart lung1 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'd', 0, 0), torso);
 			BodyPart lung2 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'b', 0, 0), torso);
 
-			Stomachs.Add(stomach);
-			Intestines.Add(intestines);
+            Stomach = stomach;
+			Intestines = intestines;
 		}
 
         private Item AddLoot(Item item)
@@ -144,15 +144,11 @@ namespace PureHatred.Entities
             return true;
         }
 
-        public void BioRhythm()
-		{
-            Alimentation();
-		}
 
         public void NetBiologyValues()
 		{
-            NutComplexMax = Anatomy.Sum(x => x.HungerComplex);
-            NutSimpleMax = Anatomy.Sum(x => x.HungerSimple);
+            HungerComplex = Anatomy.Sum(x => x.HungerComplex);
+            HungerSimple = Anatomy.Sum(x => x.HungerSimple);
             Health = Anatomy.Sum(x => x.HpCurrent);
             HealthMax = Anatomy.Sum(x => x.HpMax);
 
@@ -170,8 +166,37 @@ namespace PureHatred.Entities
 
 		}
 
+        public void BioRhythm()
+        {
+            Alimentation();
+        }
+
         public int Alimentation()
         {
+			foreach (BodyPart digestee in Stomach.children) //TODO: Move to BodyPart
+			{
+				digestee.HpCurrent--;
+
+				GraftBodyPart(new BodyPart(Color.SaddleBrown, Color.Transparent, "fecal slime", 'x', 0, 0, 2, 2), Intestines);
+
+				if (digestee.HpCurrent == 0)
+				{
+					// Destroy
+					// Move this so it rots parts in open as well, if that's all it does
+				}
+			}
+
+            foreach (BodyPart feces in Intestines.children) //TODO: Move to BodyPart
+            {
+                feces.HpCurrent--;
+                NutSimple++;
+
+                if (feces.HpCurrent == 0)
+				{
+                    // Remove
+				}
+			}
+
             foreach (BodyPart bodyPart in Anatomy)
             {
                 NutSimple -= bodyPart.HungerSimple;

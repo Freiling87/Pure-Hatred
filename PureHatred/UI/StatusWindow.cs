@@ -105,8 +105,8 @@ namespace PureHatred.UI
 			Player Player = GameLoop.World.Player;
 
 			healthBar.Progress = (float)Player.Health / (float)Player.HealthMax;
-			NutrientComplex.Progress = (float)Player.NutComplex / (float)Player.NutComplexMax;
-			NutrientSimple.Progress = (float)Player.NutSimple / (float)Player.NutSimpleMax;
+			NutrientComplex.Progress = (float)Player.NutComplex / (float)Player.HungerComplex;
+			NutrientSimple.Progress = (float)Player.NutSimple / (float)Player.HungerSimple;
 		}
 
 		public override void Draw(TimeSpan drawTime) =>

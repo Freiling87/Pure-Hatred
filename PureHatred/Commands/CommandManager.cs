@@ -16,8 +16,6 @@ namespace PureHatred.Commands
 {
     public class CommandManager
     {
-        private Point _lastMoveActorPoint;
-        private Actor _lastMoveActor;
         public GameState _gameState = GameState.PlayerTurn;
 
         public CommandManager()
@@ -31,49 +29,55 @@ namespace PureHatred.Commands
             EnemyTurn, 
             PassiveTurn,
             MenuGeneric, // Base Esc/Enter, Arrow Keys
+
 		}
 
-        private void PlayerTurn()
+        public void PlayerTurn()
 		{
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here");
-            _gameState = GameState.EnemyTurn;
+            GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here"); //-
+
+
+            if (!GameLoop.UIManager.turnTaken)
+                _gameState = GameState.EnemyTurn;
 		}
 
-        private void EnemyTurn()
+        public void PlayerTurnEnd()
+		{
+		}
+
+        public void EnemyTurn()
         {
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)");
+            GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)"); //-
             _gameState = GameState.PassiveTurn;
+            PassiveTurn();
         }
 
-        private void PassiveTurn()
+        public void PassiveTurn()
 		{
+            GameLoop.UIManager.MessageLog.AddTextNewline("(Passive Turn here)"); //-
+
+            foreach (Actor actor in GameLoop.World.CurrentMap.Actors)
+                actor.BioRhythm();
+
+            GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 
             _gameState = GameState.PlayerTurn;
+            PlayerTurn();
 		}
 
-        // COMBAT
+        // COMMANDS
 
         public bool UseDoor(Actor actor, TileDoor door)
         {
             if (door.Locked)
-            {
                 return false;
-            }
-            else if (!door.Locked && !door.IsOpen)
+            if (!door.Locked && !door.IsOpen)
             {
                 door.Open();
                 GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} opened a {door.Name}");
                 return true;
             }
             return false;
-        }
-
-        public bool MoveActorBy(Actor actor, Point position)
-        {
-            _lastMoveActor = actor;
-            _lastMoveActorPoint = position;
-
-            return actor.MoveBy(position);
         }
 
         public bool Pickup(Actor actor, Item item)
@@ -87,7 +91,7 @@ namespace PureHatred.Commands
 
         public bool Devour(Actor actor, BodyPart bodyPart)
 		{
-            bodyPart.parent = actor.Stomachs[0];
+            bodyPart.parent = actor.Stomach;
             actor.Anatomy.Add(bodyPart);
             GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {bodyPart.Name}");

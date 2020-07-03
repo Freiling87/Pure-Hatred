@@ -29,6 +29,8 @@ namespace PureHatred.UI
         public MessageLogWindow MessageLog;
         public StatusWindow StatusWindow;
 
+        public bool turnTaken = false;
+
         public UIManager()
         {
             IsVisible = true;
@@ -140,37 +142,41 @@ namespace PureHatred.UI
         {
             Player player = GameLoop.World.Player;
 
-            bool turnTaken = false;
+            turnTaken = false;
 
             if (IsKeyReleased(Keys.F5))
                 SadConsole.Settings.ToggleFullScreen();
 
             if (IsKeyPressed(Keys.Up))
             {
-                GameLoop.CommandManager.MoveActorBy(player, new Point(0, -1));
+                player.MoveBy(new Point(0, -1));
                 turnTaken = true;
             }
 
             if (IsKeyPressed(Keys.Down))
             {
-                GameLoop.CommandManager.MoveActorBy(player, new Point(0, 1));
+                player.MoveBy(new Point(0, 1));
                 turnTaken = true;
             }
 
             if (IsKeyPressed(Keys.Left))
             {
-                GameLoop.CommandManager.MoveActorBy(player, new Point(-1, 0));
+                player.MoveBy(new Point(-1, 0));
                 turnTaken = true;
             }
 
             if (IsKeyPressed(Keys.Right))
             {
-                GameLoop.CommandManager.MoveActorBy(player, new Point(1, 0));
+                player.MoveBy(new Point(1, 0));
                 turnTaken = true;
             }
 
-            if (turnTaken == true)
+            if (turnTaken)
+			{
                 MapConsole.CenterViewPortOnPoint(player.Position);
+                //GameLoop.CommandManager._gameState = CommandManager.GameState.EnemyTurn;
+                GameLoop.CommandManager.EnemyTurn();
+            }
         }
 
         // MAP 
