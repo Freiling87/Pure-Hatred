@@ -29,6 +29,7 @@ namespace PureHatred.Entities
         public BodyPart Intestines; //Checks for nutrients to process into system
         public List<Item> Inventory = new List<Item>();
         public List<Mutation> Mutations = new List<Mutation>();
+        public BodyPart Mouth;
         public BodyPart Stomach;
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
@@ -50,18 +51,17 @@ namespace PureHatred.Entities
             BodyPart brain = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "brain", '@', 10, 40), head);
             BodyPart eye1 = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", '.', 2, 1, 2, 2), head);
             BodyPart eye2 = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", '.', 2, 1, 2, 2), head);
+            BodyPart mouth = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "mouth", 'D', 0, 1, 5, 5), head);
 
 			BodyPart stomach = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", '§', 10, 10), torso);
-			BodyPart mushroom1 = GraftBodyPart(new BodyPart(Color.LightGray, Color.Transparent, "mushroom", 5, 0, 0), stomach);
-			BodyPart mushroom2 = GraftBodyPart(new BodyPart(Color.LightGray, Color.Transparent, "mushroom", 5, 0, 0), stomach);
 			BodyPart intestines = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", 'G', 5, 0), stomach);
-			BodyPart fecalSlime = GraftBodyPart(new BodyPart(Color.SaddleBrown, Color.Transparent, "fecal slime", 'x', 0, 0), intestines);
 
 			BodyPart lung1 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'd', 0, 0), torso);
 			BodyPart lung2 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'b', 0, 0), torso);
 
             Stomach = stomach;
 			Intestines = intestines;
+            Mouth = mouth;
 		}
 
         private Item AddLoot(Item item)
@@ -71,11 +71,12 @@ namespace PureHatred.Entities
             return item;
         }
 
-        private BodyPart GraftBodyPart(BodyPart target, BodyPart parent = null)
+        public BodyPart GraftBodyPart(BodyPart target, BodyPart parent = null, Actor owner = null)
         {
             //if (RecalculateBodyPart((BodyPart)bodyPart.parent)); //Cast to BodyPart or it takes it as Item
 
             Anatomy.Add(target);
+            target.owner = this;
 
             if (parent != null)
 			{
@@ -88,7 +89,7 @@ namespace PureHatred.Entities
             if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
                 GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 
-            RecalculateBodyParts(target, parent);
+            RecalcNodeCapacities(target, parent);
 
             return target;
         }
@@ -106,7 +107,7 @@ namespace PureHatred.Entities
             if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
                 GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 
-            RecalculateBodyParts(parent);
+            RecalcNodeCapacities(parent);
 
             return target;
 		}
@@ -144,17 +145,15 @@ namespace PureHatred.Entities
             return true;
         }
 
-
         public void NetBiologyValues()
 		{
             HungerComplex = Anatomy.Sum(x => x.HungerComplex);
             HungerSimple = Anatomy.Sum(x => x.HungerSimple);
             Health = Anatomy.Sum(x => x.HpCurrent);
             HealthMax = Anatomy.Sum(x => x.HpMax);
-
 		}
 
-        public void RecalculateBodyParts(params BodyPart[] list)
+        public void RecalcNodeCapacities(params BodyPart[] list)
 		{
             /* Recalculate Trunk/Branch space with existing grafts
              */
@@ -173,31 +172,10 @@ namespace PureHatred.Entities
 
         public int Alimentation()
         {
-			foreach (BodyPart digestee in Stomach.children) //TODO: Move to BodyPart
-			{
-				digestee.HpCurrent--;
+            Stomach.StomachDigestion();
+            Intestines.IntestinalDigestion();
 
-				GraftBodyPart(new BodyPart(Color.SaddleBrown, Color.Transparent, "fecal slime", 'x', 0, 0, 2, 2), Intestines);
-
-				if (digestee.HpCurrent == 0)
-				{
-					// Destroy
-					// Move this so it rots parts in open as well, if that's all it does
-				}
-			}
-
-            foreach (BodyPart feces in Intestines.children) //TODO: Move to BodyPart
-            {
-                feces.HpCurrent--;
-                NutSimple++;
-
-                if (feces.HpCurrent == 0)
-				{
-                    // Remove
-				}
-			}
-
-            foreach (BodyPart bodyPart in Anatomy)
+            foreach (BodyPart bodyPart in Anatomy) // Split off to Nourish() if gets any more complex
             {
                 NutSimple -= bodyPart.HungerSimple;
                 NutComplex -= bodyPart.HungerComplex;
@@ -207,16 +185,6 @@ namespace PureHatred.Entities
             NutrientSurplus += NutComplex;
 
             return NutrientSurplus;
-        }
-
-        public void ProcessStomachContents(Actor actor)
-        {
-            //Break contents down slowly into Nutrients, pass to child Intestine
-        }
-
-        public void ProcessIntestineContents(Actor actor)
-        {
-            // Send contained Nutrients into system metabolism
         }
 
         public void HealWounds(Actor actor)

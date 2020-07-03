@@ -107,6 +107,8 @@
  */
 
 using Microsoft.Xna.Framework;
+using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace PureHatred.Entities
@@ -126,10 +128,22 @@ namespace PureHatred.Entities
 		public int Striking;
 		public int Stability;
 
+		public int DecompositionTimer; // Loop 10 turns or so? Or varied rate, who knows
+
+		//TODO: Consider Enum PartType to streamline biorhythms
+
+		public int ContentsComplex; // Stand-in for Complex Nutrients
+		public int ContentsSimple; // Stand-in for Simple Nutrients
+									// Both are combined to fill Capacity, but could also represent blood, bile, etc depending on organ context.
+
+		public int ValuePerBiteComplex;
+		public int ValuePerBiteSimple;
+
 		public StringBuilder TierPrefix = new StringBuilder("");
 		public int AnatomyTier = 0;
+		public Actor owner; // TODO: Owner should just be a hidden Core node
 
-		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10) : base(foreground, background, name, glyph)
+		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, glyph)
 		{
 			Name = name;
 
@@ -137,7 +151,7 @@ namespace PureHatred.Entities
 			HpMax = hpMax;
 		}
 
-		public void Remove()
+		public void Delete(string message)
 		{
 			Map Map = GameLoop.World.CurrentMap;
 
@@ -146,21 +160,52 @@ namespace PureHatred.Entities
 			parent.children.Remove(this);
 			
 			foreach (BodyPart child in children)
-			{
 				child.parent = null;
-			}
 
-			GameLoop.UIManager.MessageLog.AddTextNewline($"{Name} was destroyed.");
+			GameLoop.UIManager.MessageLog.AddTextNewline(message);
 		}
 
 		public void Decompose()
 		{
-			HpCurrent--;
-
-			if (HpCurrent == 0)
-			{
-				Remove();
-			}
+			if (HpCurrent-- == 0)
+				Delete($"{Name} decomposed into thin air.");
+				//TODO: Add compost or rotting remains
 		}
+
+		public void Masticate(BodyPart morsel)
+		{
+			// TODO: Change rate of eating, possibly to this.Striking
+			morsel.HpCurrent--; //TODO: Add an event handler to HP--, since there are many possible causes? This might actually be a great place for a Setter to check for item destruction.
+			owner.Stomach.ContentsComplex += morsel.ValuePerBiteComplex;
+			owner.Stomach.ContentsSimple += morsel.ValuePerBiteComplex;
+		}
+
+		public void StomachDigestion()
+		{
+			//TODO: Develop biting/chewing process that breaks down bodyparts to send increase to ContentsSimple and ContentsComplex here
+			//TODO: Possibly change these capacity values to floats? I can see pros and cons but I'm not interrupting my flow state to write them here :D
+			//	You now: "Fuck your flow state, past-me."
+			//	Me then: "I'm in control here, I'm writing the comments."
+			//	You now: "I can delete your stupid comments. These aren't as clever as you think they are."
+
+			int digested = (int)Math.Sqrt(ContentsSimple);
+			ContentsSimple -= digested;
+			owner.Intestines.ContentsSimple += digested;
+
+			digested = (int)Math.Sqrt(ContentsComplex);
+			ContentsComplex -= digested;
+			owner.Intestines.ContentsComplex += digested;
+		}
+
+		public void IntestinalDigestion()
+		{
+			int digested = (int)Math.Sqrt(ContentsSimple);
+			ContentsSimple -= digested;
+			owner.NutSimple += digested;
+
+			digested = (int)Math.Sqrt(ContentsComplex);
+			ContentsComplex -= digested;
+			owner.NutComplex += digested;
+		}	
 	}
 }
