@@ -56,11 +56,10 @@ namespace PureHatred.UI
 
         public void InventoryList()
 		{
-            _listBox.Items.Clear();
             Player player = GameLoop.World.Player;
             List<bool> finishedTiers = new List<bool>();
-            // This should track whether the last member of this generation has been registered into the list, 
-            // In order to cease the generation of this tier's Uncle-branches in child tiers
+
+            _listBox.Items.Clear();
 
             int i = 0;
 
@@ -83,47 +82,47 @@ namespace PureHatred.UI
 
         public StringBuilder GetNodeTreeSymbols(Item item)
 		{
-            StringBuilder output = new StringBuilder(" ");
+            /* 1. Uncle branch     │ 179
+             * 2. Self branch 
+             *      Not Lastborn   ├ 195
+             *      Lastborn       └ 192
+             * 3. Offspring Branch
+             *      Childless      ─ 196
+             *      With child     ┬ 194
+             * ○┬Adam
+                ├┬Parent
+                │├─Child
+                │├─Child
+                │└┬Child
+                │ ├─Grandchild
+                │ └─Grandchild
+                ├─Parent
+                └┬Parent
+                 ├─Child
+                 └─Child
+             */
+
+            StringBuilder output = new StringBuilder("");
 
             if (item.parent == null)
-                return output.Append($"{(char)194}{(char)196}");
+                return output.Append($"{(char)196}{(char)194}"); // ─┬ Adam Trunk
 			else
 			{
-                /* Uncle branch     │ 179
-                 * Self branch 
-                 *   Not Lastborn   ├ 195
-                 *   Lastborn       └ 192
-                 * Offspring Branch
-                 *   Childless      ─ 196
-                 *   With child     ┬ 194
-                 * ○┬Adam
-                    ├┬Parent
-                    │├─Child
-                    │├─Child
-                    │└┬Child
-                    │ ├─Grandchild
-                    │ └─Grandchild
-                    ├─Parent
-                    └┬Parent
-                     ├─Child
-                     └─Child
-                 */
-
                 for (int i = 0; i < GetTier(item); i++)
-                    output.Append((char)179);
-                //These are "Uncle-branches", which allow parent to connect to its siblings. 
-                //Need to suppress if parent-or-higher tier has already expressed lastborn
-                // See FinishedTiers in InventoryList() for the first steps I've implemented. 
-                // If it's unreachable here we should just merge these two functions, but it won't be pretty.
+                    output.Append((char)179); // │ Uncle-Branch(es)
 
                 List<Item> siblings = item.parent.children;
 
                 if (item == siblings[siblings.Count - 1])
-                    output.Append((char)192); //Lastborn
+                    output.Append((char)192); // └ Lastborn
                 else
-                    output.Append((char)196);
-            }
+                    output.Append((char)195); // ├ Non-Lastborn
 
+                if (item.children.Count != 0)
+                    output.Append((char)194); // ┬ Childsome
+                else
+                    output.Append((char)196); // ─ Childless
+            }
             return output;
 		}
 

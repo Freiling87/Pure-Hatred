@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+/*TODO: Convert from .NET Core to .NET Framework
+ */
+
 namespace PureHatred
 {
     /// <summary>
