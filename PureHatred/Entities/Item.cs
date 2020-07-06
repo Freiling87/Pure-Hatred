@@ -54,7 +54,7 @@ namespace PureHatred.Entities
             return ancestor;
 		}
 
-        public bool isLastborn()
+        public bool IsLastBorn()
 		{
             //TODO: For some reason it's always detecting parent as null...
 

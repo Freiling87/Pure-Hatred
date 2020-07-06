@@ -104,7 +104,7 @@ namespace PureHatred.UI
                 List<Item> siblings = item.parent.children;
 
                 for (int i = itemTier; i > 0; i--)
-                    if (item.getAncestor(i).isLastborn())
+                    if (item.getAncestor(i).IsLastborn())
                         output.Append(" "); // No further Uncles for that tier
                     else
                         output.Append((char)179); // │ Uncle-Branch(es)
