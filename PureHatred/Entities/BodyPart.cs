@@ -124,6 +124,7 @@ namespace PureHatred.Entities
 		public int Capacity;
 		public int Trunks;
 		public int Branches;
+
 		public int Dexterity;
 		public int Striking;
 		public int Stability;

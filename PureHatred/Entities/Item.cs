@@ -1,7 +1,9 @@
 ﻿
 
 using Microsoft.Xna.Framework;
+using SadConsole;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace PureHatred.Entities
 {
@@ -42,24 +44,36 @@ namespace PureHatred.Entities
         public void Destroy() =>
             GameLoop.World.CurrentMap.Remove(this);
 
-        public Item getAncestor(int levels)
+        public Entity getAncestor(int generations) // 0 returns self
 		{
             Item ancestor = this;
 
-            for (int i = 0; i < levels; i++)
-			{
+            for (int i = 0; i < generations; i++)
                 ancestor = ancestor.parent;
-			}
 
             return ancestor;
 		}
 
         public bool isLastborn()
 		{
+            //TODO: For some reason it's always detecting parent as null...
+
             if (parent == null)
                 return true;
-            else
-                return this == parent.children[parent.children.Count - 1];
+
+            return this == parent.children[parent.children.Count - 1];
         }
+
+        public int CountParents()
+        {
+            if (parent != null)
+                return 1 + parent.CountParents();
+            return 0;
+        }
+
+        public Actor GetOwner()
+		{
+            return (Actor)getAncestor(CountParents());
+		}
     }
 }

@@ -94,40 +94,20 @@ namespace PureHatred.UI
 
         public StringBuilder GetNodeTreeSymbols(Item item)
 		{
-            /* 1. Uncle branch     │ 179
-             * 2. Self branch 
-             *      Not Lastborn   ├ 195
-             *      Lastborn       └ 192
-             * 3. Offspring Branch
-             *      Childless      ─ 196
-             *      With child     ┬ 194
-             * ○┬Adam
-                ├┬Parent
-                │├─Child
-                │├─Child
-                │└┬Child
-                │ ├─Grandchild
-                │ └─Grandchild
-                ├─Parent
-                └┬Parent
-                 ├─Child
-                 └─Child
-             */
-
             StringBuilder output = new StringBuilder("");
-            int itemTier = GetTier(item);
+            int itemTier = item.CountParents();
 
             if (item.parent == null)
                 return output.Append($"{(char)196}{(char)194}"); // ─┬ Adam Trunk
 			else
 			{
-                for (int i = 0; i < itemTier; i++)
-                    if (item.getAncestor(itemTier).isLastborn())
-                        output.Append(" "); // No further Uncles
+                List<Item> siblings = item.parent.children;
+
+                for (int i = itemTier; i > 0; i--)
+                    if (item.getAncestor(i).isLastborn())
+                        output.Append(" "); // No further Uncles for that tier
                     else
                         output.Append((char)179); // │ Uncle-Branch(es)
-
-                List<Item> siblings = item.parent.children;
 
                 if (item == siblings[siblings.Count - 1])
                     output.Append((char)192); // └ Lastborn
@@ -142,21 +122,7 @@ namespace PureHatred.UI
             return output;
 		}
 
-        private int GetTier(Item item)
-		{
-            if (item.parent == null)
-                return 0;
-            else
-                return 1 + GetTier(item.parent);
-		}
 
-        enum TierSymbol
-		{
-            Expanded = '-',
-            Collapsed = '+',
-            Terminal = 'o'
-		}
-        
         public override void Draw(TimeSpan drawTime) =>
             base.Draw(drawTime);
 
