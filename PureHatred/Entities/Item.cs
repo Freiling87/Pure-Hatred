@@ -14,7 +14,6 @@ namespace PureHatred.Entities
         public List<Item> children = new List<Item>();
         public Actor owner; // TODO: Owner should just be a hidden Core node
 
-
         public int Condition
         {
             get { return _condition; }
@@ -42,5 +41,25 @@ namespace PureHatred.Entities
 
         public void Destroy() =>
             GameLoop.World.CurrentMap.Remove(this);
+
+        public Item getAncestor(int levels)
+		{
+            Item ancestor = this;
+
+            for (int i = 0; i < levels; i++)
+			{
+                ancestor = ancestor.parent;
+			}
+
+            return ancestor;
+		}
+
+        public bool isLastborn()
+		{
+            if (parent == null)
+                return true;
+            else
+                return this == parent.children[parent.children.Count - 1];
+        }
     }
 }

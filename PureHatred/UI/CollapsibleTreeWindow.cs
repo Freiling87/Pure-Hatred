@@ -37,6 +37,8 @@ namespace PureHatred.UI
 	{
         private ListBox _listBox;
         private int _windowBorder = 2;
+        List<bool> finishedTiers = new List<bool>();
+        List<List<Item>> TierLists = new List<List<Item>>();
 
         public CollapsibleTreeWindow(int width, int height, string title) : base(width, height)
         {
@@ -57,22 +59,32 @@ namespace PureHatred.UI
         public void InventoryList()
 		{
             Player player = GameLoop.World.Player;
-            List<bool> finishedTiers = new List<bool>();
+            int i;
 
             _listBox.Items.Clear();
 
-            int i = 0;
+            for (i = 0; i < finishedTiers.Count; i++)
+                finishedTiers[i] = false;
 
+
+            // Do this like a BST
+            // Pick a node; if last, close uncle
+            // Then iterate through its children
+            // Out of children? Break
+
+            i = 0;
             if (player.Inventory.Count > 0)
                 foreach (Item item in player.Inventory)
-			    {
+                {
                     _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{player.Inventory[i++].Name}");
+
                     if (item == item.parent.children[item.parent.children.Count - 1])
-                        finishedTiers.Add(true);
+					{
+					}
+
                 }
 
             i = 0;
-
             if (player.Anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.Anatomy)
 				{
@@ -103,13 +115,17 @@ namespace PureHatred.UI
              */
 
             StringBuilder output = new StringBuilder("");
+            int itemTier = GetTier(item);
 
             if (item.parent == null)
                 return output.Append($"{(char)196}{(char)194}"); // ─┬ Adam Trunk
 			else
 			{
-                for (int i = 0; i < GetTier(item); i++)
-                    output.Append((char)179); // │ Uncle-Branch(es)
+                for (int i = 0; i < itemTier; i++)
+                    if (item.getAncestor(itemTier).isLastborn())
+                        output.Append(" "); // No further Uncles
+                    else
+                        output.Append((char)179); // │ Uncle-Branch(es)
 
                 List<Item> siblings = item.parent.children;
 
