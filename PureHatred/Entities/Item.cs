@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace PureHatred.Entities
