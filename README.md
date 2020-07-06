@@ -4,4 +4,6 @@ This is my first vidya game, mainly a learner project. Mostly still consists of 
 
 Roguelike, Sci-Fi, Body-Horror
 
-I'll update this with more information if it becomes worth looking at from a player perspective.
+The game itself is not worth looking at yet, but I do have a Trello that explains the creative direction of the project: https://trello.com/b/8SPanT3A/pure-hatred
+
+Warning: Intentionally extremely offensive content. I do not endorse the shit that happens in this game. It's meant to disgust you and make you feel horrible.
