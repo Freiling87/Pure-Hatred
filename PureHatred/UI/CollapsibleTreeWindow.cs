@@ -35,7 +35,7 @@ namespace PureHatred.UI
 {
 	public class CollapsibleTreeWindow : Window
 	{
-        private ListBox _listBox;
+        private readonly ListBox _listBox;
         private int _windowBorder = 2;
         List<bool> finishedTiers = new List<bool>();
         List<List<Item>> TierLists = new List<List<Item>>();
@@ -78,7 +78,7 @@ namespace PureHatred.UI
                 {
                     _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{player.Inventory[i++].Name}");
 
-                    if (item == item.parent.children[item.parent.children.Count - 1])
+                    if (item == item.parent.children[^1])
 					{
 					}
 
@@ -104,12 +104,12 @@ namespace PureHatred.UI
                 List<Item> siblings = item.parent.children;
 
                 for (int i = itemTier; i > 0; i--)
-                    if (item.getAncestor(i).IsLastborn())
+                    if (item.GetAncestor(i).IsLastborn())
                         output.Append(" "); // No further Uncles for that tier
                     else
                         output.Append((char)179); // │ Uncle-Branch(es)
 
-                if (item == siblings[siblings.Count - 1])
+                if (item == siblings[^1])
                     output.Append((char)192); // └ Lastborn
                 else
                     output.Append((char)195); // ├ Non-Lastborn
