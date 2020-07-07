@@ -24,8 +24,5 @@ namespace PureHatred.Entities
             animation.UseMouse = false;
             UseMouse = false;
         }
-
-		internal bool IsLastborn() =>
-            true;
-	}
+    }
 }
