@@ -84,7 +84,7 @@ namespace PureHatred.Commands
 
         public bool Pickup(Actor actor, Item item)
         {
-            actor.Inventory.Add(item);
+            actor.inventory.Add(item);
             GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} picked up {item.Name}");
             item.Destroy();
@@ -103,7 +103,7 @@ namespace PureHatred.Commands
 
 		public bool Drop(Actor actor, Item item)
 		{
-            actor.Inventory.Remove(item);
+            actor.inventory.Remove(item);
             GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {item.Name} was severed");
             //item.Destroy() opposite?
@@ -111,7 +111,7 @@ namespace PureHatred.Commands
 		}
         public bool Drop(Actor actor, BodyPart bodyPart)
 		{
-            actor.Anatomy.Remove(bodyPart);
+            actor.anatomy.Remove(bodyPart);
             GameLoop.UIManager.SideWindow.InventoryList();
             GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {bodyPart.Name} was severed");
             //item.Destroy() oposite?

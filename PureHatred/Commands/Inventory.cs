@@ -1,6 +1,18 @@
-﻿namespace PureHatred.Commands
+﻿using PureHatred.Entities;
+using System.Collections.Generic;
+
+namespace PureHatred.Commands
 {
-	class Inventory
+	public class Inventory : List<Item>
 	{
+		public Actor owner;
+
+		public Inventory(Actor owner) : base()
+		{
+		}
+
+		public void Reorder()
+		{
+		}
 	}
 }

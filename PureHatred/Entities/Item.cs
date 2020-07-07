@@ -39,5 +39,7 @@ namespace PureHatred.Entities
 
         public int CountParents() =>
             (parent != null) ? 1 + parent.CountParents() : 0;
+
+        // TODO: The above three should only be recalculated when the Item is grafted/removed, etc.
     }
 }

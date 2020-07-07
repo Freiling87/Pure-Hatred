@@ -73,18 +73,18 @@ namespace PureHatred.UI
             // Out of children? Break
 
             i = 0;
-            if (player.Inventory.Count > 0)
-                foreach (Item item in player.Inventory)
+            if (player.inventory.Count > 0)
+                foreach (Item item in player.inventory)
                 {
-                    Item current = player.Inventory[i++];
+                    Item current = player.inventory[i++];
                     _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{current.Name}");
                 }
 
             i = 0;
-            if (player.Anatomy.Count > 0)
-                foreach (BodyPart bodyPart in player.Anatomy)
+            if (player.anatomy.Count > 0)
+                foreach (BodyPart bodyPart in player.anatomy)
 				{
-                    BodyPart current = player.Anatomy[i++];
+                    BodyPart current = player.anatomy[i++];
 
                     _listBox.Items.Add($"{GetNodeTreeSymbols(bodyPart)}{current.Name}    {current.HpCurrent}/{current.HpMax}");
 				}

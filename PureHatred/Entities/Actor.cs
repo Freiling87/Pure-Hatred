@@ -25,31 +25,35 @@ namespace PureHatred.Entities
         public int HealRate { get; set; } = 1;
         public int NutrientSurplus { get; set; } = 0;
 
-        public List<BodyPart> Anatomy = new List<BodyPart>(); // TODO: Remove this list and simply make the Actor the parent of the Core. Then all Children can be determined as with a bodyPart.
-        public List<Item> Inventory = new List<Item>();
         public List<Mutation> Mutations = new List<Mutation>();
+        public Anatomy anatomy;
+        public Inventory inventory;
 
+        public BodyPart Core;
         public BodyPart Intestines; //Checks for nutrients to process into system
         public BodyPart Mouth;
         public BodyPart Stomach;
 
         protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
         {
+            anatomy = new Anatomy(this);
+            inventory = new Inventory(this);
+
             HardCodeHumanParts();
         }
 
         public void HardCodeHumanParts()
 		{
             // These are rudimentary demo parts to get the Anatomy Window working correctly.
-            BodyPart spine = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
-			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15), spine);
+            BodyPart Core = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
+			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15), Core);
 			BodyPart leg1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
 			BodyPart leg2 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
 			BodyPart arm1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
 			BodyPart arm2 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
             BodyPart beanus = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "beanus", ',', 1, 1), torso);
 
-			BodyPart neck = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "neck", 'i', 1, 5), spine);
+			BodyPart neck = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "neck", 'i', 1, 5), Core);
 			BodyPart head = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", 'O', 10, 20), neck);
             BodyPart trachea = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "trachea", 'j', 0, 1), neck);
             BodyPart brain = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "brain", '@', 10, 40), head);
@@ -70,11 +74,13 @@ namespace PureHatred.Entities
             Stomach = stomach;
 			Intestines = intestines;
             Mouth = mouth;
+
+            inventory.Reorder();
 		}
 
         private Item AddLoot(Item item)
         {
-            Inventory.Add(item);
+            inventory.Add(item);
 
             return item;
         }
@@ -83,7 +89,7 @@ namespace PureHatred.Entities
         {
             //if (RecalculateBodyPart((BodyPart)bodyPart.parent)); //Cast to BodyPart or it takes it as Item
 
-            Anatomy.Add(target);
+            anatomy.Add(target);
             target.owner = this;
 
             if (parent != null)
@@ -104,11 +110,11 @@ namespace PureHatred.Entities
 
         private BodyPart SeverBodyPart(BodyPart target, BodyPart parent = null)
 		{
-            Anatomy.Remove(target);
+            anatomy.Remove(target);
 
             if (target.children.Count != 0)
                 foreach (BodyPart bodyPart in target.children)
-                    Anatomy.Remove(bodyPart);
+                    anatomy.Remove(bodyPart);
 
             NetBiologyValues();
 
@@ -155,10 +161,10 @@ namespace PureHatred.Entities
 
         public void NetBiologyValues()
 		{
-            HungerComplex = Anatomy.Sum(x => x.HungerComplex);
-            HungerSimple = Anatomy.Sum(x => x.HungerSimple);
-            Health = Anatomy.Sum(x => x.HpCurrent);
-            HealthMax = Anatomy.Sum(x => x.HpMax);
+            HungerComplex = anatomy.Sum(x => x.HungerComplex);
+            HungerSimple = anatomy.Sum(x => x.HungerSimple);
+            Health = anatomy.Sum(x => x.HpCurrent);
+            HealthMax = anatomy.Sum(x => x.HpMax);
 		}
 
         public void RecalcNodeCapacities(params BodyPart[] list)
@@ -176,6 +182,7 @@ namespace PureHatred.Entities
         public void BioRhythm()
         {
             Alimentation();
+            HealWounds();
             if (this == GameLoop.World.Player)
                 GameLoop.UIManager.MessageLog.AddTextNewline("Player Biorhythm now");
             //TODO: Apparently this isn't running for the player, only for enemies. Will need to make sur Player is in Actors().
@@ -186,20 +193,20 @@ namespace PureHatred.Entities
             Stomach.StomachDigestion();
             Intestines.IntestinalDigestion();
 
-            foreach (BodyPart bodyPart in Anatomy)
+            foreach (BodyPart bodyPart in anatomy)
             {
                 NutSimple -= bodyPart.HungerSimple;
                 NutComplex -= bodyPart.HungerComplex;
             }
         }
 
-        public void HealWounds(Actor actor)
+        public void HealWounds()
         {
             bool multiBreak = false;
 
-            IEnumerable<BodyPart> ouchies = Anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax);
+            IEnumerable<BodyPart> ouchies = anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax);
 
-            for (int i = 0; i < actor.HealRate; i++) //Always heal same HP per nutrients, just at faster rate if possible
+            for (int i = 0; i < HealRate; i++) //Always heal same HP per nutrients, just at faster rate if possible
                 if (!multiBreak)
                     foreach (BodyPart bodyPart in ouchies)
                     {

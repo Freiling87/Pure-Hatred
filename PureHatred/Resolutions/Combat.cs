@@ -72,7 +72,7 @@ namespace PureHatred.Resolutions
 
             if (damage > 0)
             {
-                BodyPart hitPart = defender.Anatomy.RandomItem();
+                BodyPart hitPart = defender.anatomy.RandomItem();
                 hitPart.HpCurrent -= damage;
 
                 defender.Health -= damage;
@@ -96,24 +96,24 @@ namespace PureHatred.Resolutions
             GameLoop.World.CurrentMap.Add(blood);
             //TODO: Examine SadConsole.CellDecorator
 
-            if (defender.Inventory.Count > 0 || defender.Anatomy.Count > 0)
+            if (defender.inventory.Count > 0 || defender.anatomy.Count > 0)
                 deathMessage.Append(" and dropped:");
 
-            foreach (Item item in defender.Inventory)
+            foreach (Item item in defender.inventory)
             {
                 item.Position = defender.Position;
                 Map.Add(item);
                 deathMessage.Append($" {item.Name},");
             }
-            defender.Inventory.Clear();
+            defender.inventory.Clear();
 
-            foreach (BodyPart bodyPart in defender.Anatomy)
+            foreach (BodyPart bodyPart in defender.anatomy)
             {
                 bodyPart.Position = defender.Position;
                 Map.Add(bodyPart);
                 deathMessage.Append($" {bodyPart.Name},");
             }
-            defender.Anatomy.Clear();
+            defender.anatomy.Clear();
 
             deathMessage.Remove(deathMessage.Length - 1, 1); //Trim comma
             deathMessage.Append(".");
