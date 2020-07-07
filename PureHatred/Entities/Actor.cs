@@ -75,7 +75,7 @@ namespace PureHatred.Entities
 			Intestines = intestines;
             Mouth = mouth;
 
-            inventory.Reorder();
+            anatomy.Reorder();
 		}
 
         private Item AddLoot(Item item)
