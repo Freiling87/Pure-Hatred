@@ -33,7 +33,7 @@ namespace PureHatred.Entities
         public Actor GetOwner() =>
             (Actor)GetAncestor(CountParents());
 
-        public bool IsLastBorn() =>
+        public override bool IsLastborn() =>
             parent == null || this == parent.children[^1];
             // Above notation returns true if true, rest if false
 

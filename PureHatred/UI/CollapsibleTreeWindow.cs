@@ -122,7 +122,6 @@ namespace PureHatred.UI
             return output;
 		}
 
-
         public override void Draw(TimeSpan drawTime) =>
             base.Draw(drawTime);
 

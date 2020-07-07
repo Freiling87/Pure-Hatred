@@ -1,11 +1,8 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using SadConsole.Components;
 
 namespace PureHatred.Entities
 {
-    // Extends SadConsole.Entities.Entity, adds UID
     public abstract class Entity : SadConsole.Entities.Entity, GoRogue.IHasID
     {
         public uint ID { get; set; }
@@ -25,7 +22,7 @@ namespace PureHatred.Entities
             UseMouse = false;
         }
 
-		internal bool IsLastborn() =>
-            true;
+		public virtual bool IsLastborn() =>
+			true; // As Core Node
 	}
 }
