@@ -107,6 +107,7 @@
  */
 
 using Microsoft.Xna.Framework;
+using PureHatred.UI;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -137,8 +138,8 @@ namespace PureHatred.Entities
 		public int ContentsSimple; // Stand-in for Simple Nutrients
 									// Both are combined to fill Capacity, but could also represent blood, bile, etc depending on organ context.
 
-		public int ValuePerBiteComplex;
-		public int ValuePerBiteSimple;
+		public int ValuePerBiteComplex = 1;
+		public int ValuePerBiteSimple = 1;
 
 		public StringBuilder TierPrefix = new StringBuilder("");
 		public int AnatomyTier = 0;
@@ -157,7 +158,9 @@ namespace PureHatred.Entities
 
 			Map.Remove(this);
 			GameLoop.World.CurrentMap.Entities.Remove(this);
-			parent.children.Remove(this);
+
+			if (parent != null)
+				parent.children.Remove(this);
 			
 			foreach (BodyPart child in children)
 				child.parent = null;
@@ -169,43 +172,53 @@ namespace PureHatred.Entities
 		{
 			if (HpCurrent-- == 0)
 				Delete($"{Name} decomposed into thin air.");
-				//TODO: Add compost or rotting remains
 		}
 
-		public void Masticate(BodyPart morsel)
+		public bool Masticate(BodyPart morsel)
 		{
-			// TODO: Change rate of eating, possibly to this.Striking
-			morsel.HpCurrent--; //TODO: Add an event handler to HP--, since there are many possible causes? This might actually be a great place for a Setter to check for item destruction.
+			if (morsel.HpCurrent-- <= 0)
+			{
+				morsel.Delete($"{morsel.Name} was devoured.");
+			}
+
 			owner.Stomach.ContentsComplex += morsel.ValuePerBiteComplex;
-			owner.Stomach.ContentsSimple += morsel.ValuePerBiteComplex;
+			owner.Stomach.ContentsSimple += morsel.ValuePerBiteSimple;
+
+			GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
+
+			return true;
 		}
 
 		public void StomachDigestion()
 		{
-			//TODO: Develop biting/chewing process that breaks down bodyparts to send increase to ContentsSimple and ContentsComplex here
-			//TODO: Possibly change these capacity values to floats? I can see pros and cons but I'm not interrupting my flow state to write them here :D
-			//	You now: "Fuck your flow state, past-me."
-			//	Me then: "I'm in control here, I'm writing the comments."
-			//	You now: "I can delete your stupid comments. These aren't as clever as you think they are."
+			if (ContentsComplex > 0)
+			{
+				ContentsComplex--;
+				owner.Intestines.ContentsComplex++;
+			}
 
-			int digested = (int)Math.Sqrt(ContentsSimple);
-			ContentsSimple -= digested;
-			owner.Intestines.ContentsSimple += digested;
-
-			digested = (int)Math.Sqrt(ContentsComplex);
-			ContentsComplex -= digested;
-			owner.Intestines.ContentsComplex += digested;
+			if (ContentsSimple > 0)
+			{
+				ContentsSimple--;
+				owner.Intestines.ContentsSimple++;
+			}
 		}
 
 		public void IntestinalDigestion()
 		{
-			int digested = (int)Math.Sqrt(ContentsSimple);
-			ContentsSimple -= digested;
-			owner.NutSimple += digested;
+			// TODO: Add excretion
 
-			digested = (int)Math.Sqrt(ContentsComplex);
-			ContentsComplex -= digested;
-			owner.NutComplex += digested;
+			if (ContentsComplex > 0)
+			{
+				ContentsComplex--;
+				owner.NutComplex++;
+			}
+
+			if (ContentsSimple > 0)
+			{
+				ContentsSimple++;
+				owner.NutSimple++;
+			}
 		}	
 	}
 }

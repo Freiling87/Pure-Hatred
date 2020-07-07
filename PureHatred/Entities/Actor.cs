@@ -26,9 +26,10 @@ namespace PureHatred.Entities
         public int NutrientSurplus { get; set; } = 0;
 
         public List<BodyPart> Anatomy = new List<BodyPart>(); // TODO: Remove this list and simply make the Actor the parent of the Core. Then all Children can be determined as with a bodyPart.
-        public BodyPart Intestines; //Checks for nutrients to process into system
         public List<Item> Inventory = new List<Item>();
         public List<Mutation> Mutations = new List<Mutation>();
+
+        public BodyPart Intestines; //Checks for nutrients to process into system
         public BodyPart Mouth;
         public BodyPart Stomach;
 
@@ -40,7 +41,6 @@ namespace PureHatred.Entities
         public void HardCodeHumanParts()
 		{
             // These are rudimentary demo parts to get the Anatomy Window working correctly.
-
             BodyPart spine = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
 			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15), spine);
 			BodyPart leg1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
@@ -132,7 +132,7 @@ namespace PureHatred.Entities
                 //return GameLoop.CommandManager.BumpAttack(this, monster);
                 Combat.BumpAttack(this, monster);
             else if (bodyPart != null)
-                return GameLoop.CommandManager.Devour(this, bodyPart);
+                return Mouth.Masticate(bodyPart);
             //else if (item != null)
             //    return GameLoop.CommandManager.Pickup(this, item);
             else if (door != null && !door.IsOpen)
@@ -176,23 +176,21 @@ namespace PureHatred.Entities
         public void BioRhythm()
         {
             Alimentation();
+            if (this == GameLoop.World.Player)
+                GameLoop.UIManager.MessageLog.AddTextNewline("Player Biorhythm now");
+            //TODO: Apparently this isn't running for the player, only for enemies. Will need to make sur Player is in Actors().
         }
 
-        public int Alimentation()
+        public void Alimentation()
         {
             Stomach.StomachDigestion();
             Intestines.IntestinalDigestion();
 
-            foreach (BodyPart bodyPart in Anatomy) // Split off to Nourish() if gets any more complex
+            foreach (BodyPart bodyPart in Anatomy)
             {
                 NutSimple -= bodyPart.HungerSimple;
                 NutComplex -= bodyPart.HungerComplex;
             }
-
-            NutrientSurplus += NutSimple;
-            NutrientSurplus += NutComplex;
-
-            return NutrientSurplus;
         }
 
         public void HealWounds(Actor actor)

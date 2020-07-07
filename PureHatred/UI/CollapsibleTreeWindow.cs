@@ -76,19 +76,17 @@ namespace PureHatred.UI
             if (player.Inventory.Count > 0)
                 foreach (Item item in player.Inventory)
                 {
-                    _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{player.Inventory[i++].Name}");
-
-                    if (item == item.parent.children[^1])
-					{
-					}
-
+                    Item current = player.Inventory[i++];
+                    _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{current.Name}");
                 }
 
             i = 0;
             if (player.Anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.Anatomy)
 				{
-                    _listBox.Items.Add($"{GetNodeTreeSymbols(bodyPart)}{player.Anatomy[i++].Name}");
+                    BodyPart current = player.Anatomy[i++];
+
+                    _listBox.Items.Add($"{GetNodeTreeSymbols(bodyPart)}{current.Name}    {current.HpCurrent}/{current.HpMax}");
 				}
         }
 

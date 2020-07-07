@@ -23,6 +23,6 @@ namespace PureHatred.Entities
         }
 
 		public virtual bool IsLastborn() =>
-			true; // As Core Node
+			true; // Entity can only serve as Core Node
 	}
 }

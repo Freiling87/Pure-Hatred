@@ -35,6 +35,10 @@ namespace PureHatred.UI
 		private Label NutrientSimpleLabel;
 		//private Label healthOverlay;
 
+		private Label TestLabel1;
+		private Label TestLabel2;
+		private Label TestLabel3;
+
 		public StatusWindow (int width, int height) : base (width, height)
 		{
 			int i = 0;
@@ -47,7 +51,6 @@ namespace PureHatred.UI
 				DisplayText = "Health",
 			};
 			Add(healthBarLabel);
-
 			healthBar = new ProgressBar(contentWidth, 1, HorizontalAlignment.Left)
 			{
 				Position = new Point(indent, i++),
@@ -60,7 +63,6 @@ namespace PureHatred.UI
 				DisplayText = "Complex Nutrients",
 			};
 			Add(NutrientComplexLabel);
-
 			NutrientComplex = new ProgressBar(contentWidth, 1, HorizontalAlignment.Left)
 			{
 				Position = new Point(indent, i++)
@@ -73,12 +75,30 @@ namespace PureHatred.UI
 				DisplayText = "Simple Nutrients",
 			};
 			Add(NutrientSimpleLabel);
-
 			NutrientSimple = new ProgressBar(contentWidth, 1, HorizontalAlignment.Left)
 			{
 				Position = new Point (indent, i++)
 			};
 			Add(NutrientSimple);
+
+			TestLabel1 = new Label(contentWidth)
+			{
+				Position = new Point(indent, i++),
+				DisplayText = "Test 1",
+			};
+			Add(TestLabel1);
+			TestLabel2 = new Label(contentWidth)
+			{
+				Position = new Point(indent, i++),
+				DisplayText = "Test 2",
+			};
+			Add(TestLabel2);
+			TestLabel3 = new Label(contentWidth)
+			{
+				Position = new Point(indent, i++),
+				DisplayText = "Test 3",
+			};
+			Add(TestLabel3);
 
 			ApplyColorTheme();
 
@@ -107,6 +127,11 @@ namespace PureHatred.UI
 			healthBar.Progress = (float)Player.Health / (float)Player.HealthMax;
 			NutrientComplex.Progress = (float)Player.NutComplex / (float)Player.HungerComplex;
 			NutrientSimple.Progress = (float)Player.NutSimple / (float)Player.HungerSimple;
+
+			TestLabel1.DisplayText = ($"Stomach: {Player.Stomach.ContentsComplex}NC / {Player.Stomach.ContentsSimple}NS");
+			TestLabel2.DisplayText = ($"Intestines: {Player.Intestines.ContentsComplex}NC / {Player.Intestines.ContentsSimple}NS");
+			TestLabel3.DisplayText = ($"Satiation: {Player.NutComplex}/{Player.HungerComplex}NC // {Player.NutSimple}/{Player.HungerSimple}NS");
+			
 		}
 
 		public override void Draw(TimeSpan drawTime) =>

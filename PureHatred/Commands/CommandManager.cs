@@ -34,7 +34,7 @@ namespace PureHatred.Commands
 
         public void PlayerTurn()
 		{
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here"); //-
+            //GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here"); //-
 
 
             if (!GameLoop.UIManager.turnTaken)
@@ -47,17 +47,19 @@ namespace PureHatred.Commands
 
         public void EnemyTurn()
         {
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)"); //-
+            //GameLoop.UIManager.MessageLog.AddTextNewline("(Enemy Turn here)"); //-
             _gameState = GameState.PassiveTurn;
             PassiveTurn();
         }
 
         public void PassiveTurn()
 		{
-            GameLoop.UIManager.MessageLog.AddTextNewline("(Passive Turn here)"); //-
+            //GameLoop.UIManager.MessageLog.AddTextNewline("(Passive Turn here)"); //-
 
             foreach (Actor actor in GameLoop.World.CurrentMap.Actors)
+			{
                 actor.BioRhythm();
+            }
 
             GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 
@@ -89,17 +91,17 @@ namespace PureHatred.Commands
             return true;
         }
 
-        public bool Devour(Actor actor, BodyPart bodyPart)
-		{
-            bodyPart.parent = actor.Stomach;
-            actor.Anatomy.Add(bodyPart);
-            GameLoop.UIManager.SideWindow.InventoryList();
-            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {bodyPart.Name}");
-            bodyPart.Destroy();
-            return true;
-		}
+		//public bool Devour(Actor actor, BodyPart bodyPart)
+		//{
+		//	bodyPart.parent = actor.Stomach;
+		//	actor.Anatomy.Add(bodyPart);
+		//	GameLoop.UIManager.SideWindow.InventoryList();
+		//	GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {bodyPart.Name}");
+		//	bodyPart.Destroy();
+		//	return true;
+		//}
 
-        public bool Drop(Actor actor, Item item)
+		public bool Drop(Actor actor, Item item)
 		{
             actor.Inventory.Remove(item);
             GameLoop.UIManager.SideWindow.InventoryList();
