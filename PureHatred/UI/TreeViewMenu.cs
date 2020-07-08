@@ -1,6 +1,7 @@
 ﻿using SadConsole.Controls;
 
 using Microsoft.Xna.Framework;
+using SadConsole.Themes;
 
 /*
  * "I think you may have some design conflicts. The code on line 84* was designed for use with the cursor shifting the content of the console to detect a virtual "we've added some content" and enable the scroll bar to navigate within that buffer. But really you're taking a set of items and printing them out, so you don't need to dynamically (line by line) grow or shrink the buffer. You already know your size based on the items"
@@ -23,9 +24,10 @@ namespace PureHatred.UI
 {
 	public class TreeViewMenu : ListBox
 	{
-		public TreeViewMenu(int width, int height) : base(width, height)
-		{
+		private ScrollBarTheme scrollBarTheme;
 
+		public TreeViewMenu(int width, int height, ListBoxItemTheme itemTheme = null) : base(width, height, itemTheme)
+		{
 		}
 
 		

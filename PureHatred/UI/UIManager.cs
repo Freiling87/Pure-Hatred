@@ -25,7 +25,7 @@ namespace PureHatred.UI
     {
         public ScrollingConsole MapConsole;
         public Window MapWindow;
-        public CollapsibleTreeWindow SideWindow;
+        public SideWindow SideWindow;
         public MessageLogWindow MessageLog;
         public StatusWindow StatusWindow;
 
@@ -63,7 +63,7 @@ namespace PureHatred.UI
             LoadMap(GameLoop.World.CurrentMap);
             CreateMapWindow(width * 3 / 4, height * 3 / 4, "Map");
 
-            SideWindow = new CollapsibleTreeWindow(width * 1 / 4, height * 3 / 4, "Inventory / Anatomy")
+            SideWindow = new SideWindow(width * 1 / 4, height * 3 / 4, "Inventory / Anatomy")
             {
                 Position = new Point(width * 3 / 4, 0),
                 CanDrag = false,

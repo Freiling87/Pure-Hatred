@@ -34,7 +34,7 @@ namespace PureHatred.Commands
 			}
 
 			Clear();
-			this.AddRange(result);
+			AddRange(result);
 		}
 	}
 }
