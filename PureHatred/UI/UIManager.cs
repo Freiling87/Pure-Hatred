@@ -16,7 +16,6 @@ using Microsoft.Xna.Framework.Input;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 /* TODO: Move calls to CenterOnPlayerActor to beginning of player turn, when gamestates are implemented
- * 
  */
 
 namespace PureHatred.UI

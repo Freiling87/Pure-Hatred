@@ -7,7 +7,7 @@ namespace PureHatred.Entities
 {
     public class Item : Entity
     {
-        public bool isNodeExpanded;
+        public bool isNodeExpanded = true;
         public Item parent;
         public List<Item> children = new List<Item>();
         public Actor owner; // TODO: Owner should just be a hidden Core node
@@ -28,6 +28,28 @@ namespace PureHatred.Entities
                 ancestor = ancestor.parent;
 
             return ancestor;
+        }
+
+        public List<Item> GetAncestors()
+		{
+            List<Item> ancestry = new List<Item>();
+            Item context = this;
+
+            while (context.parent != null)
+			{
+                ancestry.Add(parent);
+                context = context.parent;
+			}
+
+            return ancestry;
+		}
+
+        public bool IsNodeVisible() // TODO: Can Linq a oneliner here
+        {
+            foreach (Item parent in GetAncestors())
+                if (!parent.isNodeExpanded)
+                    return false;
+            return true;
         }
 
         public Actor GetOwner() =>
