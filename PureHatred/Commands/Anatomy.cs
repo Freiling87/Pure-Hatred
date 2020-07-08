@@ -5,8 +5,9 @@ using System.Linq;
 namespace PureHatred.Commands
 {
 	public class Anatomy : List<BodyPart>
+	//suggested (IEnumerable<BodyPart> parts) : base(parts) by VGist on C# Discord
 	{
-		private Actor _owner;
+		public Actor _owner;
 
 		public Anatomy(Actor owner) : base()
 		{
@@ -15,10 +16,10 @@ namespace PureHatred.Commands
 
 		public void Reorder() 
 		{
-			List<BodyPart> result = new List<BodyPart>();
-			Stack<BodyPart> stack = new Stack<BodyPart>(_owner.anatomy);
+			Stack<BodyPart> stack = new Stack<BodyPart>();
+			Anatomy result = new Anatomy(_owner);
 
-			BodyPart root = _owner.Core; // Core is null here, but anatomy above isn't. Core is not null before the function call.
+			BodyPart root = _owner.Core;
 
 			stack.Push(root);
 
@@ -32,7 +33,8 @@ namespace PureHatred.Commands
 					stack.Push((BodyPart)node.children[i]);
 			}
 
-			_owner.anatomy = (Anatomy)result;
+			Clear();
+			this.AddRange(result);
 		}
 	}
 }
