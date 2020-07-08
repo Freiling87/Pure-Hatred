@@ -6,7 +6,7 @@ namespace PureHatred.Entities
 {
 	public class Player : Actor
     {
-        public Player(Color foreground, Color background) : base(foreground, background, 1)
+        public Player(Color foreground, Color background, string name="Player") : base(foreground, background, 1, name)
         {
             Name = "Cherub Bully";
 

@@ -34,8 +34,10 @@ namespace PureHatred.Entities
         public BodyPart Mouth;
         public BodyPart Stomach;
 
-        protected Actor(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height)
+        protected Actor(Color foreground, Color background, int glyph, string name) : base(foreground, background, glyph)
         {
+            Name = name;
+
             anatomy = new Anatomy(this);
             inventory = new Inventory(this);
 

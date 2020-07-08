@@ -15,11 +15,10 @@ namespace PureHatred.Commands
 
 		public void Reorder() 
 		{
-			//Haven't tested this yet.
 			List<BodyPart> result = new List<BodyPart>();
-			Stack<BodyPart> stack = new Stack<BodyPart>();
+			Stack<BodyPart> stack = new Stack<BodyPart>(_owner.anatomy);
 
-			BodyPart root = _owner.Core;
+			BodyPart root = _owner.Core; // Core is null here, but anatomy above isn't. Core is not null before the function call.
 
 			stack.Push(root);
 

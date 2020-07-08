@@ -10,7 +10,7 @@ namespace PureHatred.Entities
     {
         private readonly Random rndNum = new Random();
 
-        public Monster(Color foreground, Color background) : base(foreground, background, 2)
+        public Monster(Color foreground, Color background, string name = "Monster") : base(foreground, background, 2, name)
         {
 
         }

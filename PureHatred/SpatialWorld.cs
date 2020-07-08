@@ -51,7 +51,7 @@ namespace PureHatred
             for (int i = 0; i < numMonsters; i++)
             {
                 int monsterPosition = 0;
-                Monster newMonster = new Monster(Color.Blue, Color.Transparent);
+                Monster newMonster = new Monster(Color.Blue, Color.Transparent, "Gentle Cherub");
 
                 while (CurrentMap.Tiles[monsterPosition].IsImpassible)
                     monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
@@ -73,7 +73,7 @@ namespace PureHatred
 
         private void CreatePlayer()
         {
-            Player = new Player(Color.Yellow, Color.Transparent);
+            Player = new Player(Color.Yellow, Color.Transparent, "Cherub Bully");
 
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
                 if (!CurrentMap.Tiles[i].IsImpassible)
