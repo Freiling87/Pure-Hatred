@@ -131,7 +131,6 @@ namespace PureHatred.UI
 			TestLabel1.DisplayText = ($"Stomach: {Player.Stomach.ContentsComplex}NC / {Player.Stomach.ContentsSimple}NS");
 			TestLabel2.DisplayText = ($"Intestines: {Player.Intestines.ContentsComplex}NC / {Player.Intestines.ContentsSimple}NS");
 			TestLabel3.DisplayText = ($"Satiation: {Player.NutComplex}/{Player.HungerComplex}NC // {Player.NutSimple}/{Player.HungerSimple}NS");
-			
 		}
 
 		public override void Draw(TimeSpan drawTime) =>

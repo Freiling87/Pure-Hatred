@@ -34,10 +34,10 @@ namespace PureHatred.Commands
 
         public void PlayerTurn()
 		{
+            GameLoop.UIManager.turnTaken = false;
+
             //GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here"); //-
-
-
-            if (!GameLoop.UIManager.turnTaken)
+            if (GameLoop.UIManager.turnTaken)
                 _gameState = GameState.EnemyTurn;
 		}
 
@@ -72,7 +72,7 @@ namespace PureHatred.Commands
         public bool UseDoor(Actor actor, TileDoor door)
         {
             if (door.Locked)
-                return false;
+                return false; // TODO
             if (!door.Locked && !door.IsOpen)
             {
                 door.Open();
@@ -81,41 +81,5 @@ namespace PureHatred.Commands
             }
             return false;
         }
-
-        public bool Pickup(Actor actor, Item item)
-        {
-            actor.inventory.Add(item);
-            GameLoop.UIManager.SideWindow.InventoryList();
-            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} picked up {item.Name}");
-            item.Destroy();
-            return true;
-        }
-
-		//public bool Devour(Actor actor, BodyPart bodyPart)
-		//{
-		//	bodyPart.parent = actor.Stomach;
-		//	actor.Anatomy.Add(bodyPart);
-		//	GameLoop.UIManager.SideWindow.InventoryList();
-		//	GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} devoured a(n) {bodyPart.Name}");
-		//	bodyPart.Destroy();
-		//	return true;
-		//}
-
-		public bool Drop(Actor actor, Item item)
-		{
-            actor.inventory.Remove(item);
-            GameLoop.UIManager.SideWindow.InventoryList();
-            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {item.Name} was severed");
-            //item.Destroy() opposite?
-            return true;
-		}
-        public bool Drop(Actor actor, BodyPart bodyPart)
-		{
-            actor.anatomy.Remove(bodyPart);
-            GameLoop.UIManager.SideWindow.InventoryList();
-            GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name}'s {bodyPart.Name} was severed");
-            //item.Destroy() oposite?
-            return true;
-		}
     }
 }

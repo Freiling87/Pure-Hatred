@@ -44,6 +44,9 @@ namespace PureHatred.Entities
 
 			HpCurrent = hpCurrent;
 			HpMax = hpMax;
+
+			HungerComplex = hungerComplex;
+			HungerSimple = hungerSimple;
 		}
 
 		public void Delete(string message)
@@ -68,15 +71,13 @@ namespace PureHatred.Entities
 				Delete($"{Name} decomposed into thin air.");
 		}
 
-		public bool Masticate(BodyPart morsel)
+		public bool Masticate(BodyPart target)
 		{
-			if (morsel.HpCurrent-- <= 0)
-			{
-				morsel.Delete($"{morsel.Name} was devoured.");
-			}
+			if (target.HpCurrent-- <= 0)
+				target.Delete($"{target.Name} was devoured.");
 
-			owner.Stomach.ContentsComplex += morsel.ValuePerBiteComplex;
-			owner.Stomach.ContentsSimple += morsel.ValuePerBiteSimple;
+			owner.Stomach.ContentsComplex += target.ValuePerBiteComplex;
+			owner.Stomach.ContentsSimple += target.ValuePerBiteSimple;
 
 			GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 

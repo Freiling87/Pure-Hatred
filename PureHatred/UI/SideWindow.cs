@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
@@ -64,17 +65,14 @@ namespace PureHatred.UI
             //        _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{item.Name}");
 
             if (player.anatomy.Count > 0)
-                foreach (BodyPart bodyPart in player.anatomy)
+                foreach (BodyPart bodyPart in player.anatomy.Where(n => n.IsNodeVisible()))
 				{
-                    if (bodyPart.IsNodeVisible())
-					{
-                        StringBuilder entry = new StringBuilder($"{GetNodeTreeSymbols(bodyPart)}{bodyPart.Name}");
-						string dataCols = $"{bodyPart.HpCurrent} / {bodyPart.HpMax.ToString().PadLeft(2)}";
+                    StringBuilder entry = new StringBuilder($"{GetNodeTreeSymbols(bodyPart)}{bodyPart.Name}");
+					string dataCols = $"{bodyPart.HpCurrent} / {bodyPart.HpMax.ToString().PadLeft(2)}";
 
-                        entry.Append(dataCols.PadLeft(_listBox.Width - entry.Length));
+                    entry.Append(dataCols.PadLeft(_listBox.Width - entry.Length));
 
-                        _listBox.Items.Add(entry);
-                    }
+                    _listBox.Items.Add(entry);
                 }
         }
 
@@ -105,13 +103,13 @@ namespace PureHatred.UI
                 else
                     output.Append((char)195); // ├ Non-Lastborn
 
-                if (item.children.Count != 0)
+                if (item.children.Count == 0)
+                    output.Append((char)196); // ─ Childless
+                else
                     if (item.isNodeExpanded)
                         output.Append((char)194); // (-) Childsome, Expanded
                     else
                         output.Append((char)193); // (+) Childsome, Collapsed
-                else
-                    output.Append((char)196); // ─ Childless
             }
             return output;
 		}

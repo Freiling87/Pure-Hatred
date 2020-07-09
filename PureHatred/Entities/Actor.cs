@@ -29,6 +29,7 @@ namespace PureHatred.Entities
         public Anatomy anatomy;
         public Inventory inventory;
 
+        public BodyPart Brain;
         public BodyPart Core;
         public BodyPart Intestines; //Checks for nutrients to process into system
         public BodyPart Mouth;
@@ -41,44 +42,8 @@ namespace PureHatred.Entities
             anatomy = new Anatomy(this);
             inventory = new Inventory(this);
 
-            HardCodeHumanParts();
+            anatomy.HardCodeHumanParts();
         }
-
-        public void HardCodeHumanParts()
-		{
-            // These are rudimentary demo parts to get the Anatomy Window working correctly.
-            Core = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
-			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "torso", '@', 25, 15), Core);
-			BodyPart leg1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
-			BodyPart leg2 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "leg", '@', 5, 10), torso);
-			BodyPart arm1 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
-			BodyPart arm2 = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "arm", '@', 5, 10), torso);
-            BodyPart beanus = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "beanus", ',', 1, 1), torso);
-
-			BodyPart neck = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "neck", 'i', 1, 5), Core);
-			BodyPart head = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "head", 'O', 10, 20), neck);
-            BodyPart trachea = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "trachea", 'j', 0, 1), neck);
-            BodyPart brain = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "brain", '@', 10, 40), head);
-            BodyPart eye1 = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", '.', 2, 1, 2, 2), head);
-            BodyPart eye2 = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", '.', 2, 1, 2, 2), head);
-            BodyPart mouth = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "mouth", 'D', 0, 1, 5, 5), head); 
-
-			BodyPart stomach = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", '§', 10, 10), torso); // includes Duodenum, Spleen, etc.
-			BodyPart intestines = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", 'G', 5, 0), stomach);
-            BodyPart poop = GraftBodyPart(new BodyPart(Color.RosyBrown, Color.Transparent, "yummy poop", '-', 0, 0), intestines);
-
-			BodyPart lung1 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'd', 0, 0), torso);
-			BodyPart lung2 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'b', 0, 0), torso);
-
-            BodyPart tail = GraftBodyPart(new BodyPart(Color.LightSeaGreen, Color.Transparent, "tail", 'S', 2, 5), torso);
-            BodyPart stinger = GraftBodyPart(new BodyPart(Color.Black, Color.Transparent, "stinger", ',', 1, 0), tail);
-
-            Stomach = stomach;
-			Intestines = intestines;
-            Mouth = mouth;
-
-            anatomy.Reorder();
-		}
 
         private Item AddLoot(Item item)
         {
@@ -86,47 +51,6 @@ namespace PureHatred.Entities
 
             return item;
         }
-
-        public BodyPart GraftBodyPart(BodyPart target, BodyPart parent = null)
-        {
-            //if (RecalculateBodyPart((BodyPart)bodyPart.parent)); //Cast to BodyPart or it takes it as Item
-
-            anatomy.Add(target);
-            target.owner = this;
-
-            if (parent != null)
-			{
-                target.parent = parent;
-                parent.children.Add(target);
-			}
-
-            NetBiologyValues();
-
-            if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
-                GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
-
-            RecalcNodeCapacities(target, parent);
-
-            return target;
-        }
-
-        private BodyPart SeverBodyPart(BodyPart target, BodyPart parent = null)
-		{
-            anatomy.Remove(target);
-
-            if (target.children.Count != 0)
-                foreach (BodyPart bodyPart in target.children)
-                    anatomy.Remove(bodyPart);
-
-            NetBiologyValues();
-
-            if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
-                GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
-
-            RecalcNodeCapacities(parent);
-
-            return target;
-		}
 
         public bool MoveBy(Point positionChange)
         {
@@ -167,18 +91,6 @@ namespace PureHatred.Entities
             HungerSimple = anatomy.Sum(x => x.HungerSimple);
             Health = anatomy.Sum(x => x.HpCurrent);
             HealthMax = anatomy.Sum(x => x.HpMax);
-		}
-
-        public void RecalcNodeCapacities(params BodyPart[] list)
-		{
-            /* Recalculate Trunk/Branch space with existing grafts
-             */
-
-            foreach (BodyPart bodyPart in list)
-			{
-
-			}
-
 		}
 
         public void BioRhythm()
