@@ -5,10 +5,11 @@ namespace PureHatred.Commands
 {
 	public class Inventory : List<Item>
 	{
-		public Actor owner;
+		public Actor _owner;
 
 		public Inventory(Actor owner) : base()
 		{
+			_owner = owner;
 		}
 	}
 }

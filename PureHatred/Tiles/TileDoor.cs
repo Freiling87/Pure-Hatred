@@ -36,7 +36,6 @@ namespace PureHatred.Tiles
             Glyph = 239;
             this.Background = Color.DarkGray;
             this.Foreground = Color.SaddleBrown;
-            //TODO: Just switch these in the image
         }
     }
 }

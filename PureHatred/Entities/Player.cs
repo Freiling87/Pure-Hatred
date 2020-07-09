@@ -18,9 +18,9 @@ namespace PureHatred.Entities
             
             Health = 5;
 
-            NutComplex = 50;
+            SatiationComplex = 5;
 
-            NutSimple = 500;
+            SatiationSimple = 5;
         }
     }
 }

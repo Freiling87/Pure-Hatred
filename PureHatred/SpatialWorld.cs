@@ -83,6 +83,7 @@ namespace PureHatred
                 }
 
             CurrentMap.Add(Player);
+            CurrentMap.Actors.Add(Player);
 
             //for (int i = 1; i < 100; i++)
                 //Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L'));

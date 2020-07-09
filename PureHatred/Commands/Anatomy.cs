@@ -41,6 +41,10 @@ namespace PureHatred.Commands
 			BodyPart lung1 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'd', 0, 0), torso);
 			BodyPart lung2 = GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'b', 0, 0), torso);
 
+			_owner.Mouth.Metabolism = 3;
+			_owner.Stomach.Metabolism = 2;
+			_owner.Intestines.Metabolism = 1;
+
 			preCreation = false;
 			_owner.NetBiologyValues();
 			Reorder();

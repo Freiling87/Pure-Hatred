@@ -30,8 +30,9 @@ namespace PureHatred.Entities
 		public int ContentsSimple; // Stand-in for Simple Nutrients
 									// Both are combined to fill Capacity, but could also represent blood, bile, etc depending on organ context.
 
-		public int ValuePerBiteComplex = 1;
-		public int ValuePerBiteSimple = 1;
+		public int ValuePerBiteComplex = 25;
+		public int ValuePerBiteSimple = 25;
+		public int Metabolism = 2; // Mouth: BiteSize
 
 		public StringBuilder TierPrefix = new StringBuilder("");
 		public int AnatomyTier = 0;
@@ -73,11 +74,15 @@ namespace PureHatred.Entities
 
 		public bool Masticate(BodyPart target)
 		{
-			if (target.HpCurrent-- <= 0)
+			int bitesTaken = Math.Min(Metabolism, target.HpCurrent);
+			
+			target.HpCurrent -= bitesTaken;
+
+			if (target.HpCurrent == 0)
 				target.Delete($"{target.Name} was devoured.");
 
-			owner.Stomach.ContentsComplex += target.ValuePerBiteComplex;
-			owner.Stomach.ContentsSimple += target.ValuePerBiteSimple;
+			owner.Stomach.ContentsComplex += target.ValuePerBiteComplex * bitesTaken;
+			owner.Stomach.ContentsSimple += target.ValuePerBiteSimple * bitesTaken;
 
 			GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 
@@ -88,14 +93,14 @@ namespace PureHatred.Entities
 		{
 			if (ContentsComplex > 0)
 			{
-				ContentsComplex--;
-				owner.Intestines.ContentsComplex++;
+				ContentsComplex -= Metabolism;
+				owner.Intestines.ContentsComplex += Metabolism;
 			}
 
 			if (ContentsSimple > 0)
 			{
-				ContentsSimple--;
-				owner.Intestines.ContentsSimple++;
+				ContentsSimple -= Metabolism;
+				owner.Intestines.ContentsSimple += Metabolism;
 			}
 		}
 
@@ -105,14 +110,14 @@ namespace PureHatred.Entities
 
 			if (ContentsComplex > 0)
 			{
-				ContentsComplex--;
-				owner.NutComplex++;
+				ContentsComplex -= Metabolism;
+				owner.SatiationComplex += Metabolism;
 			}
 
 			if (ContentsSimple > 0)
 			{
-				ContentsSimple++;
-				owner.NutSimple++;
+				ContentsSimple -= Metabolism;
+				owner.SatiationSimple += Metabolism;
 			}
 		}	
 	}

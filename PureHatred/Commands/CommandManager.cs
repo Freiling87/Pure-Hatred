@@ -29,7 +29,6 @@ namespace PureHatred.Commands
             EnemyTurn, 
             PassiveTurn,
             MenuGeneric, // Base Esc/Enter, Arrow Keys
-
 		}
 
         public void PlayerTurn()
@@ -69,17 +68,5 @@ namespace PureHatred.Commands
 
         // COMMANDS
 
-        public bool UseDoor(Actor actor, TileDoor door)
-        {
-            if (door.Locked)
-                return false; // TODO
-            if (!door.Locked && !door.IsOpen)
-            {
-                door.Open();
-                GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} opened a {door.Name}");
-                return true;
-            }
-            return false;
-        }
     }
 }

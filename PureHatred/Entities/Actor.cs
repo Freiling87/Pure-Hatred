@@ -18,12 +18,12 @@ namespace PureHatred.Entities
         public int Gold { get; set; }
         public int Health { get; set; }
         public int HealthMax { get; set; }
-        public int HungerSimple { get; set; }
-        public int NutSimple { get; set; }
-        public int HungerComplex { get; set; }
-        public int NutComplex { get; set; }
         public int HealRate { get; set; } = 1;
-        public int NutrientSurplus { get; set; } = 0;
+
+        public int NetHungerSimple { get; set; }
+        public int SatiationSimple { get; set; }
+        public int NetHungerComplex { get; set; }
+        public int SatiationComplex { get; set; }
 
         public List<Mutation> Mutations = new List<Mutation>();
         public Anatomy anatomy;
@@ -68,7 +68,7 @@ namespace PureHatred.Entities
             //else if (item != null)
             //    return GameLoop.CommandManager.Pickup(this, item);
             else if (door != null && !door.IsOpen)
-                return GameLoop.CommandManager.UseDoor(this, door);
+                return UseDoor(door);
 
             else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
             {
@@ -87,8 +87,8 @@ namespace PureHatred.Entities
 
         public void NetBiologyValues()
 		{
-            HungerComplex = anatomy.Sum(x => x.HungerComplex);
-            HungerSimple = anatomy.Sum(x => x.HungerSimple);
+            NetHungerComplex = anatomy.Sum(x => x.HungerComplex);
+            NetHungerSimple = anatomy.Sum(x => x.HungerSimple);
             Health = anatomy.Sum(x => x.HpCurrent);
             HealthMax = anatomy.Sum(x => x.HpMax);
 		}
@@ -97,9 +97,6 @@ namespace PureHatred.Entities
         {
             Alimentation();
             HealWounds();
-            if (this == GameLoop.World.Player)
-                GameLoop.UIManager.MessageLog.AddTextNewline("Player Biorhythm now");
-            //TODO: Apparently this isn't running for the player, only for enemies. Will need to make sur Player is in Actors().
         }
 
         public void Alimentation()
@@ -107,33 +104,40 @@ namespace PureHatred.Entities
             Stomach.StomachDigestion();
             Intestines.IntestinalDigestion();
 
-            foreach (BodyPart bodyPart in anatomy)
-            {
-                NutSimple -= bodyPart.HungerSimple;
-                NutComplex -= bodyPart.HungerComplex;
-            }
+            SatiationComplex -= NetHungerComplex;
+            SatiationSimple -= NetHungerSimple;
         }
 
         public void HealWounds()
         {
             bool multiBreak = false;
 
-            IEnumerable<BodyPart> ouchies = anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax);
-
             for (int i = 0; i < HealRate; i++) //Always heal same HP per nutrients, just at faster rate if possible
                 if (!multiBreak)
-                    foreach (BodyPart bodyPart in ouchies)
+                    foreach (BodyPart bodyPart in anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax))
                     {
                         if (!multiBreak)
                             bodyPart.HpCurrent++;
                         else
                             break;
 
-                        if (NutrientSurplus-- == 0)
+                        if (SatiationSimple-- == 0)
                             multiBreak = true;
                     }
                 else
                     break;
+        }
+
+        public bool UseDoor(TileDoor door)
+        {
+            if (door.Locked)
+                return false; // TODO
+            if (!door.Locked && !door.IsOpen)
+            {
+                door.Open();
+                return true;
+            }
+            return false;
         }
     }
 }
