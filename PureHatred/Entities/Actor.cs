@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Xna.Framework;
@@ -105,8 +106,27 @@ namespace PureHatred.Entities
             Intestines.IntestinalDigestion();
 
             SatiationComplex -= NetHungerComplex;
+            if (SatiationComplex < 0)
+            {
+                Kwashiorkor(0 - SatiationComplex);
+                SatiationComplex = 0;
+            }
+
             SatiationSimple -= NetHungerSimple;
+            if (SatiationSimple < 0)
+			{
+                Starvation(0 - SatiationSimple);
+                SatiationSimple = 0;
+			}
         }
+
+        public void Kwashiorkor(int deficiency)
+		{
+		}
+
+        public void Starvation(int deficiency)
+		{
+		}
 
         public void HealWounds()
         {

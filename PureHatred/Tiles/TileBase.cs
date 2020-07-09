@@ -11,7 +11,7 @@ namespace PureHatred
         public bool IsBlockingLOS;
         public string Name;
 
-        public TileBase(Color foreground, Color background, int glyph, bool blockingMove = false, bool blockingLOS = false, String name = "") : base(foreground, background, glyph)
+        public TileBase(Color foreground, Color background, int glyph, bool blockingMove = false, bool blockingLOS = false, String name = "Unnamed Cell") : base(foreground, background, glyph)
         {
             IsImpassible = blockingMove;
             IsBlockingLOS = blockingLOS;
