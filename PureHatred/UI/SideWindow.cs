@@ -59,23 +59,17 @@ namespace PureHatred.UI
 
             _listBox.Items.Clear();
 
-            int i = 0;
-            if (player.inventory.Count > 0)
-                foreach (Item item in player.inventory)
-                {
-                    Item current = player.inventory[i++];
-                    _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{current.Name}");
-                }
+            //if (player.inventory.Count > 0)
+            //    foreach (Item item in player.inventory)
+            //        _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{item.Name}");
 
-            i = 0;
             if (player.anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.anatomy)
 				{
                     if (bodyPart.IsNodeVisible())
 					{
-                        BodyPart current = player.anatomy[i++];
-                        StringBuilder entry = new StringBuilder($"{GetNodeTreeSymbols(bodyPart)}{current.Name}");
-                        String dataCols = $"{current.HpCurrent} / {current.HpMax.ToString().PadLeft(2)}";
+                        StringBuilder entry = new StringBuilder($"{GetNodeTreeSymbols(bodyPart)}{bodyPart.Name}");
+						string dataCols = $"{bodyPart.HpCurrent} / {bodyPart.HpMax.ToString().PadLeft(2)}";
 
                         entry.Append(dataCols.PadLeft(_listBox.Width - entry.Length));
 

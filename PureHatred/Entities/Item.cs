@@ -35,13 +35,22 @@ namespace PureHatred.Entities
             List<Item> ancestry = new List<Item>();
             Item context = this;
 
-            while (context.parent != null)
+            while (context.parent != null) //For Leg, added Torso twice
 			{
-                ancestry.Add(parent);
+                ancestry.Add(context.parent);
                 context = context.parent;
 			}
 
             return ancestry;
+		}
+
+        public List<Item> GetDescendants()
+		{
+            List<Item> descendants = new List<Item>();
+
+
+
+            return descendants;
 		}
 
         public bool IsNodeVisible() // TODO: Can Linq a oneliner here
