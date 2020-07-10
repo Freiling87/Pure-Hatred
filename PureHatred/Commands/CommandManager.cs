@@ -56,9 +56,7 @@ namespace PureHatred.Commands
             //GameLoop.UIManager.MessageLog.AddTextNewline("(Passive Turn here)"); //-
 
             foreach (Actor actor in GameLoop.World.CurrentMap.Actors)
-			{
                 actor.BioRhythm();
-            }
 
             GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 

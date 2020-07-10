@@ -33,40 +33,33 @@ namespace PureHatred
             Entities = new GoRogue.MultiSpatialMap<Entity>();
         }
 
-        public bool IsTileWalkable(Point location)
-        {
-            if (location.X < 0 || location.Y < 0 || location.X >= Width || location.Y >= Height)
-                return false;
-            return !_tiles[location.ToIndex(Width)].IsImpassible;
-        }
+        public bool IsTileWalkable(Point location) =>
+            location.X >= 0 && 
+            location.Y >= 0 && 
+            location.X < Width && 
+            location.Y < Height && 
+            !_tiles[location.ToIndex(Width)].IsImpassible;
 
-        public T GetEntityAt<T>(Point tile) where T : Entity
-        {
-            return Entities.GetItems(tile).OfType<T>().FirstOrDefault();
-        }
-        public List<T> GetEntitiesAt<T>(Point tile) where T : Entity
-		{
-            return Entities.GetItems(tile).OfType<T>().ToList();
-        }
+        public T GetEntityAt<T>(Point tile) where T : Entity =>
+            Entities.GetItems(tile).OfType<T>().FirstOrDefault();
+
+        public List<T> GetEntitiesAt<T>(Point tile) where T : Entity =>
+            Entities.GetItems(tile).OfType<T>().ToList();
 
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
             int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
 
             if (locationIndex <= Width * Height && locationIndex >= 0)
-				return Tiles[locationIndex] is T t ? t : null; //https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#the-is-type-pattern-expression
+				return Tiles[locationIndex] is T t ? t : null;          //https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#the-is-type-pattern-expression
             else return null;
         }
         
-        public T GetTileAt<T>(Point tile) where T : TileBase
-        {
-            return GetTileAt<T>(tile.X, tile.Y);
-        }
+        public T GetTileAt<T>(Point tile) where T : TileBase =>
+            GetTileAt<T>(tile.X, tile.Y);
 
-        public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase
+        public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase //TODO: Linq one-liner
 		{
-            //Returns list of Tiles at multiple Points
-            //A Point can only hold one tile - do not try to detect stacks of tiles!
             List<T> result = new List<T>();
 
             for (int i = 0; i < tiles.Length; i++)
@@ -78,8 +71,6 @@ namespace PureHatred
         public void Remove(Entity entity)
         {
             Entities.Remove(entity);
-            //if (!Entities.Remove(entity))
-            //	throw new Exception("Failed to remove entity from map");
 
             entity.Moved -= OnEntityMoved; // Link entity Moved event to new handler
         }
@@ -87,8 +78,6 @@ namespace PureHatred
         public void Add(Entity entity)
         {
             Entities.Add(entity, entity.Position);
-			//if (!Entities.Add(entity, entity.Position))
-			//	throw new Exception("Failed to add entity to map");
 
 			entity.Moved += OnEntityMoved; // Link entity Moved event to new handler
         }

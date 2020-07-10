@@ -15,42 +15,8 @@ namespace PureHatred
 
         public MapGenerator(){}
 
-        public Map MapgenSurface()
-        {
-            return null;
-        }
-        public Map MapgenCaveUpper()
-		{
-            return null;
-		}
-        public Map MapgenCaveLower()
-		{
-            return null;
-		}
-        public Map MapgenMineTunnels()
-		{
-            return null;
-		}
-        public Map MapgenMineColony()
-		{
-            return null;
-		}
-        public Map MapgenOrbitalStation()
-		{
-            return null;
-		}
-        public Map MapgenSpaceship()
-		{
-            return null;
-		}
-        public Map MapgenArcology()
-		{
-            return null;
-		}
-
         public List<Rectangle> GenerateSquareRooms(int mapWidth, int mapHeight, int numberOfRooms, int minRoomDimension, int maxRoomDimension)
 		{
-            // TODO: Should pass list of existing rooms here if you want to avoid excessive intersects
             List<Rectangle> Rooms = new List<Rectangle>();
 
             for (int i = 0; i < numberOfRooms; i++)
@@ -66,9 +32,7 @@ namespace PureHatred
                 bool newRoomIntersects = Rooms.Any(room => newRoom.Intersects(room));
 
                 if (!newRoomIntersects) // If disabled, can make some interesting shapes as well
-                {
                     Rooms.Add(newRoom);
-                }
             }
             return Rooms;
 		}

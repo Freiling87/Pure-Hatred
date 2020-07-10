@@ -22,17 +22,17 @@ namespace PureHatred.UI
 {
 	public class StatusWindow : Window
 	{
-		private ProgressBar healthBar;
-		private ProgressBar NutrientSimple;
-		private ProgressBar NutrientComplex;
-		private Label healthBarLabel;
-		private Label NutrientComplexLabel;
-		private Label NutrientSimpleLabel;
+		private readonly ProgressBar healthBar;
+		private readonly ProgressBar NutrientSimple;
+		private readonly ProgressBar NutrientComplex;
+		private readonly Label healthBarLabel;
+		private readonly Label NutrientComplexLabel;
+		private readonly Label NutrientSimpleLabel;
 		//private Label healthOverlay;
 
-		private Label TestLabel1;
-		private Label TestLabel2;
-		private Label TestLabel3;
+		private readonly Label TestLabel1;
+		private readonly Label TestLabel2;
+		private readonly Label TestLabel3;
 
 		public StatusWindow (int width, int height) : base (width, height)
 		{
@@ -126,6 +126,8 @@ namespace PureHatred.UI
 			TestLabel1.DisplayText = ($"Stomach: {Player.Stomach.ContentsComplex}NC / {Player.Stomach.ContentsSimple}NS");
 			TestLabel2.DisplayText = ($"Intestines: {Player.Intestines.ContentsComplex}NC / {Player.Intestines.ContentsSimple}NS");
 			TestLabel3.DisplayText = ($"Satiation: {Player.SatiationComplex}/{Player.NetHungerComplex}NC // {Player.SatiationSimple}/{Player.NetHungerSimple}NS");
+
+			IsDirty = true;
 		}
 
 		public override void Draw(TimeSpan drawTime) =>

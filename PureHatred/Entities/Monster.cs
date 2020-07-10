@@ -1,8 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Microsoft.Xna.Framework;
-
-// TODO: Set up JSONs for items, body parts, creatures
+﻿using Microsoft.Xna.Framework;
 
 namespace PureHatred.Entities
 {

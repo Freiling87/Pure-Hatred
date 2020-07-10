@@ -5,6 +5,7 @@ using SadConsole;
 using SadConsole.Components;
 
 using PureHatred.Entities;
+using System.Linq;
 
 /* TODO:
  * - Replace Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
@@ -32,8 +33,8 @@ namespace PureHatred
         {
             CreateMap();
             CreatePlayer();
-            CreateMonsters();
-            CreateLoot();
+            CreateFlora();
+            CreateFauna();
         }
 
         private void CreateMap()
@@ -44,30 +45,43 @@ namespace PureHatred
             CurrentMap = mapGen.MapgenDungeonCannibalized(_mapWidth, _mapHeight, _maxRooms, _minRoomDimension, _maxRoomDimension);
         }
 
-        private void CreateMonsters()
+        private void CreateFlora()
         {
-            int numMonsters = 100;
+            int numFlora = 100;
 
-            for (int i = 0; i < numMonsters; i++)
+            for (int i = 0; i < numFlora; i++)
             {
-                int monsterPosition = 0;
-                Monster newMonster = new Monster(Color.Blue, Color.Transparent, "Gentle Cherub");
+                int tileIndex = 0;
+                BodyPart mushroom = new BodyPart(Color.GhostWhite, Color.Transparent, "mushroom", (char)5, 0, 0, 2, 2, null);
 
-                while (CurrentMap.Tiles[monsterPosition].IsImpassible)
-                    monsterPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                while (CurrentMap.Tiles[tileIndex].IsImpassible)
+                    tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
 
-                newMonster.Defense = rndNum.Next(0, 10);
-                newMonster.DefenseChance = rndNum.Next(0, 50);
-                newMonster.Attack = rndNum.Next(0, 10);
-                newMonster.AttackChance = rndNum.Next(0, 50);
-                newMonster.HealthMax = rndNum.Next(25, 50);
-                newMonster.Health = newMonster.HealthMax;
-                newMonster.Name = "a helpless cherub";
+                mushroom.Name = "a mushroom";
 
-                newMonster.Position = new Point(monsterPosition % CurrentMap.Width, monsterPosition / CurrentMap.Width);
-                CurrentMap.Add(newMonster);
+                mushroom.Position = new Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
+                CurrentMap.Add(mushroom);
+            }
+        }
 
-                CurrentMap.Actors.Add(newMonster);
+        private void CreateFauna()
+        {
+            int numFauna = 100;
+
+            for (int i = 0; i < numFauna; i++)
+            {
+                int tileIndex = 0;
+                Monster fauna = new Monster(Color.Blue, Color.Transparent, "Gentle Cherub");
+
+                while (CurrentMap.Tiles[tileIndex].IsImpassible)
+                    tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+
+                fauna.Name = "a helpless cherub";
+
+                fauna.Position = new Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
+                CurrentMap.Add(fauna);
+
+                CurrentMap.Actors.Add(fauna);
             }
         }
 
@@ -78,33 +92,12 @@ namespace PureHatred
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
                 if (!CurrentMap.Tiles[i].IsImpassible)
                 {
-                    Player.Position = SadConsole.Helpers.GetPointFromIndex(i, CurrentMap.Width);
+                    Player.Position = Helpers.GetPointFromIndex(i, CurrentMap.Width);
                     break;
                 }
 
             CurrentMap.Add(Player);
             CurrentMap.Actors.Add(Player);
-
-            //for (int i = 1; i < 100; i++)
-                //Player.Inventory.Add(new Item(Color.Green, Color.Transparent, $"test {i}", 'L'));
-        }
-
-        private void CreateLoot()
-        {
-            int numLoot = 20;
-
-            for (int i = 0; i < numLoot; i++)
-            {
-                Item newLoot = new Item(Color.Green, Color.Transparent, "fancy shirt", 'L');
-
-                int tileIndex = 0;
-                while (CurrentMap.Tiles[tileIndex].IsImpassible)
-                    tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
-
-                newLoot.Position = new Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
-
-                CurrentMap.Add(newLoot);
-            }
         }
     }
 }

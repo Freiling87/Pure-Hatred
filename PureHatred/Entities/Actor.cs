@@ -44,6 +44,13 @@ namespace PureHatred.Entities
             inventory = new Inventory(this);
 
             anatomy.HardCodeHumanParts();
+
+            Defense = anatomy.Sum(x => x.Striking);
+            DefenseChance = anatomy.Sum(x => x.Dexterity);
+            Attack = anatomy.Sum(x => x.Striking);
+            AttackChance = anatomy.Sum(x => x.Dexterity);
+            HealthMax = anatomy.Sum(x => x.HpMax);
+            Health = HealthMax;
         }
 
         private Item AddLoot(Item item)

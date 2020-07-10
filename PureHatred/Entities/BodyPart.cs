@@ -59,7 +59,7 @@ namespace PureHatred.Entities
 
 			if (parent != null)
 				parent.children.Remove(this);
-			
+
 			foreach (BodyPart child in children)
 				child.parent = null;
 
@@ -83,8 +83,6 @@ namespace PureHatred.Entities
 
 			owner.Stomach.ContentsComplex += target.ValuePerBiteComplex * bitesTaken;
 			owner.Stomach.ContentsSimple += target.ValuePerBiteSimple * bitesTaken;
-
-			GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
 
 			return true;
 		}
