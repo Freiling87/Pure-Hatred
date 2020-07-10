@@ -4,14 +4,20 @@ using System.Linq;
 
 using Microsoft.Xna.Framework;
 using PureHatred.Commands;
+using PureHatred.Entities.Interfaces;
 using PureHatred.Resolutions;
 using PureHatred.Tiles;
 using PureHatred.UI;
 
 namespace PureHatred.Entities
 {
-    public abstract class Actor : Entity
+    public abstract class Actor : Entity, INode
     {
+        public bool isNodeExpanded { get; set; }
+        public INode parent { get; set; }
+        public List<INode> children { get; set; }
+        public Actor owner { get; set; } // TODO: Owner should just be a hidden Core node
+
         public int Attack { get; set; } 
         public int AttackChance { get; set; } 
         public int Defense { get; set; }

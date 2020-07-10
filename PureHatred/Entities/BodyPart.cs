@@ -1,13 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
+using PureHatred.Entities.Interfaces;
 using PureHatred.UI;
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Collections.Generic;
 
 namespace PureHatred.Entities
 {
-	public class BodyPart : Item
+	public class BodyPart : Entity, INode
 	{
+		public bool isNodeExpanded { get; set; }
+		public INode parent { get; set; }
+		public List<INode> children { get; set; }
+		public Actor owner { get; set; } // TODO: Owner should just be a hidden Core node
+
 		public int HpMax;
 		public int HpCurrent;
 		public int HungerComplex;
@@ -39,7 +46,7 @@ namespace PureHatred.Entities
 
 		public bool NodeVisited = false;
 
-		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, glyph)
+		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, glyph)
 		{
 			Name = name;
 
@@ -48,6 +55,8 @@ namespace PureHatred.Entities
 
 			HungerComplex = hungerComplex;
 			HungerSimple = hungerSimple;
+
+			isNodeExpanded = true;
 		}
 
 		public void Delete(string message)
@@ -64,6 +73,11 @@ namespace PureHatred.Entities
 				child.parent = null;
 
 			GameLoop.UIManager.MessageLog.AddTextNewline(message);
+		}
+
+		internal bool IsNodeVisible()
+		{
+			throw new NotImplementedException();
 		}
 
 		public void Decompose()
