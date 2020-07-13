@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using PureHatred.UI;
-using System;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
+
+using Microsoft.Xna.Framework;
 
 namespace PureHatred.Entities
 {
@@ -18,11 +18,11 @@ namespace PureHatred.Entities
 		public int Trunks;
 		public int Branches;
 
-		public int Dexterity;
-		public int Striking;
-		public int Stability;
+		public int Dexterity = 1;
+		public int Striking = 1;
+		public int Stability = 1;
 
-		public int DecompositionTimer; // Loop 10 turns or so? Or varied rate, who knows
+		public int DecompositionTimer = 10;
 
 		//TODO: Consider Enum PartType to streamline biorhythms
 
@@ -32,12 +32,8 @@ namespace PureHatred.Entities
 
 		public int ValuePerBiteComplex = 25;
 		public int ValuePerBiteSimple = 25;
-		public int Metabolism = 2; // Mouth: BiteSize
+		public int Metabolism; // Mouth: BiteSize
 
-		public StringBuilder TierPrefix = new StringBuilder("");
-		public int AnatomyTier = 0;
-
-		public bool NodeVisited = false;
 
 		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, glyph)
 		{

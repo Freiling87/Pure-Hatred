@@ -46,7 +46,7 @@ namespace PureHatred.Commands
 			_owner.Intestines.Metabolism = 1;
 
 			preCreation = false;
-			_owner.NetBiologyValues();
+
 			Reorder();
 		}
 

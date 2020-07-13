@@ -12,10 +12,10 @@ namespace PureHatred.Entities
 {
     public abstract class Actor : Entity
     {
-        public int Attack { get; set; } 
-        public int AttackChance { get; set; } 
+        public int Attack { get; set; }
+        public int AttackChance { get; set; }
         public int Defense { get; set; }
-        public int DefenseChance { get; set; } 
+        public int DefenseChance { get; set; }
         public int Gold { get; set; }
         public int Health { get; set; }
         public int HealthMax { get; set; }
@@ -45,11 +45,8 @@ namespace PureHatred.Entities
 
             anatomy.HardCodeHumanParts();
 
-            Defense = anatomy.Sum(x => x.Striking);
-            DefenseChance = anatomy.Sum(x => x.Dexterity);
-            Attack = anatomy.Sum(x => x.Striking);
-            AttackChance = anatomy.Sum(x => x.Dexterity);
-            HealthMax = anatomy.Sum(x => x.HpMax);
+            NetBiologyValues();
+
             Health = HealthMax;
         }
 
@@ -60,7 +57,7 @@ namespace PureHatred.Entities
             return item;
         }
 
-        public bool MoveBy(Point positionChange)
+        public void MoveBy(Point positionChange)
         {
             Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
             Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
@@ -69,22 +66,14 @@ namespace PureHatred.Entities
             TileWall wall = GameLoop.World.CurrentMap.GetTileAt<TileWall>(Position + positionChange);
 
             if (monster != null)
-                //return GameLoop.CommandManager.BumpAttack(this, monster);
                 Combat.BumpAttack(this, monster);
             else if (bodyPart != null)
-                return Mouth.Masticate(bodyPart);
-            //else if (item != null)
-            //    return GameLoop.CommandManager.Pickup(this, item);
+                Mouth.Masticate(bodyPart);
             else if (door != null && !door.IsOpen)
-                return UseDoor(door);
+                UseDoor(door);
 
             else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
-            {
                 Position += positionChange;
-                return true;
-            }
-
-            return false;
         }
 
         public bool MoveTo(Point newPosition)
@@ -99,7 +88,13 @@ namespace PureHatred.Entities
             NetHungerSimple = anatomy.Sum(x => x.HungerSimple);
             Health = anatomy.Sum(x => x.HpCurrent);
             HealthMax = anatomy.Sum(x => x.HpMax);
-		}
+
+            Defense = anatomy.Sum(x => x.Striking);
+            DefenseChance = anatomy.Sum(x => x.Dexterity) * 2;
+            Attack = anatomy.Sum(x => x.Striking);
+            AttackChance = anatomy.Sum(x => x.Dexterity) * 3;
+            HealthMax = anatomy.Sum(x => x.HpMax);
+        }
 
         public void BioRhythm()
         {
