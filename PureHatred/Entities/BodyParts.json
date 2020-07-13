@@ -1,0 +1,11 @@
+{
+  "name" : "placeholder bodypart",
+  "foreground": "Color.LightPink",
+  "background": "Color.Transparent",
+  "glyph": 2,
+  "hungerComplex": 0,
+  "hungerSimple": 0,
+  "hpMax": 0,
+  "hpCurrent": 0,
+  "owner": null
+}

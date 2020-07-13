@@ -28,7 +28,6 @@ namespace PureHatred.Entities
 
         public List<Mutation> Mutations = new List<Mutation>();
         public Anatomy anatomy;
-        public Inventory inventory;
 
         public BodyPart Brain;
         public BodyPart Core;
@@ -41,7 +40,6 @@ namespace PureHatred.Entities
             Name = name;
 
             anatomy = new Anatomy(this);
-            inventory = new Inventory(this);
 
             anatomy.HardCodeHumanParts();
 
@@ -50,20 +48,11 @@ namespace PureHatred.Entities
             Health = HealthMax;
         }
 
-        private Item AddLoot(Item item)
-        {
-            inventory.Add(item);
-
-            return item;
-        }
-
         public void MoveBy(Point positionChange)
         {
             Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
-            Item item = GameLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
             BodyPart bodyPart = GameLoop.World.CurrentMap.GetEntityAt<BodyPart>(Position + positionChange);
             TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
-            TileWall wall = GameLoop.World.CurrentMap.GetTileAt<TileWall>(Position + positionChange);
 
             if (monster != null)
                 Combat.BumpAttack(this, monster);

@@ -96,16 +96,8 @@ namespace PureHatred.Resolutions
             GameLoop.World.CurrentMap.Add(blood);
             //TODO: Examine SadConsole.CellDecorator
 
-            if (defender.inventory.Count > 0 || defender.anatomy.Count > 0)
+            if (defender.anatomy.Count > 0)
                 deathMessage.Append(" and dropped:");
-
-            foreach (Item item in defender.inventory)
-            {
-                item.Position = defender.Position;
-                Map.Add(item);
-                deathMessage.Append($" {item.Name},");
-            }
-            defender.inventory.Clear();
 
             foreach (BodyPart bodyPart in defender.anatomy)
             {
