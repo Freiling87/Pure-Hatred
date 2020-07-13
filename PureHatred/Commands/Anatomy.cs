@@ -1,8 +1,8 @@
-﻿using PureHatred.Entities;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
+
+using PureHatred.Entities;
 
 namespace PureHatred.Commands
 {

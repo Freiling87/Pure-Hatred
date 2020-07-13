@@ -2,7 +2,6 @@
 
 using Microsoft.Xna.Framework;
 using SadConsole;
-using SadConsole.Components;
 
 using PureHatred.Entities;
 using System.Linq;
@@ -71,12 +70,10 @@ namespace PureHatred
             for (int i = 0; i < numFauna; i++)
             {
                 int tileIndex = 0;
-                Monster fauna = new Monster(Color.Blue, Color.Transparent, "Gentle Cherub");
+                Monster fauna = new Monster(Color.Blue, Color.Transparent, "a helpless Cherub");
 
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)
                     tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
-
-                fauna.Name = "a helpless cherub";
 
                 fauna.Position = new Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
                 CurrentMap.Add(fauna);
