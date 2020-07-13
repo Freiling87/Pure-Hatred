@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +7,9 @@ using SadConsole;
 using SadConsole.Controls;
 
 using PureHatred.Entities;
-using PureHatred.Entities.Interfaces;
+using System.Collections.Generic;
+using SadConsole.Input;
+using PureHatred.Commands;
 
 namespace PureHatred.UI
 {
@@ -38,13 +39,13 @@ namespace PureHatred.UI
 
         public void On_NodeToggled(object s, ListBox.SelectedItemEventArgs e)
         {
-            List<INode> visibleAnatomy = new List<INode>();
+            List<BodyPart> visibleAnatomy = new List<BodyPart>();
 
-            foreach (INode bodyPart in GameLoop.World.Player.anatomy)
+            foreach (BodyPart bodyPart in GameLoop.World.Player.anatomy)
                 if (bodyPart.IsNodeVisible())
                     visibleAnatomy.Add(bodyPart);
 
-            INode selection = visibleAnatomy[_listBox.SelectedIndex];
+            BodyPart selection = visibleAnatomy[_listBox.SelectedIndex];
 
             selection.isNodeExpanded = !selection.isNodeExpanded;
             InventoryList();
@@ -59,6 +60,10 @@ namespace PureHatred.UI
 
             _listBox.Items.Clear();
 
+            //if (player.inventory.Count > 0)
+            //    foreach (Item item in player.inventory)
+            //        _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{item.Name}");
+
             if (player.anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.anatomy.Where(n => n.IsNodeVisible()))
 				{
@@ -71,7 +76,7 @@ namespace PureHatred.UI
                 }
         }
 
-        public StringBuilder GetNodeTreeSymbols(INode item)
+        public StringBuilder GetNodeTreeSymbols(Item item)
 		{
             StringBuilder output = new StringBuilder("");
             int itemTier = item.CountParents();
