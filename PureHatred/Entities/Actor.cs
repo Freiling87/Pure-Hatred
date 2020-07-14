@@ -58,7 +58,7 @@ namespace PureHatred.Entities
             if (monster != null)
                 Combat.BumpAttack(this, monster);
             else if (bodyPart != null)
-                Mouth.Masticate(bodyPart);
+                Mouth.Mastication(bodyPart);
             else if (door != null && !door.IsOpen)
                 UseDoor(door);
             else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))

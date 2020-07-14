@@ -77,6 +77,10 @@ namespace PureHatred.Resolutions
 
                 defender.Health -= damage;
                 MessageLog.AddTextNewline($" {hitPart.Name} was hit for {damage} damage, now at {hitPart.HpCurrent}. {defender.Name} at {defender.Health}.");
+
+                if (hitPart.HpCurrent <= 0)
+                    hitPart.Severance(0 - hitPart.HpCurrent);
+
                 if (defender.Health <= 0)
                     ResolveDeath(defender);
             }
@@ -88,16 +92,12 @@ namespace PureHatred.Resolutions
         {
             Map Map = GameLoop.World.CurrentMap;
 
-            StringBuilder deathMessage = new StringBuilder($"{defender.Name} died");
+            StringBuilder deathMessage = new StringBuilder($"{defender.Name} died ");
 
-            Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258)
-            { Position = defender.Position };
-
-            GameLoop.World.CurrentMap.Add(blood);
-            //TODO: Examine SadConsole.CellDecorator
+            GameLoop.World.CurrentMap.BloodSplatter(defender.Position, 5);
 
             if (defender.anatomy.Count > 0)
-                deathMessage.Append(" and dropped:");
+                deathMessage.Append("and dropped:");
 
             foreach (BodyPart bodyPart in defender.anatomy)
             {

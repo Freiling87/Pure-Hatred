@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 
 using PureHatred.Commands;
 using PureHatred.UI;
+using System;
 
 namespace PureHatred
 {
@@ -13,6 +14,8 @@ namespace PureHatred
 		public static UIManager UIManager;
 		public static GameStates GSManager;
 		public static SpatialWorld World;
+
+		public static Random rndNum = new Random();
 
 		static void Main(string[] args)
 		{

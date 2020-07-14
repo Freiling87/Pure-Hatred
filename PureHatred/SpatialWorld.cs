@@ -23,7 +23,6 @@ namespace PureHatred
         private readonly int _minRoomDimension = 4;
         private readonly int _maxRoomDimension = 15;
 
-        private Random rndNum = new Random(); 
         private TileBase[] _mapTiles;
         public Map CurrentMap { get; set; }
         public Player Player { get; set; }
@@ -54,7 +53,7 @@ namespace PureHatred
                 BodyPart mushroom = new BodyPart(Color.GhostWhite, Color.Transparent, "mushroom", (char)5, 0, 0, 2, 2, null);
 
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)
-                    tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    tileIndex = GameLoop.rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
 
                 mushroom.Name = "a mushroom";
 
@@ -73,7 +72,7 @@ namespace PureHatred
                 Monster fauna = new Monster(Color.Blue, Color.Transparent, "a helpless Cherub");
 
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)
-                    tileIndex = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                    tileIndex = GameLoop.rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
 
                 fauna.Position = new Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
                 CurrentMap.Add(fauna);

@@ -29,10 +29,7 @@ namespace PureHatred.Commands
                 player.MoveBy(new Point(1, 0));
 
             if (UI.IsKeyReleased(Keys.S))
-            {
-                player.Intestines.VoluntaryDefecation();
-                GameLoop.GSManager.turnTaken = true;
-            }
+                player.Intestines.Defecation(true);
 
             if (GameLoop.GSManager.turnTaken)
                 GameLoop.GSManager.EnemyTurn();

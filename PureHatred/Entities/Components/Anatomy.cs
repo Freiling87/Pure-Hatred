@@ -22,10 +22,10 @@ namespace PureHatred.Commands
 			// These are rudimentary demo parts to get the Anatomy Window working correctly.
 			_owner.Core = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
 			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "torso", '@', 25, 15), _owner.Core);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", '@', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", '@', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", '@', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", '@', 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", 257, 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", 257, 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 256, 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 256, 5, 10), torso);
 			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "beanus", ',', 1, 1), torso);
 
 			BodyPart neck = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "neck", 'i', 1, 5), _owner.Core);
@@ -95,24 +95,6 @@ namespace PureHatred.Commands
 			return newChild;
 		}
 
-		private BodyPart SeverBodyPart(BodyPart target, BodyPart parent = null)
-		{
-			Remove(target);
-
-			if (target.children.Count != 0)
-				foreach (BodyPart bodyPart in target.children)
-					Remove(bodyPart);
-
-			_owner.NetBiologyValues();
-
-			if (GameLoop.UIManager.StatusWindow != null) // Allows for pre-game creation
-				GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
-
-			RecalcNodeCapacities(parent);
-
-			return target;
-		}
-
 		public void RecalcNodeCapacities(params BodyPart[] list)
 		{
 			/* Recalculate Trunk/Branch space with existing grafts
@@ -128,7 +110,7 @@ namespace PureHatred.Commands
 		public bool Pickup(Actor actor, BodyPart item)
 		{
 			actor.anatomy.Add(item);
-			GameLoop.UIManager.SideWindow.InventoryList();
+			GameLoop.UIManager.SideWindow.RefreshAnatomy();
 			GameLoop.UIManager.MessageLog.AddTextNewline($"{actor.Name} picked up {item.Name}");
 			item.Destroy();
 			return true;
@@ -137,7 +119,7 @@ namespace PureHatred.Commands
 		public bool Drop(BodyPart bodyPart)
 		{
 			bodyPart.owner.anatomy.Remove(bodyPart);
-			GameLoop.UIManager.SideWindow.InventoryList();
+			GameLoop.UIManager.SideWindow.RefreshAnatomy();
 			GameLoop.UIManager.MessageLog.AddTextNewline($"{bodyPart.owner.Name}'s {bodyPart.Name} was severed");
 			//item.Destroy() oposite?
 			return true;

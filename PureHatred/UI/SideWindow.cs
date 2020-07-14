@@ -32,7 +32,7 @@ namespace PureHatred.UI
             };
             Add(_listBox);
 
-            InventoryList();
+            RefreshAnatomy();
 
             _listBox.SelectedItemExecuted += On_NodeToggled;
         }
@@ -48,21 +48,17 @@ namespace PureHatred.UI
             BodyPart selection = visibleAnatomy[_listBox.SelectedIndex];
 
             selection.isNodeExpanded = !selection.isNodeExpanded;
-            InventoryList();
+            RefreshAnatomy();
 
             //TODO: Will probably need to maintain VisibleAnatomy within Player.
             // Ensure that the list writing method is pulling from there.
         }
 
-        public void InventoryList()
+        public void RefreshAnatomy()
 		{
             Player player = GameLoop.World.Player;
 
             _listBox.Items.Clear();
-
-            //if (player.inventory.Count > 0)
-            //    foreach (Item item in player.inventory)
-            //        _listBox.Items.Add($"{GetNodeTreeSymbols(item)}{item.Name}");
 
             if (player.anatomy.Count > 0)
                 foreach (BodyPart bodyPart in player.anatomy.Where(n => n.IsNodeVisible()))
@@ -79,7 +75,7 @@ namespace PureHatred.UI
         public StringBuilder GetNodeTreeSymbols(Item item)
 		{
             StringBuilder output = new StringBuilder("");
-            int itemTier = item.CountParents();
+            int itemTier = item.CountAncestors();
 
             if (item.parent == null)
 			{

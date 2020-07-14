@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
+using GoRogue.Random;
+
+using PureHatred.UI;
+using GoRogue;
+using System.Linq;
+using SadConsole.EasingFunctions;
+
+/*TODO: Event handlers:
+ * - On move, move descendants
+ * 
+ */
 
 namespace PureHatred.Entities
 {
@@ -60,13 +71,13 @@ namespace PureHatred.Entities
 			GameLoop.UIManager.MessageLog.AddTextNewline(message);
 		}
 
-		public void Decompose()
+		public void Decomposition()
 		{
 			if (HpCurrent-- == 0)
 				Delete($"{Name} decomposed into thin air.");
 		}
 
-		public bool Masticate(BodyPart target)
+		public bool Mastication(BodyPart target)
 		{
 			int bitesTaken = Math.Min(Metabolism, target.HpCurrent);
 			
@@ -83,6 +94,10 @@ namespace PureHatred.Entities
 
 		public void StomachDigestion()
 		{
+			/* Bug found: 
+			 * First round of devour -125, then -225, -275, 
+			*/				
+
 			if (ContentsSimple > 0) // Carbs absorbed in UDT
 			{
 				ContentsSimple -= Metabolism * 3 / 2;
@@ -104,32 +119,68 @@ namespace PureHatred.Entities
 				owner.SatiationComplex += Metabolism;
 				ContentsSimple += Metabolism * 3 / 4; //feces
 			}
+			
+			while (ContentsSimple > 250)
+				Defecation(false);
 		}
 
-		public void VoluntaryDefecation()
+		public void Defecation(bool isVoluntary)
 		{
 			if (ContentsSimple > 50) // Double-gate this to allow this to work for vol and invol shidding
 			{
-				GameLoop.UIManager.MessageLog.AddTextNewline("You fard and shid and look proudly upon your creation.");
+				if (isVoluntary)
+					GameLoop.UIManager.MessageLog.AddTextNewline("You fard and shid and look proudly upon your creation.");
+				else
+					GameLoop.UIManager.MessageLog.AddTextNewline("You can't wait any longer an you fard an you shid everywhere");
 
 				Decal shid = new Decal(Color.SaddleBrown, Color.Transparent, "shid", 258)
 				{ Position = owner.Position };
 				GameLoop.World.CurrentMap.Add(shid);
 
-				ContentsSimple -= 50;
+				ContentsSimple -= GameLoop.rndNum.Next(50, 100);
 			}
 			else
 			{
-				GameLoop.UIManager.MessageLog.AddTextNewline("You try to shid but only fard; you butt has bled, you pushed so hard.");
+				GameLoop.UIManager.MessageLog.AddTextNewline("You try to shid but only fard; your butt has bled, you pushed so hard.");
 
-				Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258)
-				{ Position = owner.Position };
-				GameLoop.World.CurrentMap.Add(blood);
+				GameLoop.World.CurrentMap.BloodSplatter(owner.Position, 0);
 
 				HpCurrent--;
 			}
 
-			GameLoop.GSManager.turnTaken = true;
+			if (isVoluntary)
+				GameLoop.GSManager.turnTaken = true;
+		}
+
+		public void Severance(int velocity)
+		{
+			List<BodyPart> thisEtAl = new List<BodyPart>();
+			thisEtAl.Add(this);
+			thisEtAl.Concat(GetDescendants());
+
+			List<Coord> circleProvider = new RadiusAreaProvider(owner.Position, velocity, Radius.CIRCLE).CalculatePositions().ToList();
+			Point newLocation = circleProvider.RandomItem();
+			while (!GameLoop.World.CurrentMap.IsTileWalkable(newLocation))
+				newLocation = circleProvider.RandomItem();
+			// TODO: Split this off, will be used elsewhere too
+
+			if (children.Count != 0)
+				foreach (BodyPart bodyPart in thisEtAl)
+				{
+					owner.anatomy.Remove(bodyPart);
+					bodyPart.Position = newLocation;
+				}
+			GameLoop.World.CurrentMap.Add(this);
+			GameLoop.World.CurrentMap.BloodSplatter(newLocation, velocity);
+
+			owner.anatomy.RecalcNodeCapacities((BodyPart)parent);
+			owner.NetBiologyValues();
+
+			if (GameLoop.UIManager.StatusWindow != null && // Allows for pre-game creation
+				owner == GameLoop.World.Player)
+				GameLoop.UIManager.StatusWindow.UpdateStatusWindow();
+
+			GameLoop.UIManager.MessageLog.AddTextNewline($"{Name} is severed, flying away in a bloody arc!");
 		}
 	}
 }

@@ -102,5 +102,14 @@ namespace PureHatred
 
         public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args) =>
             GameLoop.UIManager.MapConsole.Children.Add(args.Item);
+
+        public void BloodSplatter(Point position, int volume)
+		{
+            Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258 + volume)
+            { Position = position };
+            GameLoop.World.CurrentMap.Add(blood);
+
+            //TODO: Examine SadConsole.CellDecorator
+        }
     }
 }

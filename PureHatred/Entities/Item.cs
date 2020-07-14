@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using SadConsole;
 using System.Collections.Generic;
-using System.ComponentModel;
+
+// TODO: Many of these should only be recalculated when the Item is grafted/removed, etc.
 
 namespace PureHatred.Entities
 {
@@ -19,6 +19,14 @@ namespace PureHatred.Entities
 
         public void Destroy() =>
             GameLoop.World.CurrentMap.Remove(this);
+
+        //ANCESTORS
+
+        public Actor GetOwner() =>
+            (Actor)GetAncestor(CountAncestors() + 1);
+
+        public int CountAncestors() =>
+            (parent != null) ? 1 + parent.CountAncestors() : 0;
 
         public Entity GetAncestor(int generations) // 0 returns self
 		{
@@ -44,14 +52,27 @@ namespace PureHatred.Entities
             return ancestry;
 		}
 
+        //SIBLINGS
+
+        public override bool IsLastborn() =>
+            parent == null || this == parent.children[^1];
+
+        //DESCENDANTS
+
+        public int CountDescendants() =>
+            //TODO
+            0;
+
         public List<Item> GetDescendants()
 		{
             List<Item> descendants = new List<Item>();
 
-
+            // TODO
 
             return descendants;
 		}
+
+        //NODES
 
         public bool IsNodeVisible() // TODO: Can Linq a oneliner here
         {
@@ -60,17 +81,5 @@ namespace PureHatred.Entities
                     return false;
             return true;
         }
-
-        public Actor GetOwner() =>
-            (Actor)GetAncestor(CountParents() +1);
-
-        public override bool IsLastborn() =>
-            parent == null || this == parent.children[^1];
-            // Above notation returns true if true, rest if false
-
-        public int CountParents() =>
-            (parent != null) ? 1 + parent.CountParents() : 0;
-
-        // TODO: The above three should only be recalculated when the Item is grafted/removed, etc.
     }
 }
