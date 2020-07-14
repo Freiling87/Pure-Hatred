@@ -1,24 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-using GoRogue;
-using GoRogue.DiceNotation;
-using Microsoft.Xna.Framework;
-
-using PureHatred.Entities;
-using PureHatred.Resolutions;
-using PureHatred.Tiles;
-using PureHatred.UI;
+﻿using PureHatred.Entities;
 
 namespace PureHatred.Commands
 {
-    public class CommandManager
+    public class GameStates
     {
         public GameState _gameState = GameState.PlayerTurn;
+        public bool turnTaken = false;
 
-        public CommandManager()
+        public GameStates()
         {
         }
 
@@ -33,10 +22,10 @@ namespace PureHatred.Commands
 
         public void PlayerTurn()
 		{
-            GameLoop.UIManager.turnTaken = false;
+            GameLoop.GSManager.turnTaken = false;
 
             //GameLoop.UIManager.MessageLog.AddTextNewline("(Player Turn here"); //-
-            if (GameLoop.UIManager.turnTaken)
+            if (GameLoop.GSManager.turnTaken)
                 _gameState = GameState.EnemyTurn;
 		}
 

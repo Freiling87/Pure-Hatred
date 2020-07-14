@@ -14,7 +14,7 @@ namespace PureHatred.Commands
             Player player = GameLoop.World.Player;
             UIManager UI = GameLoop.UIManager;
 
-            GameLoop.UIManager.turnTaken = false;
+            GameLoop.GSManager.turnTaken = false;
 
             if (UI.IsKeyReleased(Keys.F5))
                 SadConsole.Settings.ToggleFullScreen();
@@ -30,12 +30,12 @@ namespace PureHatred.Commands
 
             if (UI.IsKeyReleased(Keys.S))
             {
-                player.Intestines.IntestinalExcretion();
-                UI.turnTaken = true;
+                player.Intestines.VoluntaryDefecation();
+                GameLoop.GSManager.turnTaken = true;
             }
 
-            if (UI.turnTaken)
-                GameLoop.CommandManager.EnemyTurn();
+            if (GameLoop.GSManager.turnTaken)
+                GameLoop.GSManager.EnemyTurn();
         }
     }
 }

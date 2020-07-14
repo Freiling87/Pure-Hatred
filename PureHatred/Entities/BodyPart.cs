@@ -106,7 +106,7 @@ namespace PureHatred.Entities
 			}
 		}
 
-		public void IntestinalExcretion()
+		public void VoluntaryDefecation()
 		{
 			if (ContentsSimple > 50) // Double-gate this to allow this to work for vol and invol shidding
 			{
@@ -128,6 +128,8 @@ namespace PureHatred.Entities
 
 				HpCurrent--;
 			}
+
+			GameLoop.GSManager.turnTaken = true;
 		}
 	}
 }

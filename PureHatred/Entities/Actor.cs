@@ -69,7 +69,7 @@ namespace PureHatred.Entities
             else
                 return;
 
-            GameLoop.UIManager.turnTaken = true;
+            GameLoop.GSManager.turnTaken = true;
         }
 
         public bool MoveTo(Point newPosition)

@@ -11,7 +11,7 @@ namespace PureHatred
 		public const int GameHeight = 80;
 
 		public static UIManager UIManager;
-		public static CommandManager CommandManager;
+		public static GameStates GSManager;
 		public static SpatialWorld World;
 
 		static void Main(string[] args)
@@ -33,7 +33,7 @@ namespace PureHatred
 		private static void Init()
 		{
 			UIManager = new UIManager();
-			CommandManager = new CommandManager();
+			GSManager = new GameStates();
 			World = new SpatialWorld();
 
 			UIManager.Init();

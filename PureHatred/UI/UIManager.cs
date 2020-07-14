@@ -28,8 +28,6 @@ namespace PureHatred.UI
         public MessageLogWindow MessageLog;
         public StatusWindow StatusWindow;
 
-        public bool turnTaken = false;
-
         public UIManager()
         {
             IsVisible = true;
@@ -47,7 +45,7 @@ namespace PureHatred.UI
 
         public override void Update(TimeSpan timeElapsed)
         {
-            if (GameLoop.CommandManager._gameState == CommandManager.GameState.PlayerTurn)
+            if (GameLoop.GSManager._gameState == GameStates.GameState.PlayerTurn)
                 MapCommands.CheckKeyboard();
 
             base.Update(timeElapsed);
