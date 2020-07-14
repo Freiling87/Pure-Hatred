@@ -127,15 +127,11 @@ namespace PureHatred.UI
             GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
         }
 
-        private bool IsKeyReleased(Keys input)
-        {
-            return Global.KeyboardState.IsKeyReleased(input);
-        }
+        private bool IsKeyReleased(Keys input) =>
+            Global.KeyboardState.IsKeyReleased(input);
 
-        private bool IsKeyPressed(Keys input) 
-        {
-            return Global.KeyboardState.IsKeyPressed(input);
-        }
+        private bool IsKeyPressed(Keys input) =>
+            Global.KeyboardState.IsKeyPressed(input);
 
         private void CheckKeyboard()
         {
@@ -147,33 +143,23 @@ namespace PureHatred.UI
                 SadConsole.Settings.ToggleFullScreen();
 
             if (IsKeyPressed(Keys.Up))
-            {
                 player.MoveBy(new Point(0, -1));
-                turnTaken = true;
-            }
-
             if (IsKeyPressed(Keys.Down))
-            {
                 player.MoveBy(new Point(0, 1));
-                turnTaken = true;
-            }
-
             if (IsKeyPressed(Keys.Left))
-            {
                 player.MoveBy(new Point(-1, 0));
-                turnTaken = true;
-            }
-
             if (IsKeyPressed(Keys.Right))
-            {
                 player.MoveBy(new Point(1, 0));
+
+            if (IsKeyReleased(Keys.S))
+			{
+                player.Intestines.IntestinalExcretion();
                 turnTaken = true;
             }
 
             if (turnTaken)
 			{
                 MapConsole.CenterViewPortOnPoint(player.Position);
-                //GameLoop.CommandManager._gameState = CommandManager.GameState.EnemyTurn;
                 GameLoop.CommandManager.EnemyTurn();
             }
         }

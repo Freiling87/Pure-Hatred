@@ -60,9 +60,12 @@ namespace PureHatred.Entities
                 Mouth.Masticate(bodyPart);
             else if (door != null && !door.IsOpen)
                 UseDoor(door);
-
             else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
                 Position += positionChange;
+            else
+                return;
+
+            GameLoop.UIManager.turnTaken = true;
         }
 
         public bool MoveTo(Point newPosition)

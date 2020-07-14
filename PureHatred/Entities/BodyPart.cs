@@ -83,34 +83,51 @@ namespace PureHatred.Entities
 
 		public void StomachDigestion()
 		{
-			if (ContentsComplex > 0)
+			if (ContentsSimple > 0) // Carbs absorbed in UDT
+			{
+				ContentsSimple -= Metabolism * 3 / 2;
+				owner.SatiationSimple += Metabolism * 3 / 2;
+				owner.Intestines.ContentsSimple += Metabolism * 3 / 4;
+			}
+			if (ContentsComplex > 0) // Complex nuts passed to LDT
 			{
 				ContentsComplex -= Metabolism;
 				owner.Intestines.ContentsComplex += Metabolism;
-			}
-
-			if (ContentsSimple > 0)
-			{
-				ContentsSimple -= Metabolism;
-				owner.Intestines.ContentsSimple += Metabolism;
 			}
 		}
 
 		public void IntestinalDigestion()
 		{
-			// TODO: Add excretion
-
-			if (ContentsComplex > 0)
+			if (ContentsComplex > 0) // LDT processes complex nuts
 			{
 				ContentsComplex -= Metabolism;
 				owner.SatiationComplex += Metabolism;
+				ContentsSimple += Metabolism * 3 / 4; //feces
 			}
+		}
 
-			if (ContentsSimple > 0)
+		public void IntestinalExcretion()
+		{
+			if (ContentsSimple > 50) // Double-gate this to allow this to work for vol and invol shidding
 			{
-				ContentsSimple -= Metabolism;
-				owner.SatiationSimple += Metabolism;
+				GameLoop.UIManager.MessageLog.AddTextNewline("You fard and shid and look proudly upon your creation.");
+
+				Decal shid = new Decal(Color.SaddleBrown, Color.Transparent, "shid", 258)
+				{ Position = owner.Position };
+				GameLoop.World.CurrentMap.Add(shid);
+
+				ContentsSimple -= 50;
 			}
-		}	
+			else
+			{
+				GameLoop.UIManager.MessageLog.AddTextNewline("You try to shid but only fard; you butt has bled, you pushed so hard.");
+
+				Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258)
+				{ Position = owner.Position };
+				GameLoop.World.CurrentMap.Add(blood);
+
+				HpCurrent--;
+			}
+		}
 	}
 }
