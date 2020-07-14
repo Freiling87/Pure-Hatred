@@ -48,41 +48,43 @@ namespace PureHatred.UI
         public override void Update(TimeSpan timeElapsed)
         {
             if (GameLoop.CommandManager._gameState == CommandManager.GameState.PlayerTurn)
-                CheckKeyboard();
+                MapCommands.CheckKeyboard();
 
             base.Update(timeElapsed);
         }
 
         public void CreateWindows()
         {
-            int width = GameLoop.GameWidth;
-            int height = GameLoop.GameHeight;
+            int height_1_4 = GameLoop.GameHeight * 1 / 4;
+            int height_3_4 = GameLoop.GameHeight * 3 / 4;
+            int width14 = GameLoop.GameWidth * 1 / 4;
+            int width34 = GameLoop.GameWidth * 3 / 4;
 
-            MapConsole = new ScrollingConsole(width, height);
+            MapConsole = new ScrollingConsole(GameLoop.GameWidth, GameLoop.GameHeight);
             LoadMap(GameLoop.World.CurrentMap);
-            CreateMapWindow(width * 3 / 4, height * 3 / 4, "Map");
+            CreateMapWindow(width34, height_3_4, "Map");
 
-            SideWindow = new SideWindow(width * 1 / 4, height * 3 / 4, "Inventory / Anatomy")
+            SideWindow = new SideWindow(width14, height_3_4, "Inventory / Anatomy")
             {
-                Position = new Point(width * 3 / 4, 0),
+                Position = new Point(width34, 0),
                 CanDrag = false,
                 UseMouse = true,
             };
             Children.Add(SideWindow);
             SideWindow.Show();
 
-            MessageLog = new MessageLogWindow(width * 3 / 4, height * 1 / 4, "Log")
+            MessageLog = new MessageLogWindow(width34, height_1_4, "Log")
             {
-                Position = new Point(0, height * 3 / 4),
+                Position = new Point(0, height_3_4),
                 CanDrag = false,
                 UseMouse = true,
             };
             Children.Add(MessageLog);
             MessageLog.Show();
 
-            StatusWindow = new StatusWindow(width * 1 / 4, height * 1 / 4)
+            StatusWindow = new StatusWindow(width14, height_1_4)
             {
-                Position = new Point(width * 3 / 4, height * 3 / 4),
+                Position = new Point(width34, height_3_4),
                 CanDrag = false,
                 UseMouse = true,
             };
@@ -127,42 +129,11 @@ namespace PureHatred.UI
             GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
         }
 
-        private bool IsKeyReleased(Keys input) =>
+        public bool IsKeyReleased(Keys input) =>
             Global.KeyboardState.IsKeyReleased(input);
 
-        private bool IsKeyPressed(Keys input) =>
+        public bool IsKeyPressed(Keys input) =>
             Global.KeyboardState.IsKeyPressed(input);
-
-        private void CheckKeyboard()
-        {
-            Player player = GameLoop.World.Player;
-
-            turnTaken = false;
-
-            if (IsKeyReleased(Keys.F5))
-                SadConsole.Settings.ToggleFullScreen();
-
-            if (IsKeyPressed(Keys.Up))
-                player.MoveBy(new Point(0, -1));
-            if (IsKeyPressed(Keys.Down))
-                player.MoveBy(new Point(0, 1));
-            if (IsKeyPressed(Keys.Left))
-                player.MoveBy(new Point(-1, 0));
-            if (IsKeyPressed(Keys.Right))
-                player.MoveBy(new Point(1, 0));
-
-            if (IsKeyReleased(Keys.S))
-			{
-                player.Intestines.IntestinalExcretion();
-                turnTaken = true;
-            }
-
-            if (turnTaken)
-			{
-                MapConsole.CenterViewPortOnPoint(player.Position);
-                GameLoop.CommandManager.EnemyTurn();
-            }
-        }
 
         // MAP 
 
@@ -205,26 +176,9 @@ namespace PureHatred.UI
         {
             Map currentMap = GameLoop.World.CurrentMap;
 
-            MapConsole = new SadConsole.ScrollingConsole(currentMap.Width, currentMap.Height, Global.FontDefault, new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight), map.Tiles);
+            GameLoop.UIManager.MapConsole = new ScrollingConsole(currentMap.Width, currentMap.Height, Global.FontDefault, new Rectangle(0, 0, GameLoop.GameWidth, GameLoop.GameHeight), map.Tiles);
 
-            SyncMapEntities(map);
+            map.SyncMapEntities();
         }
-
-        private void SyncMapEntities(Map map)
-        {
-            MapConsole.Children.Clear();
-
-            foreach (Entity entity in map.Entities.Items)
-                MapConsole.Children.Add(entity);
-
-            map.Entities.ItemAdded += OnMapEntityAdded;
-            map.Entities.ItemRemoved += OnMapEntityRemoved;
-        }
-
-        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args) =>
-            MapConsole.Children.Remove(args.Item);
-
-        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args) =>
-            MapConsole.Children.Add(args.Item);
     }
 }

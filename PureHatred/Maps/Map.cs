@@ -85,5 +85,22 @@ namespace PureHatred
         // If Entity .Moved changes, this event handler updates Entity's position in SpatialMap
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args) =>
             Entities.Move(args.Entity as Entity, args.Entity.Position);
+
+        public void SyncMapEntities()
+        {
+            GameLoop.UIManager.MapConsole.Children.Clear();
+
+            foreach (Entity entity in Entities.Items)
+                GameLoop.UIManager.MapConsole.Children.Add(entity);
+
+            Entities.ItemAdded += OnMapEntityAdded;
+            Entities.ItemRemoved += OnMapEntityRemoved;
+        }
+
+        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args) =>
+            GameLoop.UIManager.MapConsole.Children.Remove(args.Item);
+
+        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args) =>
+            GameLoop.UIManager.MapConsole.Children.Add(args.Item);
     }
 }

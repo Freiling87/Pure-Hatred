@@ -7,6 +7,7 @@ using PureHatred.Commands;
 using PureHatred.Resolutions;
 using PureHatred.Tiles;
 using PureHatred.UI;
+using SadConsole;
 
 namespace PureHatred.Entities
 {
@@ -61,7 +62,10 @@ namespace PureHatred.Entities
             else if (door != null && !door.IsOpen)
                 UseDoor(door);
             else if (GameLoop.World.CurrentMap.IsTileWalkable(Position + positionChange))
+            {
                 Position += positionChange;
+                GameLoop.UIManager.MapConsole.CenterViewPortOnPoint(GameLoop.World.Player.Position);
+            }
             else
                 return;
 
