@@ -18,6 +18,8 @@ namespace PureHatred.Entities
 {
 	public class BodyPart : Item
 	{
+		new public readonly int renderOrder = (int)RenderOrder.BodyPart;
+
 		public int HpMax;
 		public int HpCurrent;
 		public int HungerComplex;
@@ -60,7 +62,7 @@ namespace PureHatred.Entities
 			Map Map = GameLoop.World.CurrentMap;
 
 			Map.Remove(this);
-			GameLoop.World.CurrentMap.Entities.Remove(this);
+			GameLoop.World.CurrentMap.MapEntities.Remove(this);
 
 			if (parent != null)
 				parent.children.Remove(this);

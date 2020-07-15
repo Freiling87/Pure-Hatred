@@ -7,6 +7,8 @@ namespace PureHatred.Entities
 {
     public class Item : Entity
     {
+        new public readonly int renderOrder = (int)RenderOrder.Item;
+
         public bool isNodeExpanded = true;
         public Item parent;
         public List<Item> children = new List<Item>();

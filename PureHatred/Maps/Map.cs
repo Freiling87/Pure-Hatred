@@ -12,7 +12,7 @@ namespace PureHatred
 {
     public class Map
     {
-        TileBase[] _tiles; // contain all tile objects
+        TileBase[] _tiles;
         private int _width;
         private int _height;
 
@@ -20,8 +20,8 @@ namespace PureHatred
         public int Width { get { return _width; } set { _width = value; }}
         public int Height { get { return _height; } set { _height = value; }}
 
-        public GoRogue.MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
-        public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator(); // A static IDGenerator that all Entities can access
+        public GoRogue.MultiSpatialMap<Entity> MapEntities;
+        public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator();
 
         public List<Actor> Actors = new List<Actor>();
 
@@ -30,7 +30,7 @@ namespace PureHatred
             _width = width;
             _height = height;
             Tiles = new TileBase[width * height];
-            Entities = new GoRogue.MultiSpatialMap<Entity>();
+            MapEntities = new GoRogue.MultiSpatialMap<Entity>();
         }
 
         public bool IsTileWalkable(Point location) =>
@@ -41,10 +41,10 @@ namespace PureHatred
             !_tiles[location.ToIndex(Width)].IsImpassible;
 
         public T GetEntityAt<T>(Point tile) where T : Entity =>
-            Entities.GetItems(tile).OfType<T>().FirstOrDefault();
+            MapEntities.GetItems(tile).OfType<T>().FirstOrDefault();
 
         public List<T> GetEntitiesAt<T>(Point tile) where T : Entity =>
-            Entities.GetItems(tile).OfType<T>().ToList();
+            MapEntities.GetItems(tile).OfType<T>().ToList();
 
         public T GetTileAt<T>(int x, int y) where T : TileBase
         {
@@ -70,46 +70,59 @@ namespace PureHatred
 
         public void Remove(Entity entity)
         {
-            Entities.Remove(entity);
+            MapEntities.Remove(entity);
 
             entity.Moved -= OnEntityMoved; // Link entity Moved event to new handler
         }
 
         public void Add(Entity entity)
         {
-            Entities.Add(entity, entity.Position);
+            MapEntities.Add(entity, entity.Position);
 
 			entity.Moved += OnEntityMoved; // Link entity Moved event to new handler
         }
 
         // If Entity .Moved changes, this event handler updates Entity's position in SpatialMap
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args) =>
-            Entities.Move(args.Entity as Entity, args.Entity.Position);
+            MapEntities.Move(args.Entity as Entity, args.Entity.Position);
 
         public void SyncMapEntities()
         {
             GameLoop.UIManager.MapConsole.Children.Clear();
 
-            foreach (Entity entity in Entities.Items)
-                GameLoop.UIManager.MapConsole.Children.Add(entity);
+            MapEntities.ItemAdded += OnMapEntityAdded;
+            MapEntities.ItemRemoved += OnMapEntityRemoved;
 
-            Entities.ItemAdded += OnMapEntityAdded;
-            Entities.ItemRemoved += OnMapEntityRemoved;
+            foreach (Entity entity in MapEntities.Items)
+                GameLoop.UIManager.MapConsole.Children.Insert(0, entity);
         }
 
         public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args) =>
             GameLoop.UIManager.MapConsole.Children.Remove(args.Item);
 
-        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args) =>
-            GameLoop.UIManager.MapConsole.Children.Add(args.Item);
-
-        public void BloodSplatter(Point position, int volume)
+        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
 		{
-            Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 258 + volume)
+            int insertionIndex = 0;
+
+            for (int i = 0; i < GameLoop.UIManager.MapConsole.Children.Count; i++)
+                if (GameLoop.UIManager.MapConsole.Children[i] is Entity e && e.renderOrder > args.Item.renderOrder)
+                {
+                    insertionIndex = i;
+                    break;
+                }
+            GameLoop.UIManager.MapConsole.Children.Insert(insertionIndex, args.Item);
+        }
+
+    public void BloodSplatter(Point position, int volume)
+		{
+            Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 256 + volume)
             { Position = position };
             GameLoop.World.CurrentMap.Add(blood);
 
             //TODO: Examine SadConsole.CellDecorator
+            // TODO: Intensity of splatter should be inverse to distance traveled
+            // TODO: Provide source and splatter from here
         }
     }
 }
+ 

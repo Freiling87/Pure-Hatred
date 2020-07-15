@@ -22,10 +22,10 @@ namespace PureHatred.Commands
 			// These are rudimentary demo parts to get the Anatomy Window working correctly.
 			_owner.Core = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
 			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "torso", '@', 25, 15), _owner.Core);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", 257, 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", 257, 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 256, 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 256, 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", '7', 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", '7', 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 'L', 5, 10), torso);
+			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 'L', 5, 10), torso);
 			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "beanus", ',', 1, 1), torso);
 
 			BodyPart neck = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "neck", 'i', 1, 5), _owner.Core);

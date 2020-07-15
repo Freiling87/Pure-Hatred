@@ -6,6 +6,19 @@ namespace PureHatred.Entities
     public abstract class Entity : SadConsole.Entities.Entity, GoRogue.IHasID
     {
         public uint ID { get; set; }
+        public readonly int renderOrder = (int)RenderOrder.Entity;
+
+        public enum RenderOrder : int
+		{
+            Decal,
+            Flora,
+            BodyPart,
+            Item,
+            Actor,
+            Monster,
+            Player,
+            Entity
+		}
 
         protected Entity(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(width, height)
         {

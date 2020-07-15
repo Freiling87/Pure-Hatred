@@ -4,6 +4,7 @@ using System.Linq;
 
 using Microsoft.Xna.Framework;
 using PureHatred.Commands;
+using PureHatred.Entities.Components;
 using PureHatred.Resolutions;
 using PureHatred.Tiles;
 using PureHatred.UI;
@@ -13,6 +14,8 @@ namespace PureHatred.Entities
 {
     public abstract class Actor : Entity
     {
+        new public readonly int renderOrder = (int)RenderOrder.Actor;
+
         public int Attack { get; set; }
         public int AttackChance { get; set; }
         public int Defense { get; set; }
@@ -29,6 +32,7 @@ namespace PureHatred.Entities
 
         public List<Mutation> Mutations = new List<Mutation>();
         public Anatomy anatomy;
+        public Psyche psyche;
 
         public BodyPart Brain;
         public BodyPart Core;
@@ -51,7 +55,7 @@ namespace PureHatred.Entities
 
         public void MoveBy(Point positionChange)
         {
-            Monster monster = GameLoop.World.CurrentMap.GetEntityAt<Monster>(Position + positionChange);
+            Npc monster = GameLoop.World.CurrentMap.GetEntityAt<Npc>(Position + positionChange);
             BodyPart bodyPart = GameLoop.World.CurrentMap.GetEntityAt<BodyPart>(Position + positionChange);
             TileDoor door = GameLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
 
@@ -128,22 +132,20 @@ namespace PureHatred.Entities
 
         public void HealWounds()
         {
-            bool multiBreak = false;
+            BodyPart currentPart = null;
+            Queue<BodyPart> ouchies = new Queue<BodyPart>();
+            ouchies.Concat(anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax));
 
-            for (int i = 0; i < HealRate; i++) //Always heal same HP per nutrients, just at faster rate if possible
-                if (!multiBreak)
-                    foreach (BodyPart bodyPart in anatomy.Where(bodyPart => bodyPart.HpCurrent < bodyPart.HpMax))
-                    {
-                        if (!multiBreak)
-                            bodyPart.HpCurrent++;
-                        else
-                            break;
+            while (SatiationSimple > 0 && ouchies.Count > 0)
+			{
+                currentPart = ouchies.Dequeue();
 
-                        if (SatiationSimple-- == 0)
-                            multiBreak = true;
-                    }
-                else
-                    break;
+                currentPart.HpCurrent += HealRate; //TODO: Remainder
+                SatiationSimple -= HealRate;
+
+                if (SatiationSimple <= 0)
+                    SatiationSimple = 0;
+            }
         }
 
         public bool UseDoor(TileDoor door)

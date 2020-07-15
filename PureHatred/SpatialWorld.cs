@@ -69,7 +69,7 @@ namespace PureHatred
             for (int i = 0; i < numFauna; i++)
             {
                 int tileIndex = 0;
-                Monster fauna = new Monster(Color.Blue, Color.Transparent, "a helpless Cherub");
+                Npc fauna = new Npc(Color.Blue, Color.Transparent, "a helpless Cherub");
 
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)
                     tileIndex = GameLoop.rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);

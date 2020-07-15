@@ -5,6 +5,8 @@ using PureHatred.UI;
 
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
+// TranscendenceRL has a way to do a case statement for key input: https://github.com/INeedAUniqueUsername/TranscendenceRL/blob/master/TranscendenceRL/Screens/ArenaScreen.cs#L141
+
 namespace PureHatred.Commands
 {
 	static class MapCommands

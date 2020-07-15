@@ -1,0 +1,14 @@
+﻿RE: Render order, from Chris3606
+
+Depends on what GoRogue features you're using.  The SadConsole-GoRogue integration library does this for you; it has layers to its BasicMap, with things on higher layers rendered on top of lower ones.
+
+If you're not using the integration library, you're generally speaking not at all at risk of messing up GoRogue features.  You can order the entity list for sure.  The integration library uses MultipleConsoleEntityDrawingComponents instead of the more traditional EntityViewSyncComponents, which work slightly differently; the component itself actually does the entity drawing, which allows you to then order the components using the SortOrder mechanics sadconsole has for components and thus enforce the draw order.
+FreilingToday at 10:08 AM
+Yeah I think mine is using EntityViewSyncComponents
+Have not seen BasicMap yet
+Nor SortOrder
+Is either solution more performant than the other?
+Chris3606Today at 10:11 AM
+BasicMap is a core feature of the SadConsole-GoRogue integration library, not built into either SadConsole or GoRogue individually.  The ansiware tutorial didn't use it as the ansiware tutorial predates the integration library.  It's the desired solution in my opinion if you're using it, but if not switching to the integration library is non-trivial.  If using just SadConsole and GoRogue, I would attempt to order the children list or switch the sync component.  I personally think the solution involving MultipleConsoleEntityDrawingComponents is prettier, but it's also not the intended use of that component, rather a nice side effect; it's meant for if you have a single entity being drawn on multiple consoles.
+
+It just so happens that part of that process involves the component being responsible for drawing the entities rather than the console, so you get to use sort order.  The integration library uses that method because it needs to use the MultipleConsoleEntityDrawingComponents anyway.
