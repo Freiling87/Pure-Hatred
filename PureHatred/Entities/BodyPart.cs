@@ -20,6 +20,16 @@ namespace PureHatred.Entities
 	{
 		new public readonly int renderOrder = (int)RenderOrder.BodyPart;
 
+		//JSON Stuff
+		public string foreground { get; set; }
+		public string background { get; set; }
+		public string name { get; set; }
+		public int glyph { get; set; }
+		public int hungerComplex { get; set; }
+		public int hungerSimple { get; set; }
+		public int hpMax { get; set; }
+		public int hpCurrent { get; set; }
+
 		public int HpMax;
 		public int HpCurrent;
 		public int HungerComplex;
@@ -38,9 +48,8 @@ namespace PureHatred.Entities
 
 		//TODO: Consider Enum PartType to streamline biorhythms
 
-		public int ContentsComplex; // Stand-in for Complex Nutrients
-		public int ContentsSimple; // Stand-in for Simple Nutrients
-									// Both are combined to fill Capacity, but could also represent blood, bile, etc depending on organ context.
+		public int ContentsComplex; 
+		public int ContentsSimple; // Both are combined to fill Capacity, but could also represent blood, bile, etc depending on organ context.
 
 		public int ValuePerBiteComplex = 25;
 		public int ValuePerBiteSimple = 25;
@@ -48,13 +57,6 @@ namespace PureHatred.Entities
 
 		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, glyph)
 		{
-			Name = name;
-
-			HpCurrent = hpCurrent;
-			HpMax = hpMax;
-
-			HungerComplex = hungerComplex;
-			HungerSimple = hungerSimple;
 		}
 
 		public void Delete(string message)
@@ -62,7 +64,7 @@ namespace PureHatred.Entities
 			Map Map = GameLoop.World.CurrentMap;
 
 			Map.Remove(this);
-			GameLoop.World.CurrentMap.MapEntities.Remove(this);
+			GameLoop.World.CurrentMap.Remove(this);
 
 			if (parent != null)
 				parent.children.Remove(this);
@@ -154,24 +156,33 @@ namespace PureHatred.Entities
 				GameLoop.GSManager.turnTaken = true;
 		}
 
+		public Coord RandomWalkableTileInCircle(Point origin, int radius)
+		{
+			// TODO: Move this to different class
+			// TODO: Add POV limitations
+
+			List<Coord> circle = new RadiusAreaProvider(origin, radius, Radius.CIRCLE).CalculatePositions().ToList();
+
+			Point newLocation = circle.RandomItem();
+
+			while (!GameLoop.World.CurrentMap.IsTileWalkable(newLocation))
+				newLocation = circle.RandomItem();
+
+			return newLocation;
+		}
+
 		public void Severance(int velocity)
 		{
-			List<BodyPart> thisEtAl = new List<BodyPart>();
-			thisEtAl.Add(this);
-			thisEtAl.Concat(GetDescendants());
+			List<BodyPart> severedAndDescendants = new List<BodyPart>() { this };
+			severedAndDescendants.Concat(GetDescendants());
 
-			List<Coord> circleProvider = new RadiusAreaProvider(owner.Position, velocity, Radius.CIRCLE).CalculatePositions().ToList();
-			Point newLocation = circleProvider.RandomItem();
-			while (!GameLoop.World.CurrentMap.IsTileWalkable(newLocation))
-				newLocation = circleProvider.RandomItem();
-			// TODO: Split this off, will be used elsewhere too
+			Point newLocation = RandomWalkableTileInCircle(owner.Position, velocity);
 
-			if (children.Count != 0)
-				foreach (BodyPart bodyPart in thisEtAl)
-				{
-					owner.anatomy.Remove(bodyPart);
-					bodyPart.Position = newLocation;
-				}
+			foreach (BodyPart bodyPart in severedAndDescendants)
+			{
+				owner.anatomy.Remove(bodyPart);
+				bodyPart.Position = newLocation;
+			}
 			GameLoop.World.CurrentMap.Add(this);
 			GameLoop.World.CurrentMap.BloodSplatter(newLocation, velocity);
 

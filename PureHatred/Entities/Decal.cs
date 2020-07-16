@@ -8,7 +8,7 @@ namespace PureHatred.Entities
 
 		public Decal(Color foreground, Color background, string name, int glyph) : base(foreground, background, glyph)
 		{
-
+			Name = name;
 		}
 	}
 }

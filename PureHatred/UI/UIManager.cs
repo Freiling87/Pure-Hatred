@@ -96,9 +96,17 @@ namespace PureHatred.UI
         {
             var console = (Console)sender;
 
-            // Map Look by Mouseover
+            // Map _____ by Click
+            //if (e.MouseState.Mouse.LeftButtonDown)
+            //	console.Print(1, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}        ");
+            //else
+            //	console.Print(1, console.Height - 2, $"                                                           ");
+        }
+
+        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
+		{
+			var console = (Console)sender;
             StringBuilder seenString = new StringBuilder("You see:");
-            // May need to move this to MessageLog by Click, as it can get very extensive
             // Or just list Adam objects only, and allow further inspection explicitly
 
             TileBase seenTile = GameLoop.World.CurrentMap.GetTileAt<TileBase>(e.MouseState.CellPosition);
@@ -110,21 +118,9 @@ namespace PureHatred.UI
                 foreach (Entity entity in seenEntities)
                     seenString.Append($" {entity.Name},");
 
-            seenString.Remove(seenString.Length - 1, 1);                    //comma
-            seenString.Append("                                         "); //overwrite
-            console.Print(0, 0, seenString.ToString());
+            seenString.Remove(seenString.Length - 1, 1);                    //trim comma
 
-            // Map _____ by Click
-            //if (e.MouseState.Mouse.LeftButtonDown)
-            //	console.Print(1, console.Height - 2, $"You've clicked on {e.MouseState.CellPosition}        ");
-            //else
-            //	console.Print(1, console.Height - 2, $"                                                           ");
-        }
-
-        private static void Console_MouseClicked(object sender, SadConsole.Input.MouseEventArgs e)//+
-		{
-			var console = (Console)sender;
-            GameLoop.UIManager.MessageLog.AddTextNewline($"You've clicked on {e.MouseState.CellPosition}              ");
+            GameLoop.UIManager.MessageLog.AddTextNewline(seenString.ToString());
         }
 
         public bool IsKeyReleased(Keys input) =>

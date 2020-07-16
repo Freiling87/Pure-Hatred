@@ -1,7 +1,7 @@
 {
-  "name" : "test bodypart",
   "foreground": "Color.LightPink",
   "background": "Color.Transparent",
+  "name": "TEST JSON 1",
   "glyph": 2,
   "hungerComplex": 0,
   "hungerSimple": 0,

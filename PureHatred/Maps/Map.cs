@@ -20,7 +20,7 @@ namespace PureHatred
         public int Width { get { return _width; } set { _width = value; }}
         public int Height { get { return _height; } set { _height = value; }}
 
-        public GoRogue.MultiSpatialMap<Entity> MapEntities;
+        private GoRogue.MultiSpatialMap<Entity> MapEntities;
         public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator();
 
         public List<Actor> Actors = new List<Actor>();
@@ -68,18 +68,18 @@ namespace PureHatred
             return result;
 		}
 
-        public void Remove(Entity entity)
-        {
-            MapEntities.Remove(entity);
-
-            entity.Moved -= OnEntityMoved; // Link entity Moved event to new handler
-        }
-
         public void Add(Entity entity)
         {
             MapEntities.Add(entity, entity.Position);
 
-			entity.Moved += OnEntityMoved; // Link entity Moved event to new handler
+            entity.Moved += OnEntityMoved;
+        }
+
+        public void Remove(Entity entity)
+        {
+            MapEntities.Remove(entity);
+
+            entity.Moved -= OnEntityMoved;
         }
 
         // If Entity .Moved changes, this event handler updates Entity's position in SpatialMap
@@ -88,6 +88,13 @@ namespace PureHatred
 
         public void SyncMapEntities()
         {
+            /* Chris3606:change void SyncMapEntities() to void ConfigureAsRenderer(ScrollingConsole console).  
+             *   The function would take the console it's setting up as a parameter, and cache it as a private variable.   
+             *     Use that variable everywhere in Map instead of GameLoop.UIManager.MapConsole.  
+             * Then have a function RemoveRenderer() that nulls out the variable and unlinks events as needed.   
+             * That way map has a more strong guarantee that what it wants is actually there and what it expects.
+             */
+
             GameLoop.UIManager.MapConsole.Children.Clear();
 
             MapEntities.ItemAdded += OnMapEntityAdded;
@@ -119,7 +126,7 @@ namespace PureHatred
             { Position = position };
             GameLoop.World.CurrentMap.Add(blood);
 
-            //TODO: Examine SadConsole.CellDecorator
+            // TODO: Examine SadConsole.CellDecorator
             // TODO: Intensity of splatter should be inverse to distance traveled
             // TODO: Provide source and splatter from here
         }

@@ -36,4 +36,10 @@
     <Folder Include="Entities\Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Entities\BodyParts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-
 using Microsoft.Xna.Framework;
-
 using PureHatred.Entities;
 
 namespace PureHatred.Commands
@@ -44,6 +42,11 @@ namespace PureHatred.Commands
 			_owner.Mouth.Metabolism = 3;
 			_owner.Stomach.Metabolism = 2;
 			_owner.Intestines.Metabolism = 1;
+
+			//string jsonString = File.ReadAllText("Entities\\BodyParts.json");
+			//BodyPart myDeserializedClass = JsonConvert.DeserializeObject<BodyPart>(jsonString);
+			// This one might work if JSON covers all public properties, according to C# discord
+			// Build a BodyPart2 class from scratch and see what's causing the issue!
 
 			preCreation = false;
 
