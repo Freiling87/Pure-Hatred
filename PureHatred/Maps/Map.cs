@@ -12,25 +12,61 @@ namespace PureHatred
 {
     public class Map
     {
-        TileBase[] _tiles;
-        private int _width;
-        private int _height;
+        /* TODO:
+         * - Replace Point(TileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
+         *   with Point(TileIndexToPoint(TileIndex));
+         *   or Overload Point to accept a single int and use that:
+         *   Point(TileIndex);
+         */
 
-        public TileBase[] Tiles { get { return _tiles; } set { _tiles = value; }}
-        public int Width { get { return _width; } set { _width = value; }}
-        public int Height { get { return _height; } set { _height = value; }}
+        public TileBase[] Tiles { get; set; }
+		public int Width { get; set; }
+		public int Height { get; set; }
 
-        private GoRogue.MultiSpatialMap<Entity> MapEntities;
+		private GoRogue.MultiSpatialMap<Entity> MapEntities;
         public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator();
 
         public List<Actor> Actors = new List<Actor>();
 
         public Map(int width, int height)
         {
-            _width = width;
-            _height = height;
+            Width = width;
+            Height = height;
             Tiles = new TileBase[width * height];
             MapEntities = new GoRogue.MultiSpatialMap<Entity>();
+        }
+
+        #region TERRAIN
+
+        public Point IndexToPoint(int tileIndex) =>
+            new Point(tileIndex % Width, tileIndex / Height);
+
+        public int PointToIndex(Point input)
+		{
+            //TODO
+            return 0;
+		}
+
+        public T GetTileAt<T>(int x, int y) where T : TileBase
+        {
+            int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
+
+            if (locationIndex <= Width * Height && locationIndex >= 0)
+                return Tiles[locationIndex] is T t ? t : null;          //https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#the-is-type-pattern-expression
+            else return null;
+        }
+
+        public T GetTileAt<T>(Point tile) where T : TileBase =>
+            GetTileAt<T>(tile.X, tile.Y);
+
+        public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase //TODO: Linq one-liner
+        {
+            List<T> result = new List<T>();
+
+            for (int i = 0; i < tiles.Length; i++)
+                result.Add(GetTileAt<T>(tiles[i].X, tiles[i].Y));
+
+            return result;
         }
 
         public bool IsTileWalkable(Point location) =>
@@ -38,35 +74,16 @@ namespace PureHatred
             location.Y >= 0 && 
             location.X < Width && 
             location.Y < Height && 
-            !_tiles[location.ToIndex(Width)].IsImpassible;
+            !Tiles[location.ToIndex(Width)].IsImpassible;
 
-        public T GetEntityAt<T>(Point tile) where T : Entity =>
+		#endregion TERRAIN
+		#region ENTITIES
+
+		public T GetEntityAt<T>(Point tile) where T : Entity =>
             MapEntities.GetItems(tile).OfType<T>().FirstOrDefault();
 
         public List<T> GetEntitiesAt<T>(Point tile) where T : Entity =>
             MapEntities.GetItems(tile).OfType<T>().ToList();
-
-        public T GetTileAt<T>(int x, int y) where T : TileBase
-        {
-            int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
-
-            if (locationIndex <= Width * Height && locationIndex >= 0)
-				return Tiles[locationIndex] is T t ? t : null;          //https://docs.microsoft.com/en-us/dotnet/csharp/pattern-matching#the-is-type-pattern-expression
-            else return null;
-        }
-        
-        public T GetTileAt<T>(Point tile) where T : TileBase =>
-            GetTileAt<T>(tile.X, tile.Y);
-
-        public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase //TODO: Linq one-liner
-		{
-            List<T> result = new List<T>();
-
-            for (int i = 0; i < tiles.Length; i++)
-                result.Add(GetTileAt<T>(tiles[i].X, tiles[i].Y));
-
-            return result;
-		}
 
         public void Add(Entity entity)
         {
@@ -82,9 +99,24 @@ namespace PureHatred
             entity.Moved -= OnEntityMoved;
         }
 
-        // If Entity .Moved changes, this event handler updates Entity's position in SpatialMap
+        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
+        {
+            int insertionIndex = 0;
+
+            for (int i = 0; i < GameLoop.UIManager.MapConsole.Children.Count; i++)
+                if (GameLoop.UIManager.MapConsole.Children[i] is Entity e && e.renderOrder > args.Item.renderOrder)
+                {
+                    insertionIndex = i;
+                    break;
+                }
+            GameLoop.UIManager.MapConsole.Children.Insert(insertionIndex, args.Item);
+        }
+
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args) =>
             MapEntities.Move(args.Entity as Entity, args.Entity.Position);
+
+        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args) =>
+            GameLoop.UIManager.MapConsole.Children.Remove(args.Item);
 
         public void SyncMapEntities()
         {
@@ -104,23 +136,10 @@ namespace PureHatred
                 GameLoop.UIManager.MapConsole.Children.Insert(0, entity);
         }
 
-        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args) =>
-            GameLoop.UIManager.MapConsole.Children.Remove(args.Item);
+		#endregion ENTITIES
+		#region DECALS
 
-        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
-		{
-            int insertionIndex = 0;
-
-            for (int i = 0; i < GameLoop.UIManager.MapConsole.Children.Count; i++)
-                if (GameLoop.UIManager.MapConsole.Children[i] is Entity e && e.renderOrder > args.Item.renderOrder)
-                {
-                    insertionIndex = i;
-                    break;
-                }
-            GameLoop.UIManager.MapConsole.Children.Insert(insertionIndex, args.Item);
-        }
-
-    public void BloodSplatter(Point position, int volume)
+		public void BloodSplatter(Point position, int volume)
 		{
             Decal blood = new Decal(Color.DarkRed, Color.Transparent, "blood", 256 + volume)
             { Position = position };
@@ -130,6 +149,8 @@ namespace PureHatred
             // TODO: Intensity of splatter should be inverse to distance traveled
             // TODO: Provide source and splatter from here
         }
-    }
+
+		#endregion Decals
+	}
 }
  

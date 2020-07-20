@@ -13,7 +13,7 @@ namespace PureHatred
 
 		public static UIManager UIManager;
 		public static GameStates GSManager;
-		public static SpatialWorld World;
+		public static Populator World;
 
 		public static Random rndNum = new Random();
 
@@ -37,7 +37,7 @@ namespace PureHatred
 		{
 			UIManager = new UIManager();
 			GSManager = new GameStates();
-			World = new SpatialWorld();
+			World = new Populator();
 
 			UIManager.Init();
 		}

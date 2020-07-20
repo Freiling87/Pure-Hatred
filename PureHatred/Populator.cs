@@ -6,16 +6,10 @@ using SadConsole;
 using PureHatred.Entities;
 using System.Linq;
 
-/* TODO:
- * - Replace Point(tileIndex % CurrentMap.Width, tileIndex / CurrentMap.Width);
- *   with Point(TileIndexToPoint(TileIndex));
- *   or Overload Point to accept a single int and use that:
- *   Point(TileIndex);
- */
 
 namespace PureHatred
 {
-    public class SpatialWorld
+    public class Populator
     {
         private readonly int _mapWidth = 150;
         private readonly int _mapHeight = 150;
@@ -27,7 +21,7 @@ namespace PureHatred
         public Map CurrentMap { get; set; }
         public Player Player { get; set; }
 
-        public SpatialWorld()
+        public Populator()
         {
             CreateMap();
             CreatePlayer();
