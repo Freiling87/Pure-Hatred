@@ -11,8 +11,8 @@ namespace PureHatred
 {
     public class Populator
     {
-        private readonly int _mapWidth = 150;
-        private readonly int _mapHeight = 150;
+        private readonly int _mapWidth = 51;
+        private readonly int _mapHeight = 51;
         private readonly int _maxRooms = 100;
         private readonly int _minRoomDimension = 4;
         private readonly int _maxRoomDimension = 15;

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Linq.Expressions;
 using GoRogue;
 using Microsoft.Xna.Framework;
 
 using PureHatred.Tiles;
-
+using SadConsole;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 //TODO: Explore GoRogue documentation on MapGen. Not fully covered in tutorial yet. https://github.com/Chris3606/GoRogue/blob/master/GoRogue.Docs/articles/gr3-map-gen.md
@@ -19,7 +20,7 @@ namespace PureHatred
 
         public MapGenerator(){}
 
-		public Map MapgenDungeonCannibalized1(int mapWidth, int mapHeight, int maxRooms, int minRoomDimension, int maxRoomDimension)
+		public Map MapgenDungeonCannibalized(int mapWidth, int mapHeight, int maxRooms, int minRoomDimension, int maxRoomDimension)
         {
             _map = new Map(mapWidth, mapHeight);
 
@@ -35,17 +36,6 @@ namespace PureHatred
 
             foreach (Rectangle room in Rooms)
                 CreateDoor(room);
-
-            return _map;
-        }
-
-        public Map MapgenDungeonCannibalized(int mapWidth, int mapHeight, int maxRooms, int minRoomDimension, int maxRoomDimension)
-        {
-            _map = new Map(mapWidth, mapHeight);
-
-            FillMapWithWalls();
-
-            PrimsAlgorithm();
 
             return _map;
         }
@@ -247,69 +237,5 @@ namespace PureHatred
 
         private Point GetMidpoint(Point a, Point b) =>
             new Point((a.X + b.X) / 2, (a.Y + b.Y) / 2);
-
-        private void PrimsAlgorithm()
-        {
-            // 1 Start with a grid full of walls.
-            // 2 Pick a cell, make floor. Add the walls of the cell to the wall list.
-            // 3 While there are walls in the list:
-            //    1 Pick a random wall from the list.If only one of the two cells that the wall divides is visited, then:
-            //       1 Make the wall a passage and mark the unvisited cell as part of the maze.
-            //       2 Add the neighboring walls of the cell to the wall list.
-            //    2 Remove the wall from the list.
-
-            List<TileBase> Walls = new List<TileBase>();
-            Walls.Concat(_map.Tiles.ToList());
-
-            int width = _map.Width;
-            int height = _map.Height;
-            Random rnd = GameLoop.rndNum;
-
-            // Start from odd coords only
-            int x = rnd.Next(0, width / 2) * 2 + 1;
-            int y = rnd.Next(0, height / 2) * 2 + 1;
-
-            CreateFloor(new Point(x, y));
-
-            List<Point> to_check = new List<Point>();
-            if (y - 2 >= 0)
-                to_check.Add(new Point(x, y - 2));
-            if (y + 2 < height)
-                to_check.Add(new Point(x, y + 2));
-            if (x - 2 >= 0)
-                to_check.Add(new Point(x - 2, y));
-            if (x + 2 < width)
-                to_check.Add(new Point(x + 2, y));
-
-            // While there are cells in your growable array, choose choose one at random, clear it, and remove it from the growable array.
-            while (to_check.Count() > 0)
-            {
-                int index = rnd.Next(0, to_check.Count());
-
-                Point cell = to_check[index];
-                CreateFloor(cell);
-
-                x = cell.X;
-                y = cell.Y;
-
-                to_check.RemoveAt(index);
-
-                for (int i = 0; i < to_check.Count(); i++)
-                    if (_map.IsTileWalkable(to_check[i]))
-                    {
-                        CreateFloor(GetMidpoint(to_check[i], cell));
-                        to_check.Clear();
-                        break;
-                    }
-                if (y - 2 >= 0 && _map.GetTileAt<TileWall>(x, y - 2) != null)
-                    to_check.Add(new Point(x, y - 2));
-                if (y + 2 < height && _map.GetTileAt<TileWall>(x, y + 2) != null)
-                    to_check.Add(new Point(x, y + 2));
-                if (x - 2 >= 0 && _map.GetTileAt<TileWall>(x - 2, y) != null)
-                    to_check.Add(new Point(x - 2, y));
-                if (x + 2 < width && _map.GetTileAt<TileWall>(x + 2, y) != null)
-                    to_check.Add(new Point(x + 2, y));
-            }
-		}
     }
 }

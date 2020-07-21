@@ -7,6 +7,7 @@ using SadConsole;
 
 using PureHatred.Tiles;
 using PureHatred.Entities;
+using GoRogue;
 
 namespace PureHatred
 {
@@ -58,6 +59,14 @@ namespace PureHatred
 
         public T GetTileAt<T>(Point tile) where T : TileBase =>
             GetTileAt<T>(tile.X, tile.Y);
+
+        public bool IsWall(Point tile) =>
+            GetTileAt<TileWall>(tile.X, tile.Y) != null;
+
+        public Point North(Point context, int distance) =>
+            new Point(context.X, context.Y - distance);
+        public Point West(Point context, int distance) =>
+            new Point(context.X - distance, context.Y);
 
         public List<T> GetTilesAt<T>(params Point[] tiles) where T : TileBase //TODO: Linq one-liner
         {
