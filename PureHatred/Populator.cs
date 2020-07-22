@@ -5,7 +5,7 @@ using SadConsole;
 
 using PureHatred.Entities;
 using System.Linq;
-
+using PureHatred.Entities.Components;
 
 namespace PureHatred
 {
@@ -44,7 +44,7 @@ namespace PureHatred
             for (int i = 0; i < numFlora; i++)
             {
                 int tileIndex = 0;
-                BodyPart mushroom = new BodyPart(Color.GhostWhite, Color.Transparent, "mushroom", (char)5, 0, 0, 2, 2, null);
+                BodyPart mushroom = new BodyPart(Color.GhostWhite, Color.Transparent, "mushroom", (Spritesheet.Anatomy)Spritesheet.Flora.Slime); //Temporary, while mushrooms are BPs
 
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)
                     tileIndex = GameLoop.rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);

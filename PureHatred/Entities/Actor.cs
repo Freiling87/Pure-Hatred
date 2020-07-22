@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using PureHatred.Commands;
 using PureHatred.Entities.Components;
@@ -40,6 +40,8 @@ namespace PureHatred.Entities
         public BodyPart Mouth;
         public BodyPart Stomach;
 
+        public Color SkinColor;
+
         protected Actor(Color foreground, Color background, int glyph, string name) : base(foreground, background, glyph)
         {
             Name = name;
@@ -51,6 +53,8 @@ namespace PureHatred.Entities
             NetBiologyValues();
 
             Health = HealthMax;
+
+            SkinColor = foreground;
         }
 
         public void MoveBy(Point positionChange)

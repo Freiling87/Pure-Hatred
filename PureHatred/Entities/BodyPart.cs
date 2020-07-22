@@ -8,6 +8,7 @@ using PureHatred.UI;
 using GoRogue;
 using System.Linq;
 using SadConsole.EasingFunctions;
+using PureHatred.Entities.Components;
 
 /*TODO: Event handlers:
  * - On move, move descendants
@@ -55,8 +56,9 @@ namespace PureHatred.Entities
 		public int ValuePerBiteSimple = 25;
 		public int Metabolism; // Mouth: BiteSize
 
-		public BodyPart(Color foreground, Color background, string name, int glyph, int hungerComplex, int hungerSimple, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, glyph)
+		public BodyPart(Color foreground, Color background, string name, Spritesheet.Anatomy sprite, int hungerComplex = 10, int hungerSimple = 10, int hpMax = 10, int hpCurrent = 10, Actor owner=null) : base(foreground, background, name, (int)sprite)
 		{
+			//TODO: Change glyph from int to Spritesheet type, then can eliminate int casting and 
 		}
 
 		public void Delete(string message)

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using PureHatred.Entities;
+using PureHatred.Entities.Components;
 
 namespace PureHatred.Commands
 {
-	public class Anatomy : List<BodyPart>
+	public partial class Anatomy : List<BodyPart>
 	//suggested (IEnumerable<BodyPart> parts) : base(parts) by VGist on C# Discord
 	{
 		public Actor _owner;
@@ -18,26 +19,26 @@ namespace PureHatred.Commands
 		public void HardCodeHumanParts()
 		{
 			// These are rudimentary demo parts to get the Anatomy Window working correctly.
-			_owner.Core = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", 'I', 1, 0), null);
-			BodyPart torso = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "torso", '@', 25, 15), _owner.Core);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", '7', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "leg", '7', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 'L', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "arm", 'L', 5, 10), torso);
-			GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "beanus", ',', 1, 1), torso);
+			_owner.Core = GraftBodyPart(new BodyPart(Color.OldLace, Color.Transparent, "spine", Spritesheet.Anatomy.Spine), null);
+			BodyPart torso = GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "torso", Spritesheet.Anatomy.Torso), _owner.Core);
+			GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "leg", Spritesheet.Anatomy.Leg), torso);
+			GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "leg", Spritesheet.Anatomy.Leg), torso);
+			GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "arm", Spritesheet.Anatomy.Arm), torso);
+			GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "arm", Spritesheet.Anatomy.Arm), torso);
+			GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "beanus", Spritesheet.Anatomy.Beanus), torso);
 
-			BodyPart neck = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "neck", 'i', 1, 5), _owner.Core);
-			BodyPart head = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "head", 'O', 10, 20), neck);
-			GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "trachea", 'j', 0, 1), neck);
-			_owner.Brain = GraftBodyPart(new BodyPart(Color.LightPink, Color.Transparent, "brain", '@', 10, 40), head);
-			GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", '.', 2, 1, 2, 2), head);
-			GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", '.', 2, 1, 2, 2), head);
-			_owner.Mouth = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "mouth", 'D', 0, 1, 5, 5), head);
+			BodyPart neck = GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "neck", Spritesheet.Anatomy.Trachea), _owner.Core);
+			BodyPart head = GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "head", Spritesheet.Anatomy.Head, 10, 20), neck);
+			GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "trachea", Spritesheet.Anatomy.Trachea), neck);
+			_owner.Brain = GraftBodyPart(new BodyPart(Color.PeachPuff, Color.Transparent, "brain", Spritesheet.Anatomy.Brain), head);
+			GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", Spritesheet.Anatomy.Eyeball), head);
+			GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "eyeball", Spritesheet.Anatomy.Eyeball), head);
+			_owner.Mouth = GraftBodyPart(new BodyPart(Color.White, Color.Transparent, "mouth", Spritesheet.Anatomy.Mouth), head);
 
-			_owner.Stomach = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", '§', 10, 10), torso); // includes Duodenum, Spleen, etc.
-			_owner.Intestines = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", 'G', 5, 0), _owner.Stomach);
-			GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'd', 0, 0), torso);
-			GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", 'b', 0, 0), torso);
+			_owner.Stomach = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "stomach", Spritesheet.Anatomy.Stomach), torso); // includes Duodenum, Spleen, etc.
+			_owner.Intestines = GraftBodyPart(new BodyPart(Color.DarkRed, Color.Transparent, "intestines", Spritesheet.Anatomy.Intestines), _owner.Stomach);
+			GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", Spritesheet.Anatomy.Lung), torso);
+			GraftBodyPart(new BodyPart(Color.AliceBlue, Color.Transparent, "lung", Spritesheet.Anatomy.Lung), torso);
 
 			_owner.Mouth.Metabolism = 3;
 			_owner.Stomach.Metabolism = 2;
