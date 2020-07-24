@@ -44,7 +44,7 @@ namespace PureHatred
             for (int i = 0; i < numFlora; i++)
             {
                 int tileIndex = 0;
-                BodyPart mushroom = new BodyPart(Color.GhostWhite, Color.Transparent, "mushroom", (Spritesheet.Anatomy)Spritesheet.Flora.Slime); //Temporary, while mushrooms are BPs
+                BodyPart mushroom = new BodyPart(Color.GreenYellow, Color.Transparent, "mushroom", (Spritesheet.Anatomy)Spritesheet.Flora.Spindly); //Temporary, while mushrooms are BPs
 
                 while (CurrentMap.Tiles[tileIndex].IsImpassible)
                     tileIndex = GameLoop.rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
